@@ -8,9 +8,9 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = "2.0"
 
   s.summary         = "HJNetwork is a high level request util based on AFNetworking."
-  s.homepage        = "./"
-  s.source          = { :path => './' , :tag => s.version }
-  s.license         = "MIT"
+  s.homepage        = 'https://github.com/ObjectiveC-Lib/HJNetwork'
+  s.source          = { :git => 'https://github.com/ObjectiveC-Lib/HJNetwork.git', :tag => s.version }
+  s.license         = { :type => 'MIT', :file => 'LICENSE' }
   s.author          = { "navy" => "lzxy169@gmail.com" }
 
   s.requires_arc    = true
@@ -24,6 +24,6 @@ Pod::Spec.new do |s|
     core.private_header_files = "HJNetwork/HJNetworkPrivate.h"
   end
 
-  s.dependency "AFNetworking", "~> 3.0"
+  s.dependency "AFNetworking"
   s.dependency "HJCache"
 end
