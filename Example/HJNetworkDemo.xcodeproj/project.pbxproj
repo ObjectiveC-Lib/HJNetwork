@@ -1,0 +1,530 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5530ECFE259346060008C8ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5530ECFC259346060008C8ED /* Main.storyboard */; };
+		5530ED00259346080008C8ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5530ECFF259346080008C8ED /* Assets.xcassets */; };
+		5530ED03259346080008C8ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5530ED01259346080008C8ED /* LaunchScreen.storyboard */; };
+		5530ED06259346080008C8ED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5530ED05259346080008C8ED /* main.m */; };
+		557C621B2599CF5F00BF10A9 /* DMAccountLoginApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */; };
+		557C622A2599D54D00BF10A9 /* DMAppConfigApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C62292599D54D00BF10A9 /* DMAppConfigApi.m */; };
+		557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */; };
+		557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */; };
+		559B53932595C027009B38C9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53902595C027009B38C9 /* ViewController.m */; };
+		559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CB2595D46A009B38C9 /* DMNetworkManage.m */; };
+		559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CF2595DBEE009B38C9 /* DMRequest.m */; };
+		559B53F925998FB8009B38C9 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53F825998FB8009B38C9 /* ImageViewController.m */; };
+		55CE2D9F25A82EE8007DF74A /* UIView+HJUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */; };
+		55CE2DA025A82EE8007DF74A /* HJUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2D9E25A82EE8007DF74A /* HJUpload.m */; };
+		55CE2DA825A82F6C007DF74A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2DA725A82F6C007DF74A /* AppDelegate.m */; };
+		5B2F60B569C55B4CE6985587 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		49A64D1EF7378216CFFF2F73 /* Pods-HJNetworkDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.release.xcconfig"; sourceTree = "<group>"; };
+		5530ECF0259346060008C8ED /* HJNetworkDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HJNetworkDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5530ECFD259346060008C8ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5530ECFF259346080008C8ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5530ED02259346080008C8ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5530ED04259346080008C8ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5530ED05259346080008C8ED /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		557C62192599CF5F00BF10A9 /* DMAccountLoginApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMAccountLoginApi.h; sourceTree = "<group>"; };
+		557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMAccountLoginApi.m; sourceTree = "<group>"; };
+		557C62282599D54D00BF10A9 /* DMAppConfigApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMAppConfigApi.h; sourceTree = "<group>"; };
+		557C62292599D54D00BF10A9 /* DMAppConfigApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMAppConfigApi.m; sourceTree = "<group>"; };
+		557C622E259ADCA300BF10A9 /* DMUploadImageApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMUploadImageApi.h; sourceTree = "<group>"; };
+		557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMUploadImageApi.m; sourceTree = "<group>"; };
+		557C6232259ADE4100BF10A9 /* DMDownloadImageApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMDownloadImageApi.h; sourceTree = "<group>"; };
+		557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDownloadImageApi.m; sourceTree = "<group>"; };
+		559B53902595C027009B38C9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		559B53922595C027009B38C9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		559B53CA2595D46A009B38C9 /* DMNetworkManage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMNetworkManage.h; sourceTree = "<group>"; };
+		559B53CB2595D46A009B38C9 /* DMNetworkManage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMNetworkManage.m; sourceTree = "<group>"; };
+		559B53CE2595DBEE009B38C9 /* DMRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRequest.h; sourceTree = "<group>"; };
+		559B53CF2595DBEE009B38C9 /* DMRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRequest.m; sourceTree = "<group>"; };
+		559B53F725998FB8009B38C9 /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		559B53F825998FB8009B38C9 /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
+		55CE2D9925A82EE8007DF74A /* UIView+HJUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+HJUpload.h"; sourceTree = "<group>"; };
+		55CE2D9A25A82EE8007DF74A /* HJUploadDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJUploadDefine.h; sourceTree = "<group>"; };
+		55CE2D9C25A82EE8007DF74A /* HJUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJUpload.h; sourceTree = "<group>"; };
+		55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+HJUpload.m"; sourceTree = "<group>"; };
+		55CE2D9E25A82EE8007DF74A /* HJUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJUpload.m; sourceTree = "<group>"; };
+		55CE2DA425A82F6C007DF74A /* DMInlineHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
+		55CE2DA625A82F6C007DF74A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		55CE2DA725A82F6C007DF74A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5530ECED259346060008C8ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B2F60B569C55B4CE6985587 /* Pods_HJNetworkDemo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4ACD659283C5733CF44D68E6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5530ECE7259346060008C8ED = {
+			isa = PBXGroup;
+			children = (
+				5530ECF2259346060008C8ED /* HJNetworkDemo */,
+				5530ECF1259346060008C8ED /* Products */,
+				87DEA3B986B5E6C59C87633A /* Pods */,
+				4ACD659283C5733CF44D68E6 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		5530ECF1259346060008C8ED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5530ECF0259346060008C8ED /* HJNetworkDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5530ECF2259346060008C8ED /* HJNetworkDemo */ = {
+			isa = PBXGroup;
+			children = (
+				559B538E2595C027009B38C9 /* HJNetworkDemo */,
+				5530ECFC259346060008C8ED /* Main.storyboard */,
+				5530ECFF259346080008C8ED /* Assets.xcassets */,
+				5530ED01259346080008C8ED /* LaunchScreen.storyboard */,
+				5530ED04259346080008C8ED /* Info.plist */,
+				5530ED05259346080008C8ED /* main.m */,
+			);
+			path = HJNetworkDemo;
+			sourceTree = "<group>";
+		};
+		557C62182599CF5F00BF10A9 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				557C62192599CF5F00BF10A9 /* DMAccountLoginApi.h */,
+				557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */,
+				557C62282599D54D00BF10A9 /* DMAppConfigApi.h */,
+				557C62292599D54D00BF10A9 /* DMAppConfigApi.m */,
+				557C6232259ADE4100BF10A9 /* DMDownloadImageApi.h */,
+				557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */,
+				557C622E259ADCA300BF10A9 /* DMUploadImageApi.h */,
+				557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */,
+			);
+			name = Api;
+			path = HJNetworkDemo/HJNetworkDemo/Api;
+			sourceTree = SOURCE_ROOT;
+		};
+		557C621E2599CF9800BF10A9 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				559B53F725998FB8009B38C9 /* ImageViewController.h */,
+				559B53F825998FB8009B38C9 /* ImageViewController.m */,
+				559B53922595C027009B38C9 /* ViewController.h */,
+				559B53902595C027009B38C9 /* ViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		557C621F2599CFCB00BF10A9 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				559B53CA2595D46A009B38C9 /* DMNetworkManage.h */,
+				559B53CB2595D46A009B38C9 /* DMNetworkManage.m */,
+				559B53CE2595DBEE009B38C9 /* DMRequest.h */,
+				559B53CF2595DBEE009B38C9 /* DMRequest.m */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		559B538E2595C027009B38C9 /* HJNetworkDemo */ = {
+			isa = PBXGroup;
+			children = (
+				557C62182599CF5F00BF10A9 /* Api */,
+				55CE2DA525A82F6C007DF74A /* App */,
+				55CE2DA325A82F6C007DF74A /* Common */,
+				55CE2D9825A82EE8007DF74A /* HJUpload */,
+				557C621F2599CFCB00BF10A9 /* Network */,
+				557C621E2599CF9800BF10A9 /* ViewController */,
+			);
+			path = HJNetworkDemo;
+			sourceTree = "<group>";
+		};
+		55CE2D9825A82EE8007DF74A /* HJUpload */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2D9C25A82EE8007DF74A /* HJUpload.h */,
+				55CE2D9E25A82EE8007DF74A /* HJUpload.m */,
+				55CE2D9A25A82EE8007DF74A /* HJUploadDefine.h */,
+				55CE2D9925A82EE8007DF74A /* UIView+HJUpload.h */,
+				55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */,
+			);
+			path = HJUpload;
+			sourceTree = "<group>";
+		};
+		55CE2DA325A82F6C007DF74A /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2DA425A82F6C007DF74A /* DMInlineHeader.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		55CE2DA525A82F6C007DF74A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2DA625A82F6C007DF74A /* AppDelegate.h */,
+				55CE2DA725A82F6C007DF74A /* AppDelegate.m */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		87DEA3B986B5E6C59C87633A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */,
+				49A64D1EF7378216CFFF2F73 /* Pods-HJNetworkDemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5530ECEF259346060008C8ED /* HJNetworkDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5530ED09259346080008C8ED /* Build configuration list for PBXNativeTarget "HJNetworkDemo" */;
+			buildPhases = (
+				630847C1C92128B53AAA3D2D /* [CP] Check Pods Manifest.lock */,
+				5530ECEC259346060008C8ED /* Sources */,
+				5530ECED259346060008C8ED /* Frameworks */,
+				5530ECEE259346060008C8ED /* Resources */,
+				ABDDD69E71B577A33BFDCFEB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HJNetworkDemo;
+			productName = HJNetworkDemo;
+			productReference = 5530ECF0259346060008C8ED /* HJNetworkDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5530ECE8259346060008C8ED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					5530ECEF259346060008C8ED = {
+						CreatedOnToolsVersion = 12.3;
+					};
+				};
+			};
+			buildConfigurationList = 5530ECEB259346060008C8ED /* Build configuration list for PBXProject "HJNetworkDemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5530ECE7259346060008C8ED;
+			productRefGroup = 5530ECF1259346060008C8ED /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5530ECEF259346060008C8ED /* HJNetworkDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5530ECEE259346060008C8ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5530ED03259346080008C8ED /* LaunchScreen.storyboard in Resources */,
+				5530ED00259346080008C8ED /* Assets.xcassets in Resources */,
+				5530ECFE259346060008C8ED /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		630847C1C92128B53AAA3D2D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HJNetworkDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ABDDD69E71B577A33BFDCFEB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5530ECEC259346060008C8ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				559B53F925998FB8009B38C9 /* ImageViewController.m in Sources */,
+				557C621B2599CF5F00BF10A9 /* DMAccountLoginApi.m in Sources */,
+				559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */,
+				559B53932595C027009B38C9 /* ViewController.m in Sources */,
+				55CE2D9F25A82EE8007DF74A /* UIView+HJUpload.m in Sources */,
+				559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */,
+				557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */,
+				557C622A2599D54D00BF10A9 /* DMAppConfigApi.m in Sources */,
+				55CE2DA825A82F6C007DF74A /* AppDelegate.m in Sources */,
+				55CE2DA025A82EE8007DF74A /* HJUpload.m in Sources */,
+				5530ED06259346080008C8ED /* main.m in Sources */,
+				557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5530ECFC259346060008C8ED /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5530ECFD259346060008C8ED /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5530ED01259346080008C8ED /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5530ED02259346080008C8ED /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5530ED07259346080008C8ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5530ED08259346080008C8ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5530ED0A259346080008C8ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K8YA62HSZ5;
+				INFOPLIST_FILE = HJNetworkDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = navy.HJNetworkDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5530ED0B259346080008C8ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49A64D1EF7378216CFFF2F73 /* Pods-HJNetworkDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K8YA62HSZ5;
+				INFOPLIST_FILE = HJNetworkDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = navy.HJNetworkDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5530ECEB259346060008C8ED /* Build configuration list for PBXProject "HJNetworkDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5530ED07259346080008C8ED /* Debug */,
+				5530ED08259346080008C8ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5530ED09259346080008C8ED /* Build configuration list for PBXNativeTarget "HJNetworkDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5530ED0A259346080008C8ED /* Debug */,
+				5530ED0B259346080008C8ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5530ECE8259346060008C8ED /* Project object */;
+}
