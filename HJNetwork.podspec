@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.requires_arc    = true
   s.framework       = 'CFNetwork'
 
-  s.source_files = 'HJNetwork/HJNetwork.h'
+  s.source_files    = 'HJNetwork/HJNetwork.h'
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |core|
