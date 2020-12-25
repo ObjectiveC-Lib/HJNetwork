@@ -13,10 +13,10 @@
 
 @interface HJCacheMetadata : NSObject<NSSecureCoding>
 @property (nonatomic, assign) long long version;
-@property (nonatomic, strong) NSString *sensitiveDataString;
-@property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, strong) NSDate *creationDate;
 @property (nonatomic, strong) NSString *appVersionString;
+@property (nonatomic, strong) NSString *sensitiveDataString;
+@property (nonatomic, assign) NSStringEncoding stringEncoding;
 @end
 
 @implementation HJCacheMetadata
@@ -27,10 +27,10 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.version) forKey:NSStringFromSelector(@selector(version))];
-    [aCoder encodeObject:self.sensitiveDataString forKey:NSStringFromSelector(@selector(sensitiveDataString))];
-    [aCoder encodeObject:@(self.stringEncoding) forKey:NSStringFromSelector(@selector(stringEncoding))];
     [aCoder encodeObject:self.creationDate forKey:NSStringFromSelector(@selector(creationDate))];
     [aCoder encodeObject:self.appVersionString forKey:NSStringFromSelector(@selector(appVersionString))];
+    [aCoder encodeObject:self.sensitiveDataString forKey:NSStringFromSelector(@selector(sensitiveDataString))];
+    [aCoder encodeObject:@(self.stringEncoding) forKey:NSStringFromSelector(@selector(stringEncoding))];
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -38,10 +38,10 @@
     if (!self) return nil;
 
     self.version = [[aDecoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(version))] integerValue];
-    self.sensitiveDataString = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(sensitiveDataString))];
-    self.stringEncoding = [[aDecoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(stringEncoding))] integerValue];
     self.creationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(creationDate))];
     self.appVersionString = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(appVersionString))];
+    self.sensitiveDataString = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(sensitiveDataString))];
+    self.stringEncoding = [[aDecoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(stringEncoding))] integerValue];
     
     return self;
 }
@@ -50,9 +50,9 @@
 
 
 @interface HJRequest()
+@property (nonatomic, strong) id cacheJSON;
 @property (nonatomic, strong) NSData *cacheData;
 @property (nonatomic, strong) NSString *cacheString;
-@property (nonatomic, strong) id cacheJSON;
 @property (nonatomic, strong) NSXMLParser *cacheXML;
 @property (nonatomic, strong) NSString *cacheKey;
 
@@ -84,13 +84,16 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self requestCompletePreprocessor];
         [self requestCompleteFilter];
+        
         HJRequest *strongSelf = self;
         if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(requestFinished:)]) {
             [strongSelf.delegate requestFinished:strongSelf];
         }
+        
         if (strongSelf.successCompletionBlock) {
             strongSelf.successCompletionBlock(strongSelf);
         }
+        
         [strongSelf clearCompletionBlock];
     });
 }
@@ -104,6 +107,7 @@
 
 - (void)requestCompletePreprocessor {
     [super requestCompletePreprocessor];
+    
     [self saveResponseDataToCacheFile:[super responseData]];
 }
 
@@ -214,6 +218,7 @@
         }
         return NO;
     }
+    
     // Version
     long long cacheVersionFileContent = self.cacheMetadata.version;
     if (cacheVersionFileContent != [self cacheVersion]) {
@@ -224,6 +229,7 @@
         }
         return NO;
     }
+    
     // Sensitive data
     NSString *sensitiveDataString = self.cacheMetadata.sensitiveDataString;
     NSString *currentSensitiveDataString = ((NSObject *)[self cacheSensitiveData]).description;
@@ -239,6 +245,7 @@
             return NO;
         }
     }
+    
     // App version
     NSString *appVersionString = self.cacheMetadata.appVersionString;
     NSString *currentAppVersionString = [HJNetworkUtils appVersionString];
@@ -257,24 +264,25 @@
 }
 
 - (BOOL)loadCacheMetadata {
-    _cacheMetadata = [[HJNetworkCache sharedCache] extendedDataForKey:self.cacheKey];
-    return _cacheMetadata != nil;
+    self.cacheMetadata = [[HJNetworkCache sharedCache] extendedDataForKey:self.cacheKey];
+    return (self.cacheMetadata != nil);
 }
 
 - (BOOL)loadCacheData {
     NSError *error = nil;
     NSData *data = [[HJNetworkCache sharedCache] objectForKey:self.cacheKey];
     if (!data) return NO;
-    _cacheData = data;
-    _cacheString = [[NSString alloc] initWithData:_cacheData encoding:self.cacheMetadata.stringEncoding];
+    self.cacheData = data;
+    self.cacheString = [[NSString alloc] initWithData:self.cacheData encoding:self.cacheMetadata.stringEncoding];
+    
     switch (self.responseSerializerType) {
         case HJResponseSerializerTypeHTTP:
             return YES; // Do nothing.
         case HJResponseSerializerTypeJSON:
-            _cacheJSON = [NSJSONSerialization JSONObjectWithData:_cacheData options:(NSJSONReadingOptions)0 error:&error];
+            self.cacheJSON = [NSJSONSerialization JSONObjectWithData:self.cacheData options:(NSJSONReadingOptions)0 error:&error];
             return error == nil;
         case HJResponseSerializerTypeXMLParser:
-            _cacheXML = [[NSXMLParser alloc] initWithData:_cacheData];
+            self.cacheXML = [[NSXMLParser alloc] initWithData:self.cacheData];
             return YES;
     }
     return NO;

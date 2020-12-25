@@ -39,6 +39,8 @@ NS_ENUM(NSInteger) {
 ///  Save response data (probably from another request) to this request's cache location
 - (void)saveResponseDataToCacheFile:(NSData *)data;
 
+#pragma mark - Subclass Override
+
 ///  Default is -1, which means response is not actually saved as cache.
 - (NSInteger)cacheTimeInSeconds;
 
@@ -48,6 +50,9 @@ NS_ENUM(NSInteger) {
 ///  This can be used as additional identifier that tells the cache needs updating.
 ///  Using `NSArray` or `NSDictionary` as return value type is recommended
 - (nullable id)cacheSensitiveData;
+
+///  Whether cache is asynchronously written to storage. Default is YES.
+- (BOOL)writeCacheAsynchronously;
 
 @end
 

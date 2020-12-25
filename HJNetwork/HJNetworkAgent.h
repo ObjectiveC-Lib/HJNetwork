@@ -13,14 +13,19 @@ NS_ASSUME_NONNULL_BEGIN
 @class HJBaseRequest;
 
 @interface HJNetworkAgent : NSObject
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
 + (HJNetworkAgent *)sharedAgent;
+
 - (void)addRequest:(HJBaseRequest *)request;
 - (void)cancelRequest:(HJBaseRequest *)request;
 - (void)cancelAllRequests;
+
 - (NSString *)buildRequestUrl:(HJBaseRequest *)request;
 - (id)buildRequestArgument:(HJBaseRequest *)request;
+
 @end
 
 NS_ASSUME_NONNULL_END

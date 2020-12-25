@@ -23,14 +23,14 @@ FOUNDATION_EXPORT BOOL HJNSStringAvailable(NSString *string);
 
 
 @interface HJNetworkUtils : NSObject
-+ (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator;
-+ (void)addDoNotBackupAttribute:(NSString *)path;
-+ (NSString *)md5StringFromString:(NSString *)string;
-+ (NSString *)appVersionString;
-+ (NSStringEncoding)stringEncodingWithRequest:(HJBaseRequest *)request;
 + (BOOL)validateResumeData:(NSData *)data;
++ (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator;
 + (BOOL)containsOfString:(NSString *)string originalStr:(NSString *)originalStr;
++ (void)addDoNotBackupAttribute:(NSString *)path;
++ (NSString *)appVersionString;
++ (NSString *)md5StringFromString:(NSString *)string;
 + (NSString *)stringByURLDecode:(NSString *)string;
++ (NSStringEncoding)stringEncodingWithRequest:(HJBaseRequest *)request;
 @end
 
 

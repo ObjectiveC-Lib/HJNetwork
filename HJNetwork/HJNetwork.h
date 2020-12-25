@@ -29,6 +29,7 @@ FOUNDATION_EXPORT const unsigned char HJNetworkVersionString[];
 #import <HJNetwork/HJBaseRequest+Accessory.h>
 #import <HJNetwork/HJBatchRequest+Accessory.h>
 #import <HJNetwork/HJChainRequest+Accessory.h>
+#import <HJNetwork/HJRequestEventAccessory.h>
 
 #else /* __has_include */
 
@@ -45,7 +46,9 @@ FOUNDATION_EXPORT const unsigned char HJNetworkVersionString[];
 #import "HJBaseRequest+Accessory.h"
 #import "HJBatchRequest+Accessory.h"
 #import "HJChainRequest+Accessory.h"
+#import "HJRequestEventAccessory.h"
 
 #endif /* __has_include */
 
 #endif /* _HJNetwork_ */
+// 3.0.4

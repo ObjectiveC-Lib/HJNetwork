@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class HJBaseRequest;
 @class AFSecurityPolicy;
 
+typedef void (^AFURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * metrics) API_AVAILABLE(ios(10), macosx(10.12), watchos(3), tvos(10));
+
 @protocol HJUrlFilterProtocol <NSObject>
 - (NSString *)filterUrl:(NSString *)originUrl urlEncode:(BOOL)urlEncode withRequest:(HJBaseRequest *)request;
 @end
@@ -22,17 +24,21 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface HJNetworkConfig : NSObject
+
 @property NSUInteger cacheCountLimit;
+
+@property (nonatomic, assign) BOOL debugLogEnabled;
 @property (nonatomic, strong) NSString *baseUrl;
 @property (nonatomic, strong) NSString *cdnUrl;
+@property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
 @property (nonatomic, strong, readonly) NSArray<id<HJUrlFilterProtocol>> *urlFilters;
 @property (nonatomic, strong, readonly) NSArray<id<HJCacheDirPathFilterProtocol>> *cacheDirPathFilters;
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
-@property (nonatomic) BOOL debugLogEnabled;
-@property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, strong) AFURLSessionTaskDidFinishCollectingMetricsBlock collectingMetricsBlock API_AVAILABLE(ios(10), macosx(10.12), watchos(3), tvos(10));
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
 + (HJNetworkConfig *)sharedConfig;
 
 - (void)addUrlFilter:(id<HJUrlFilterProtocol>)filter;
@@ -42,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSInteger)totalCostOfCache;
 - (void)removeAllCache;
+
 @end
 
 NS_ASSUME_NONNULL_END

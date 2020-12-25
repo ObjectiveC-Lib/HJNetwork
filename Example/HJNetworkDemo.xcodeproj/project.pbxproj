@@ -7,27 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5530ECF5259346060008C8ED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5530ECF4259346060008C8ED /* AppDelegate.m */; };
-		5530ECFB259346060008C8ED /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5530ECFA259346060008C8ED /* ViewController.m */; };
 		5530ECFE259346060008C8ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5530ECFC259346060008C8ED /* Main.storyboard */; };
 		5530ED00259346080008C8ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5530ECFF259346080008C8ED /* Assets.xcassets */; };
 		5530ED03259346080008C8ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5530ED01259346080008C8ED /* LaunchScreen.storyboard */; };
 		5530ED06259346080008C8ED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5530ED05259346080008C8ED /* main.m */; };
+		559B53932595C027009B38C9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53902595C027009B38C9 /* ViewController.m */; };
+		559B53942595C027009B38C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53912595C027009B38C9 /* AppDelegate.m */; };
 		5B2F60B569C55B4CE6985587 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		49A64D1EF7378216CFFF2F73 /* Pods-HJNetworkDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5530ECF0259346060008C8ED /* HJNetworkDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HJNetworkDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5530ECF3259346060008C8ED /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		5530ECF4259346060008C8ED /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		5530ECF9259346060008C8ED /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		5530ECFA259346060008C8ED /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		5530ECFD259346060008C8ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5530ECFF259346080008C8ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5530ED02259346080008C8ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5530ED04259346080008C8ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5530ED05259346080008C8ED /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		559B538F2595C027009B38C9 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		559B53902595C027009B38C9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		559B53912595C027009B38C9 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		559B53922595C027009B38C9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -73,15 +73,23 @@
 		5530ECF2259346060008C8ED /* HJNetworkDemo */ = {
 			isa = PBXGroup;
 			children = (
-				5530ECF3259346060008C8ED /* AppDelegate.h */,
-				5530ECF4259346060008C8ED /* AppDelegate.m */,
-				5530ECF9259346060008C8ED /* ViewController.h */,
-				5530ECFA259346060008C8ED /* ViewController.m */,
+				559B538E2595C027009B38C9 /* HJNetworkDemo */,
 				5530ECFC259346060008C8ED /* Main.storyboard */,
 				5530ECFF259346080008C8ED /* Assets.xcassets */,
 				5530ED01259346080008C8ED /* LaunchScreen.storyboard */,
 				5530ED04259346080008C8ED /* Info.plist */,
 				5530ED05259346080008C8ED /* main.m */,
+			);
+			path = HJNetworkDemo;
+			sourceTree = "<group>";
+		};
+		559B538E2595C027009B38C9 /* HJNetworkDemo */ = {
+			isa = PBXGroup;
+			children = (
+				559B538F2595C027009B38C9 /* AppDelegate.h */,
+				559B53912595C027009B38C9 /* AppDelegate.m */,
+				559B53922595C027009B38C9 /* ViewController.h */,
+				559B53902595C027009B38C9 /* ViewController.m */,
 			);
 			path = HJNetworkDemo;
 			sourceTree = "<group>";
@@ -208,9 +216,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5530ECFB259346060008C8ED /* ViewController.m in Sources */,
-				5530ECF5259346060008C8ED /* AppDelegate.m in Sources */,
+				559B53932595C027009B38C9 /* ViewController.m in Sources */,
 				5530ED06259346080008C8ED /* main.m in Sources */,
+				559B53942595C027009B38C9 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

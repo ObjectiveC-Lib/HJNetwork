@@ -9,10 +9,10 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "HJNetworkPrivate.h"
 
-#if __has_include(<AFNetworking/AFNetworking.h>)
+#if __has_include(<AFNetworking/AFURLRequestSerialization.h>)
 #import <AFNetworking/AFURLRequestSerialization.h>
 #else
-#import "AFURLRequestSerialization.h"
+#import <AFNetworking/AFURLRequestSerialization.h>
 #endif
 
 void HJLog(NSString *format, ...) {
@@ -33,6 +33,29 @@ BOOL HJNSStringAvailable(NSString *string) {
 
 
 @implementation HJNetworkUtils
+
++ (BOOL)validateResumeData:(NSData *)data {
+    if (!data || [data length] < 1) return NO;
+    
+    NSError *error;
+    NSDictionary *resumeDictionary = [NSPropertyListSerialization propertyListWithData:data
+                                                                               options:NSPropertyListImmutable
+                                                                                format:NULL
+                                                                                 error:&error];
+    if (!resumeDictionary || error) return NO;
+    
+    // Before iOS 9 & Mac OS X 10.11
+#if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED < 90000)\
+|| (defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101100)
+    NSString *localFilePath = [resumeDictionary objectForKey:@"NSURLSessionResumeInfoLocalPath"];
+    if ([localFilePath length] < 1) return NO;
+    return [[NSFileManager defaultManager] fileExistsAtPath:localFilePath];
+#endif
+    // After iOS 9 we can not actually detects if the cache file exists. This plist file has a somehow
+    // complicated structue. Besides, the plist structure is different between iOS 9 and iOS 10.
+    // We can only assume that the plist being successfully parsed means the resume data is valid.
+    return YES;
+}
 
 + (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator {
     if ([json isKindOfClass:[NSDictionary class]]
@@ -80,6 +103,15 @@ BOOL HJNSStringAvailable(NSString *string) {
     }
 }
 
++ (BOOL)containsOfString:(NSString *)string originalStr:(NSString *)originalStr {
+    if (string == nil || originalStr == nil) return NO;
+    if (@available(iOS 8.0, *)) {
+        return [originalStr containsString:string];
+    } else {
+        return [originalStr rangeOfString:string].location != NSNotFound;
+    }
+}
+
 + (void)addDoNotBackupAttribute:(NSString *)path {
     NSURL *url = [NSURL fileURLWithPath:path];
     NSError *error = nil;
@@ -91,11 +123,14 @@ BOOL HJNSStringAvailable(NSString *string) {
     }
 }
 
++ (NSString *)appVersionString {
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+}
+
 + (NSString *)md5StringFromString:(NSString *)string {
     NSParameterAssert(string != nil && [string length] > 0);
     
     const char *value = [string UTF8String];
-    
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
     CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
     
@@ -105,50 +140,6 @@ BOOL HJNSStringAvailable(NSString *string) {
     }
     
     return outputString;
-}
-
-+ (NSString *)appVersionString {
-    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-}
-
-+ (NSStringEncoding)stringEncodingWithRequest:(HJBaseRequest *)request {
-    NSStringEncoding stringEncoding = NSUTF8StringEncoding;
-    if (request && HJNSStringAvailable(request.response.textEncodingName)) {
-        CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)request.response.textEncodingName);
-        if (encoding != kCFStringEncodingInvalidId) {
-            stringEncoding = CFStringConvertEncodingToNSStringEncoding(encoding);
-        }
-    }
-    return stringEncoding;
-}
-
-+ (BOOL)validateResumeData:(NSData *)data {
-    if (!data || [data length] < 1) return NO;
-    
-    NSError *error;
-    NSDictionary *resumeDictionary = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
-    if (!resumeDictionary || error) return NO;
-    
-    // Before iOS 9 & Mac OS X 10.11
-#if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED < 90000)\
-|| (defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101100)
-    NSString *localFilePath = [resumeDictionary objectForKey:@"NSURLSessionResumeInfoLocalPath"];
-    if ([localFilePath length] < 1) return NO;
-    return [[NSFileManager defaultManager] fileExistsAtPath:localFilePath];
-#endif
-    // After iOS 9 we can not actually detects if the cache file exists. This plist file has a somehow
-    // complicated structue. Besides, the plist structure is different between iOS 9 and iOS 10.
-    // We can only assume that the plist being successfully parsed means the resume data is valid.
-    return YES;
-}
-
-+ (BOOL)containsOfString:(NSString *)string originalStr:(NSString *)originalStr {
-    if (string == nil || originalStr == nil) return NO;
-    if (@available(iOS 8.0, *)) {
-        return [originalStr containsString:string];
-    } else {
-        return [originalStr rangeOfString:string].location != NSNotFound;
-    }
 }
 
 + (NSString *)stringByURLDecode:(NSString *)string {
@@ -170,6 +161,18 @@ BOOL HJNSStringAvailable(NSString *string) {
         return decoded;
 #pragma clang diagnostic pop
     }
+}
+
++ (NSStringEncoding)stringEncodingWithRequest:(HJBaseRequest *)request {
+    NSStringEncoding stringEncoding = NSUTF8StringEncoding;
+    NSString *encodingName = [request.response.textEncodingName copy];
+    if (encodingName) {
+        CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
+        if (encoding != kCFStringEncodingInvalidId) {
+            stringEncoding = CFStringConvertEncodingToNSStringEncoding(encoding);
+        }
+    }
+    return stringEncoding;
 }
 
 @end

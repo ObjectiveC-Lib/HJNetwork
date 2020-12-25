@@ -10,13 +10,6 @@
 #import "HJNetworkAgent.h"
 #import "HJNetworkPrivate.h"
 
-#if __has_include(<AFNetworking/AFNetworking.h>)
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-
-#endif
-
 NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 
 @interface HJBaseRequest ()
@@ -26,7 +19,7 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 @property (nonatomic, strong, readwrite) id responseObject;
 @property (nonatomic, strong, readwrite) NSString *responseString;
 @property (nonatomic, strong, readwrite) NSError *error;
-@property (nonatomic, assign, readwrite) NSInteger requestDuration;
+@property (nonatomic, assign, readwrite) NSTimeInterval requestDuration;
 @property (nonatomic, assign, readwrite) NSTimeInterval requestStartTime;
 @property (nonatomic, assign, readwrite) NSTimeInterval requestStopTime;
 @end
@@ -55,7 +48,7 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     return self.requestTask.originalRequest;
 }
 
-- (NSInteger)requestDuration {
+- (NSTimeInterval)requestDuration {
     return (self.requestStopTime - self.requestStartTime) * 1000;
 }
 
@@ -76,8 +69,7 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 #pragma mark - Request Configuration
 
 - (void)setCompletionBlockWithSuccess:(HJRequestCompletionBlock)success
-                              failure:(HJRequestCompletionBlock)failure
-{
+                              failure:(HJRequestCompletionBlock)failure {
     self.successCompletionBlock = success;
     self.failureCompletionBlock = failure;
 }
@@ -86,6 +78,7 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     // nil out to break the retain cycle.
     self.successCompletionBlock = nil;
     self.failureCompletionBlock = nil;
+    self.uploadProgressBlock = nil;
 }
 
 - (void)addAccessory:(id<HJRequestAccessory>)accessory {
@@ -111,15 +104,13 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 }
 
 - (void)startWithCompletionBlockWithSuccess:(HJRequestCompletionBlock)success
-                                    failure:(HJRequestCompletionBlock)failure
-{
+                                    failure:(HJRequestCompletionBlock)failure {
     [self startWithCompletionBlockWithSuccess:success failure:failure loadMore:NO];
 }
 
 - (void)startWithCompletionBlockWithSuccess:(HJRequestCompletionBlock)success
                                     failure:(HJRequestCompletionBlock)failure
-                                   loadMore:(BOOL)loadMore
-{
+                                   loadMore:(BOOL)loadMore {
     self.loadMore = loadMore;
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];

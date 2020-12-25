@@ -51,6 +51,7 @@ typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
 @class HJBaseRequest;
 typedef void(^HJRequestCompletionBlock)(__kindof HJBaseRequest *request);
 
+
 @protocol HJRequestDelegate <NSObject>
 @optional
 - (void)requestFinished:(__kindof HJBaseRequest *)request;
@@ -70,17 +71,17 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJBaseRequest *request);
 @property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;
 @property (nonatomic, strong, readonly) NSURLRequest *currentRequest;
 @property (nonatomic, strong, readonly) NSURLRequest *originalRequest;
-@property (nonatomic, assign, readonly) NSInteger requestDuration; // msec
 @property (nonatomic, assign, readonly) NSTimeInterval requestStartTime;
 @property (nonatomic, assign, readonly) NSTimeInterval requestStopTime;
+@property (nonatomic, assign, readonly) NSTimeInterval requestDuration; // msec
 
 @property (nonatomic, strong, readonly) NSHTTPURLResponse *response;
-@property (nonatomic, readonly) NSInteger responseStatusCode;
 @property (nonatomic, strong, readonly, nullable) NSDictionary *responseHeaders;
 @property (nonatomic, strong, readonly, nullable) NSData *responseData;
 @property (nonatomic, strong, readonly, nullable) NSString *responseString;
 @property (nonatomic, strong, readonly, nullable) id responseObject;
 @property (nonatomic, strong, readonly, nullable) id responseJSONObject;
+@property (nonatomic, readonly) NSInteger responseStatusCode;
 
 @property (nonatomic, strong, readonly, nullable) NSError *error;
 
@@ -93,6 +94,7 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJBaseRequest *request);
 
 @property (nonatomic) NSInteger tag;
 @property (nonatomic, strong, nullable) NSDictionary *userInfo;
+@property (nonatomic) HJRequestPriority requestPriority;
 @property (nonatomic, weak, nullable) id<HJRequestDelegate> delegate;
 @property (nonatomic, copy, nullable) HJRequestCompletionBlock successCompletionBlock;
 @property (nonatomic, copy, nullable) HJRequestCompletionBlock failureCompletionBlock;
@@ -102,9 +104,6 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJBaseRequest *request);
 @property (nonatomic, strong, nullable) NSString *resumableDownloadPath;
 @property (nonatomic, copy, nullable) AFURLSessionTaskProgressBlock resumableDownloadProgressBlock;
 @property (nonatomic, copy, nullable) AFURLSessionTaskProgressBlock uploadProgressBlock;
-@property (nonatomic, copy, nullable) AFURLSessionTaskProgressBlock downloadProgressBlock;
-
-@property (nonatomic) HJRequestPriority requestPriority;
 
 - (void)setCompletionBlockWithSuccess:(nullable HJRequestCompletionBlock)success
                               failure:(nullable HJRequestCompletionBlock)failure;
