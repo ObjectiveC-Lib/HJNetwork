@@ -92,9 +92,9 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJBaseRequest *request);
 
 #pragma mark - Request Configuration
 
-@property (nonatomic) NSInteger tag;
+@property (nonatomic, assign) NSInteger tag;
 @property (nonatomic, strong, nullable) NSDictionary *userInfo;
-@property (nonatomic) HJRequestPriority requestPriority;
+@property (nonatomic, assign) HJRequestPriority requestPriority;
 @property (nonatomic, weak, nullable) id<HJRequestDelegate> delegate;
 @property (nonatomic, copy, nullable) HJRequestCompletionBlock successCompletionBlock;
 @property (nonatomic, copy, nullable) HJRequestCompletionBlock failureCompletionBlock;

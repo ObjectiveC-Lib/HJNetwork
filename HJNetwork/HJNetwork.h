@@ -14,6 +14,12 @@
 FOUNDATION_EXPORT double HJNetworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char HJNetworkVersionString[];
 
+#if __has_include(<AFNetworking/AFNetworking.h>)
+#import <AFNetworking/AFNetworking.h>
+#elif __has_include("AFNetworking.h")
+#import "AFNetworking.h"
+#endif
+
 #if __has_include(<HJNetwork/HJNetwork.h>)
 
 #import <HJNetwork/HJRequest.h>

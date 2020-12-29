@@ -11,8 +11,15 @@
 		5530ED00259346080008C8ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5530ECFF259346080008C8ED /* Assets.xcassets */; };
 		5530ED03259346080008C8ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5530ED01259346080008C8ED /* LaunchScreen.storyboard */; };
 		5530ED06259346080008C8ED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5530ED05259346080008C8ED /* main.m */; };
+		557C621B2599CF5F00BF10A9 /* DMAccountLoginApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */; };
+		557C622A2599D54D00BF10A9 /* DMAppConfigApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C62292599D54D00BF10A9 /* DMAppConfigApi.m */; };
+		557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */; };
+		557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */; };
 		559B53932595C027009B38C9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53902595C027009B38C9 /* ViewController.m */; };
 		559B53942595C027009B38C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53912595C027009B38C9 /* AppDelegate.m */; };
+		559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CB2595D46A009B38C9 /* DMNetworkManage.m */; };
+		559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CF2595DBEE009B38C9 /* DMRequest.m */; };
+		559B53F925998FB8009B38C9 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53F825998FB8009B38C9 /* ImageViewController.m */; };
 		5B2F60B569C55B4CE6985587 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,10 +31,25 @@
 		5530ED02259346080008C8ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5530ED04259346080008C8ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5530ED05259346080008C8ED /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		557C62192599CF5F00BF10A9 /* DMAccountLoginApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMAccountLoginApi.h; sourceTree = "<group>"; };
+		557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMAccountLoginApi.m; sourceTree = "<group>"; };
+		557C62282599D54D00BF10A9 /* DMAppConfigApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMAppConfigApi.h; sourceTree = "<group>"; };
+		557C62292599D54D00BF10A9 /* DMAppConfigApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMAppConfigApi.m; sourceTree = "<group>"; };
+		557C622E259ADCA300BF10A9 /* DMUploadImageApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMUploadImageApi.h; sourceTree = "<group>"; };
+		557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMUploadImageApi.m; sourceTree = "<group>"; };
+		557C6232259ADE4100BF10A9 /* DMDownloadImageApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMDownloadImageApi.h; sourceTree = "<group>"; };
+		557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDownloadImageApi.m; sourceTree = "<group>"; };
 		559B538F2595C027009B38C9 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		559B53902595C027009B38C9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		559B53912595C027009B38C9 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		559B53922595C027009B38C9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		559B53CA2595D46A009B38C9 /* DMNetworkManage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMNetworkManage.h; sourceTree = "<group>"; };
+		559B53CB2595D46A009B38C9 /* DMNetworkManage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMNetworkManage.m; sourceTree = "<group>"; };
+		559B53CE2595DBEE009B38C9 /* DMRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRequest.h; sourceTree = "<group>"; };
+		559B53CF2595DBEE009B38C9 /* DMRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRequest.m; sourceTree = "<group>"; };
+		559B53D32595DEED009B38C9 /* DMInlineHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
+		559B53F725998FB8009B38C9 /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		559B53F825998FB8009B38C9 /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -83,13 +105,53 @@
 			path = HJNetworkDemo;
 			sourceTree = "<group>";
 		};
+		557C62182599CF5F00BF10A9 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				557C62192599CF5F00BF10A9 /* DMAccountLoginApi.h */,
+				557C621A2599CF5F00BF10A9 /* DMAccountLoginApi.m */,
+				557C62282599D54D00BF10A9 /* DMAppConfigApi.h */,
+				557C62292599D54D00BF10A9 /* DMAppConfigApi.m */,
+				557C6232259ADE4100BF10A9 /* DMDownloadImageApi.h */,
+				557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */,
+				557C622E259ADCA300BF10A9 /* DMUploadImageApi.h */,
+				557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */,
+			);
+			name = Api;
+			path = HJNetworkDemo/HJNetworkDemo/Api;
+			sourceTree = SOURCE_ROOT;
+		};
+		557C621E2599CF9800BF10A9 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				559B53F725998FB8009B38C9 /* ImageViewController.h */,
+				559B53F825998FB8009B38C9 /* ImageViewController.m */,
+				559B53922595C027009B38C9 /* ViewController.h */,
+				559B53902595C027009B38C9 /* ViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		557C621F2599CFCB00BF10A9 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				559B53CA2595D46A009B38C9 /* DMNetworkManage.h */,
+				559B53CB2595D46A009B38C9 /* DMNetworkManage.m */,
+				559B53CE2595DBEE009B38C9 /* DMRequest.h */,
+				559B53CF2595DBEE009B38C9 /* DMRequest.m */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		559B538E2595C027009B38C9 /* HJNetworkDemo */ = {
 			isa = PBXGroup;
 			children = (
+				557C62182599CF5F00BF10A9 /* Api */,
 				559B538F2595C027009B38C9 /* AppDelegate.h */,
 				559B53912595C027009B38C9 /* AppDelegate.m */,
-				559B53922595C027009B38C9 /* ViewController.h */,
-				559B53902595C027009B38C9 /* ViewController.m */,
+				559B53D32595DEED009B38C9 /* DMInlineHeader.h */,
+				557C621F2599CFCB00BF10A9 /* Network */,
+				557C621E2599CF9800BF10A9 /* ViewController */,
 			);
 			path = HJNetworkDemo;
 			sourceTree = "<group>";
@@ -216,9 +278,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				559B53F925998FB8009B38C9 /* ImageViewController.m in Sources */,
+				557C621B2599CF5F00BF10A9 /* DMAccountLoginApi.m in Sources */,
+				559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */,
 				559B53932595C027009B38C9 /* ViewController.m in Sources */,
+				559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */,
+				557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */,
+				557C622A2599D54D00BF10A9 /* DMAppConfigApi.m in Sources */,
 				5530ED06259346080008C8ED /* main.m in Sources */,
 				559B53942595C027009B38C9 /* AppDelegate.m in Sources */,
+				557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

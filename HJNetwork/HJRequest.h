@@ -25,7 +25,7 @@ NS_ENUM(NSInteger) {
 @interface HJRequest : HJBaseRequest
 
 /// Default is NO, Whether to use cache as response or not.
-@property (nonatomic) BOOL ignoreCache;
+@property (nonatomic, assign) BOOL ignoreCache;
 
 ///  Whether data is from local cache.
 - (BOOL)isDataFromCache;

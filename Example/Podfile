@@ -11,5 +11,5 @@ target 'HJNetworkDemo' do
   # Pods for HJNetworkDemo
 
   pod 'HJNetwork', :path => '../'
-
+  pod 'SDWebImage'
 end

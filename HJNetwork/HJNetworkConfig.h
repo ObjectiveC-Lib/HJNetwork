@@ -25,11 +25,10 @@ typedef void (^AFURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *se
 
 @interface HJNetworkConfig : NSObject
 
-@property NSUInteger cacheCountLimit;
-
-@property (nonatomic, assign) BOOL debugLogEnabled;
 @property (nonatomic, strong) NSString *baseUrl;
 @property (nonatomic, strong) NSString *cdnUrl;
+@property (nonatomic, assign) BOOL debugLogEnabled;
+@property (nonatomic, assign) NSUInteger cacheCountLimit;
 @property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
 @property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
 @property (nonatomic, strong, readonly) NSArray<id<HJUrlFilterProtocol>> *urlFilters;

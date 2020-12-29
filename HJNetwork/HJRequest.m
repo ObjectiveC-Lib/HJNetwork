@@ -125,6 +125,10 @@
     return nil;
 }
 
+- (BOOL)writeCacheAsynchronously {
+    return YES;
+}
+
 #pragma mark -
 
 - (BOOL)isDataFromCache {
