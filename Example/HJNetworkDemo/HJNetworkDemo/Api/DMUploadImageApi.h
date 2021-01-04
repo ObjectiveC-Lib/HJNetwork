@@ -7,14 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "DMRequest.h"
+#import <HJUpload/HJUploadHeader.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DMUploadImageApi : DMRequest
+@interface DMUploadImageApi : DMRequest <HJUploadProtocol>
 
-- (id)initWithName:(NSString *)name image:(UIImage *)image;
-
-- (NSString *)responseImageId;
+- (id)initWithKey:(nullable NSString *)key image:(nullable UIImage *)image;
 
 @end
 

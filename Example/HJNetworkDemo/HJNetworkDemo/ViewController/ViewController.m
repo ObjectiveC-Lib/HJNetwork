@@ -9,6 +9,7 @@
 #import "ImageViewController.h"
 #import "DMAccountLoginApi.h"
 #import "DMAppConfigApi.h"
+#import "DMUploadImageApi.h"
 
 
 @interface ViewController ()
@@ -39,7 +40,7 @@
     UIButton *btn2 = [self createButton:CGRectMake(CGRectGetWidth(self.view.frame) - 60, CGRectGetHeight(self.view.frame) - 60 - bottom, 60.0, 60.0)];
     [btn2 setTitle:@"点击我" forState:UIControlStateNormal];
     btn2.backgroundColor = [UIColor redColor];
-    [btn2 addTarget:self action:@selector(doShowImageVC:) forControlEvents:UIControlEventTouchUpInside];
+    [btn2 addTarget:self action:@selector(uploadImage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn2];
 }
 
@@ -76,6 +77,26 @@
         NSDictionary *resultObj = request.responseJSONObject;
         NSLog(@"resultObj = %@", resultObj);
 
+    }];
+}
+
+- (void)uploadImage {
+    UIImage *image  = [UIImage imageNamed:@"WechatIMG6"];
+    DMUploadImageApi *api = [[DMUploadImageApi alloc] initWithKey:nil image:image];
+    
+    [HJUpload hj_upload:api
+                  image:image
+                    key:nil
+                options:HJUploadOptionsTypeImage
+               progress:^(NSProgress * _Nullable uploadProgress) {
+        NSLog(@"fractionCompleted: %f", uploadProgress.fractionCompleted);
+//        NSLog(@"totalUnitCount: %lld", uploadProgress.totalUnitCount);
+
+    } completion:^(NSString * _Nullable key, HJUploadStage stage, NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
+        NSLog(@"key %@", key);
+        NSLog(@"stage %ld", (long)stage);
+        NSLog(@"callbackInfo %@", callbackInfo);
+        NSLog(@"error %@", error);
     }];
 }
 
