@@ -10,6 +10,7 @@
 #import "DMAccountLoginApi.h"
 #import "DMAppConfigApi.h"
 #import "DMUploadImageApi.h"
+#import "HJUpload.h"
 
 
 @interface ViewController ()
@@ -81,22 +82,21 @@
 }
 
 - (void)uploadImage {
-    UIImage *image  = [UIImage imageNamed:@"WechatIMG6"];
-    DMUploadImageApi *api = [[DMUploadImageApi alloc] initWithKey:nil image:image];
+    UIImage *image = [UIImage imageNamed:@"WechatIMG6"];
+    DMUploadImageApi *api = [[DMUploadImageApi alloc] initWithImage:image];
     
     [HJUpload hj_upload:api
                   image:image
-                    key:nil
-                options:HJUploadOptionsTypeImage
-               progress:^(NSProgress * _Nullable uploadProgress) {
-        NSLog(@"fractionCompleted: %f", uploadProgress.fractionCompleted);
+               progress:^(NSProgress * _Nullable taskProgress) {
+        NSLog(@"fractionCompleted: %f", taskProgress.fractionCompleted);
 //        NSLog(@"totalUnitCount: %lld", uploadProgress.totalUnitCount);
 
-    } completion:^(NSString * _Nullable key, HJUploadStage stage, NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
-        NSLog(@"key %@", key);
-        NSLog(@"stage %ld", (long)stage);
-        NSLog(@"callbackInfo %@", callbackInfo);
-        NSLog(@"error %@", error);
+    } completion:^(HJTaskKey key, HJTaskStage stage, NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
+        NSLog(@"completion_key = %@", key);
+        NSLog(@"completion_stage = %ld", (long)stage);
+        NSLog(@"completion_callbackInfo = %@", callbackInfo);
+        NSLog(@"completion_error = %@", error);
+        [HJUpload hj_removeMediaWithKey:key];
     }];
 }
 

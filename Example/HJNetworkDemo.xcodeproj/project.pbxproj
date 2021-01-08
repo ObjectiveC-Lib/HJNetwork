@@ -16,10 +16,12 @@
 		557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */; };
 		557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */; };
 		559B53932595C027009B38C9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53902595C027009B38C9 /* ViewController.m */; };
-		559B53942595C027009B38C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53912595C027009B38C9 /* AppDelegate.m */; };
 		559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CB2595D46A009B38C9 /* DMNetworkManage.m */; };
 		559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53CF2595DBEE009B38C9 /* DMRequest.m */; };
 		559B53F925998FB8009B38C9 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559B53F825998FB8009B38C9 /* ImageViewController.m */; };
+		55CE2D9F25A82EE8007DF74A /* UIView+HJUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */; };
+		55CE2DA025A82EE8007DF74A /* HJUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2D9E25A82EE8007DF74A /* HJUpload.m */; };
+		55CE2DA825A82F6C007DF74A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CE2DA725A82F6C007DF74A /* AppDelegate.m */; };
 		5B2F60B569C55B4CE6985587 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,17 +41,22 @@
 		557C622F259ADCA300BF10A9 /* DMUploadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMUploadImageApi.m; sourceTree = "<group>"; };
 		557C6232259ADE4100BF10A9 /* DMDownloadImageApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMDownloadImageApi.h; sourceTree = "<group>"; };
 		557C6233259ADE4100BF10A9 /* DMDownloadImageApi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDownloadImageApi.m; sourceTree = "<group>"; };
-		559B538F2595C027009B38C9 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		559B53902595C027009B38C9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		559B53912595C027009B38C9 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		559B53922595C027009B38C9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		559B53CA2595D46A009B38C9 /* DMNetworkManage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMNetworkManage.h; sourceTree = "<group>"; };
 		559B53CB2595D46A009B38C9 /* DMNetworkManage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMNetworkManage.m; sourceTree = "<group>"; };
 		559B53CE2595DBEE009B38C9 /* DMRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRequest.h; sourceTree = "<group>"; };
 		559B53CF2595DBEE009B38C9 /* DMRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRequest.m; sourceTree = "<group>"; };
-		559B53D32595DEED009B38C9 /* DMInlineHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
 		559B53F725998FB8009B38C9 /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		559B53F825998FB8009B38C9 /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
+		55CE2D9925A82EE8007DF74A /* UIView+HJUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+HJUpload.h"; sourceTree = "<group>"; };
+		55CE2D9A25A82EE8007DF74A /* HJUploadDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJUploadDefine.h; sourceTree = "<group>"; };
+		55CE2D9C25A82EE8007DF74A /* HJUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJUpload.h; sourceTree = "<group>"; };
+		55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+HJUpload.m"; sourceTree = "<group>"; };
+		55CE2D9E25A82EE8007DF74A /* HJUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJUpload.m; sourceTree = "<group>"; };
+		55CE2DA425A82F6C007DF74A /* DMInlineHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
+		55CE2DA625A82F6C007DF74A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		55CE2DA725A82F6C007DF74A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		9973A9A99E4F7287A2A5B451 /* Pods-HJNetworkDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		EC7152FE7E619553689F8D54 /* Pods_HJNetworkDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -147,13 +154,42 @@
 			isa = PBXGroup;
 			children = (
 				557C62182599CF5F00BF10A9 /* Api */,
-				559B538F2595C027009B38C9 /* AppDelegate.h */,
-				559B53912595C027009B38C9 /* AppDelegate.m */,
-				559B53D32595DEED009B38C9 /* DMInlineHeader.h */,
+				55CE2DA525A82F6C007DF74A /* App */,
+				55CE2DA325A82F6C007DF74A /* Common */,
+				55CE2D9825A82EE8007DF74A /* HJUpload */,
 				557C621F2599CFCB00BF10A9 /* Network */,
 				557C621E2599CF9800BF10A9 /* ViewController */,
 			);
 			path = HJNetworkDemo;
+			sourceTree = "<group>";
+		};
+		55CE2D9825A82EE8007DF74A /* HJUpload */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2D9C25A82EE8007DF74A /* HJUpload.h */,
+				55CE2D9E25A82EE8007DF74A /* HJUpload.m */,
+				55CE2D9A25A82EE8007DF74A /* HJUploadDefine.h */,
+				55CE2D9925A82EE8007DF74A /* UIView+HJUpload.h */,
+				55CE2D9D25A82EE8007DF74A /* UIView+HJUpload.m */,
+			);
+			path = HJUpload;
+			sourceTree = "<group>";
+		};
+		55CE2DA325A82F6C007DF74A /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2DA425A82F6C007DF74A /* DMInlineHeader.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		55CE2DA525A82F6C007DF74A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				55CE2DA625A82F6C007DF74A /* AppDelegate.h */,
+				55CE2DA725A82F6C007DF74A /* AppDelegate.m */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		87DEA3B986B5E6C59C87633A /* Pods */ = {
@@ -282,11 +318,13 @@
 				557C621B2599CF5F00BF10A9 /* DMAccountLoginApi.m in Sources */,
 				559B53D02595DBEE009B38C9 /* DMRequest.m in Sources */,
 				559B53932595C027009B38C9 /* ViewController.m in Sources */,
+				55CE2D9F25A82EE8007DF74A /* UIView+HJUpload.m in Sources */,
 				559B53CC2595D46A009B38C9 /* DMNetworkManage.m in Sources */,
 				557C6234259ADE4100BF10A9 /* DMDownloadImageApi.m in Sources */,
 				557C622A2599D54D00BF10A9 /* DMAppConfigApi.m in Sources */,
+				55CE2DA825A82F6C007DF74A /* AppDelegate.m in Sources */,
+				55CE2DA025A82EE8007DF74A /* HJUpload.m in Sources */,
 				5530ED06259346080008C8ED /* main.m in Sources */,
-				559B53942595C027009B38C9 /* AppDelegate.m in Sources */,
 				557C6230259ADCA300BF10A9 /* DMUploadImageApi.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
