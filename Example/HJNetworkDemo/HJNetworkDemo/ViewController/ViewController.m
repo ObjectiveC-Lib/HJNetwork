@@ -90,7 +90,7 @@
                progress:^(NSProgress * _Nullable taskProgress) {
         NSLog(@"fractionCompleted: %f", taskProgress.fractionCompleted);
 //        NSLog(@"totalUnitCount: %lld", uploadProgress.totalUnitCount);
-
+        
     } completion:^(HJTaskKey key, HJTaskStage stage, NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
         NSLog(@"completion_key = %@", key);
         NSLog(@"completion_stage = %ld", (long)stage);
