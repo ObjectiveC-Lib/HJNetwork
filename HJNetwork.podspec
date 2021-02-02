@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name            = 'HJNetwork'
   s.version         = '1.0.0'
 
-  s.ios.deployment_target = "9.0"
+  s.ios.deployment_target = '9.0'
 
   s.summary         = 'HJNetwork is a high level request util based on AFNetworking.'
   s.homepage        = 'https://github.com/ObjectiveC-Lib/HJNetwork'
@@ -18,21 +18,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |core|
     core.source_files = 'HJNetwork/**/*.{h,m}'
-    core.private_header_files = 'HJNetwork/HJNetworkPrivate.h'
-    
-    core.subspec 'BatchRequest' do |batchRequest|
-      batchRequest.source_files = 'HJNetwork/BatchRequest/*.{h,m}'
-    end
-
-    core.subspec 'ChainRequest' do |chainRequest|
-      chainRequest.source_files = 'HJNetwork/ChainRequest/*.{h,m}'
-    end
-
-    core.subspec 'Accessory' do |accessory|
-      accessory.source_files = 'HJNetwork/Accessory/*.{h,m}'
-    end
   end
   
-  s.dependency "AFNetworking", "~> 4.0"
+  s.dependency 'AFNetworking', '~> 4.0'
   s.dependency 'HJCache'
 end
