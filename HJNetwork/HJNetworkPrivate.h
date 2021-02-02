@@ -21,6 +21,8 @@ FOUNDATION_EXPORT BOOL HJNSStringAvailable(NSString *string);
 
 @class AFHTTPSessionManager;
 
+@interface HJNetworkPrivate : NSObject
+@end
 
 @interface HJNetworkUtils : NSObject
 + (BOOL)validateResumeData:(NSData *)data;

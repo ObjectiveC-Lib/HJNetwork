@@ -31,6 +31,8 @@ BOOL HJNSStringAvailable(NSString *string) {
     return (string != nil && [string isKindOfClass:[NSString class]] && string.length > 0);
 }
 
+@implementation HJNetworkPrivate
+@end
 
 @implementation HJNetworkUtils
 
