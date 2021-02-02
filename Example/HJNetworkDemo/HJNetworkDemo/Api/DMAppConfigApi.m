@@ -18,7 +18,7 @@
 }
 
 - (NSString *)requestUrl {
-    return @"http://blogapp.sina.cn/sys/android/config.json";
+    return @"http://xxx/sys/android/config.json";
 }
 
 - (NSInteger)cacheTimeInSeconds {

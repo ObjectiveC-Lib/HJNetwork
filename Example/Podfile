@@ -10,9 +10,13 @@ target 'HJNetworkDemo' do
   
   # Pods for HJNetworkDemo
   
-  pod 'HJNetwork', :path => '../'
-  pod 'HJTask', :path => '../../HJTask'
-  pod 'HJCache/Default', :path => '../../HJCache'
+#  pod 'HJNetwork', :path => '../'
+#  pod 'HJTask', :path => '../../HJTask'
+#  pod 'HJCache/Default', :path => '../../HJCache'
+  
+  pod 'HJNetwork'
+  pod 'HJTask'
+  pod 'HJCache/Default'
   
   pod 'SDWebImage'
   

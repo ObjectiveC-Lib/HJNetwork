@@ -34,7 +34,7 @@
 }
 
 - (NSString *)requestUrl {
-    return @"http://upload.photo.sina.com.cn/interface/pic_upload.php";
+    return @"http://upload.photo.com.cn/interface/pic_upload.php";
 }
 
 - (AFConstructingBlock)constructingBodyBlock {
@@ -77,7 +77,7 @@
             dict = [NSMutableDictionary dictionaryWithDictionary:tmpDict[@"pic_1"]];
         }
         if (DMNSDictionaryAvailable(dict)) {
-            dict[@"imgUrl"] = [NSString stringWithFormat:@"http://s8.sinaimg.cn/middle/%@", DMSafeNSString(dict[@"pid"])];
+            dict[@"imgUrl"] = [NSString stringWithFormat:@"http://img.cn/middle/%@", DMSafeNSString(dict[@"pid"])];
         }
         
         if (self.taskResult) {
