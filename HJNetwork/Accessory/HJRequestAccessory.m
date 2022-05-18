@@ -39,8 +39,7 @@
     if (_animatingView) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // TODO: show loading
-            // [HJAlertUtils showLoadingAlertView:_animatingText inView:_animatingView];
-            NSLog(@" loading start");
+            //            [HJAlertUtils showLoadingAlertView:_animatingText inView:_animatingView];
         });
     }
 }
@@ -49,8 +48,7 @@
     if (_animatingView) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // TODO: hide loading
-            //[HJAlertUtils hideLoadingAlertView:_animatingView];
-            NSLog(@" loading finished");
+            //            [HJAlertUtils hideLoadingAlertView:_animatingView];
         });
     }
 }

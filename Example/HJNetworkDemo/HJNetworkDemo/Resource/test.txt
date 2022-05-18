@@ -1,0 +1,36 @@
+#!/bin/sh
+
+source ./fastlane/.env
+bugfixListFile=./fastlane/bug_fix_list
+
+schemeName=$1
+
+./git_pull_all.sh install "$schemeName" root
+
+# laneName=$1
+
+# build号
+# date=`date +"%m%d%H%M"`
+# buildVersion="$date"
+# buildVersion="10081711"
+
+# #ipa name
+# ipaName="$SCHEME_NAME-$APP_VERSION-$buildVersion-$laneName"
+# echo "ipaName:""$ipaName"
+
+#当前正在执行脚本的绝对路径
+# basePath=$(cd `dirname $0`; pwd)
+
+# #ipa地址
+# ipaPath="$basePath/$BUILD_OUTPUT_PATH/$SCHEME_NAME/$APP_VERSION/$laneName/$ipaName"
+# ipaFile="$ipaPath/${ipaName}.ipa"
+# echo "ipaFile:""$ipaFile"
+
+# 上传到OTA
+# ./fastlane/uploadipa.sh $laneName $ipaPath $ipaName
+
+# webhost="https:dsssss"
+# buildversion="dddddd"
+
+# dingtalk="https://oapi.dingtalk.com/robot/send?access_token=363b35c7437f6d10ecb48e7ab41ec36f184c55834c3721d5033f21d9534fd5f2"
+# curl $dingtalk -H 'Content-Type: application/json' -d '{"msgtype": "text","text": {"content":"ios测试包构建成功 内网安装地址: '${webhost}'/ios/ios.'${buildversion}'.html"}}'

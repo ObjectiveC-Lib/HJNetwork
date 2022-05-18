@@ -1,23 +1,47 @@
 # Uncomment the next line to define a global platform for your project
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/ObjectiveC-Lib/Specs.git'     #私有仓库地址
+source 'https://github.com/ObjectiveC-Lib/Specs.git'
 
 platform :ios, '9.0'
+inhibit_all_warnings!
 
 target 'HJNetworkDemo' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   
-  # Pods for HJNetworkDemo
-  
   pod 'HJNetwork', :path => '../'
+  pod 'HJNetwork/Accessory', :path => '../'
+  pod 'HJNetwork/AFDefault', :path => '../'
   pod 'HJTask', :path => '../../HJTask'
-  pod 'HJCache/Default', :path => '../../HJCache'
   
-#  pod 'HJNetwork'
+  #  pod 'HJNetwork'
+  #  pod 'HJNetwork/Accessory'
+  #  pod 'HJNetwork/AFDefault'
+  
 #  pod 'HJTask'
-#  pod 'HJCache/Default'
-  
+  pod 'HJCache'
   pod 'SDWebImage'
+  pod 'WCDB'
   
+  target 'HJNetworkDemoTests' do
+    inherit! :search_paths
+    #  pod 'HJNetwork', :path => '../'
+    #  pod 'HJNetwork'
+    #  pod 'HJCache'
+  end
+  
+  target 'HJNetworkDemoUITests' do
+    # Pods for testing
+  end
+  
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 9.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+      end
+    end
+  end
 end

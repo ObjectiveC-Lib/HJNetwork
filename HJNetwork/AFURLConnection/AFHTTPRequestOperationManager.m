@@ -38,7 +38,7 @@
 @implementation AFHTTPRequestOperationManager
 
 + (instancetype)manager {
-    return [[self alloc] initWithBaseURL:nil];
+    return [[[self class] alloc] initWithBaseURL:nil];
 }
 
 - (instancetype)init {
@@ -127,6 +127,7 @@
     operation.credential = self.credential;
     operation.securityPolicy = self.securityPolicy;
     
+    [operation setWillSendRequestForAuthenticationChallengeBlock:self.authenticationChallengeHandler];
     [operation setCompletionBlockWithSuccess:success failure:failure];
     operation.completionQueue = self.completionQueue;
     operation.completionGroup = self.completionGroup;

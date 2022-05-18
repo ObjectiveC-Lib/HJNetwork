@@ -91,6 +91,10 @@ NS_ASSUME_NONNULL_BEGIN
  - Archives and copies of HTTP clients will be initialized with an empty operation queue.
  - NSSecureCoding cannot serialize / deserialize block properties, so an archive of an HTTP client will not include any reachability callback block that may be set.
  */
+
+typedef void (^AFURLConnectionAuthenticationChallengeBlock)(NSURLConnection *connection,
+                                                            NSURLAuthenticationChallenge *challenge);
+
 @interface AFHTTPRequestOperationManager : NSObject <NSSecureCoding, NSCopying>
 
 /**
@@ -103,14 +107,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  @warning `requestSerializer` must not be `nil`.
  */
-@property (nonatomic, strong) AFHTTPRequestSerializer <AFURLRequestSerialization> * requestSerializer;
+@property (nonatomic, strong) AFHTTPRequestSerializer <AFURLRequestSerialization> *requestSerializer;
 
 /**
  Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to a JSON serializer, which serializes data from responses with a `application/json` MIME type, and falls back to the raw data object. The serializer validates the status code to be in the `2XX` range, denoting success. If the response serializer generates an error in `-responseObjectForResponse:data:error:`, the `failure` callback of the session task or request operation will be executed; otherwise, the `success` callback will be executed.
  
  @warning `responseSerializer` must not be `nil`.
  */
-@property (nonatomic, strong) AFHTTPResponseSerializer <AFURLResponseSerialization> * responseSerializer;
+@property (nonatomic, strong) AFHTTPResponseSerializer <AFURLResponseSerialization> *responseSerializer;
 
 /**
  The operation queue on which request operations are scheduled and run.
@@ -143,6 +147,8 @@ NS_ASSUME_NONNULL_BEGIN
  The security policy used by created request operations to evaluate server trust for secure connections. `AFHTTPRequestOperationManager` uses the `defaultPolicy` unless otherwise specified.
  */
 @property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+
+@property (nonatomic, copy) AFURLConnectionAuthenticationChallengeBlock authenticationChallengeHandler;
 
 ///------------------------------------
 /// @name Managing Network Reachability
@@ -210,6 +216,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                     success:(nullable void (^)(AFHTTPRequestOperation *operation, id __nullable responseObject))success
                                                     failure:(nullable void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 
+- (AFHTTPRequestOperation *)HTTPRequestOperationWithHTTPMethod:(NSString *)method
+                                                     URLString:(NSString *)URLString
+                                                    parameters:(id)parameters
+                                                       success:(void (^)(AFHTTPRequestOperation *operation, id __nullable responseObject))success
+                                                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 ///---------------------------
 /// @name Making HTTP Requests
 ///---------------------------
