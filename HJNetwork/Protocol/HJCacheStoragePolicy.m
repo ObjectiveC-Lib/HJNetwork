@@ -11,8 +11,8 @@ extern NSURLCacheStoragePolicy HJCacheStoragePolicyForRequestAndResponse(NSURLRe
     BOOL                        cacheable;
     NSURLCacheStoragePolicy     result;
     
-    assert(request != NULL);
-    assert(response != NULL);
+    //    assert(request != NULL);
+    //    assert(response != NULL);
     
     // First determine if the request is cacheable based on its status code.
     switch ([response statusCode]) {

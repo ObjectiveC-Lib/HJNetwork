@@ -15,9 +15,9 @@
 #endif
 
 @interface HJThreadInfo : NSObject
-@property (atomic, assign, readonly ) uint64_t tid;             ///< The globally unique thread ID.
-@property (atomic, assign, readonly ) NSUInteger number;        ///< The thread number inside this app.
-@property (atomic, copy,   readonly ) NSString *name;           ///< The name of the thread; will not be nil.
+@property (atomic, assign, readonly) uint64_t tid;             ///< The globally unique thread ID.
+@property (atomic, assign, readonly) NSUInteger number;        ///< The thread number inside this app.
+@property (atomic, copy,   readonly) NSString *name;           ///< The name of the thread; will not be nil.
 
 /*! Initialises the object with the specified values.
  *  \param tid The globally unique thread ID.
