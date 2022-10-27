@@ -654,7 +654,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSURLCacheStoragePolicy cacheStoragePolicy;
     NSInteger statusCode;
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-        cacheStoragePolicy = HJCacheStoragePolicyForRequestAndResponse(self.task.originalRequest, (NSHTTPURLResponse *) response);
+        cacheStoragePolicy = HJCacheStoragePolicyForRequestAndResponse(self.task.originalRequest, (NSHTTPURLResponse *)response);
         statusCode = [((NSHTTPURLResponse *) response) statusCode];
     } else {
         assert(NO);

@@ -51,10 +51,8 @@ typedef void (^HJURLConnectionAuthenticationChallengeBlock)(NSURLConnection *con
 @property (nonatomic, copy, nullable) NSArray <NSString *> *jsonResponseContentTypes;
 @property (nonatomic, copy, nullable) NSArray <NSString *> *xmlResponseContentTypes;
 @property (nonatomic, copy, nullable) HJDNSNodeBlock dnsNodeBlock;
+@property (nonatomic, assign) BOOL useDNS;
 @property (nonatomic, assign) BOOL debugLogEnabled;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
 
 + (HJNetworkConfig *)sharedConfig;
 

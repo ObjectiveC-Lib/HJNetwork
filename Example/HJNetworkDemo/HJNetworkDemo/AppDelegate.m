@@ -92,6 +92,7 @@
             [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
         }
     };
+    config.useDNS = YES;
     config.dnsNodeBlock = ^HJDNSNode * _Nullable(NSString * _Nonnull originalURLString) {
         return nil;
     };
@@ -122,7 +123,7 @@
     };
     manager.requestHeaderField = @{ @"Cache-Control":@"no-store" };
     manager.dnsNodeBlock = config.dnsNodeBlock;
-    manager.dnsEnabled = YES;
+    manager.useDNS = config.useDNS;
     if (@available(iOS 10.0, *)) {
         manager.collectingMetricsBlock = ^(NSURLSession * _Nonnull session,
                                            NSURLSessionTask * _Nonnull task,

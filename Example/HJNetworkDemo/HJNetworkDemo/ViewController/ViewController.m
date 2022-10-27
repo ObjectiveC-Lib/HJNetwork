@@ -242,8 +242,7 @@ NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.
 }
 
 - (void)get:(id)sender {
-    AFSessionManager *manager = [AFSessionManager manager];
-    manager.dnsEnabled = YES;
+    AFSessionManager *manager = [AFSessionManager manager:[HJNetworkConfig new]];
     [manager GET:@"https://httpbin.org/get"
       parameters:nil
          headers:nil

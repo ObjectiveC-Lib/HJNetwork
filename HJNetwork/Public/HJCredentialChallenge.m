@@ -1,16 +1,16 @@
 //
-//  DMCredentialChallenge.m
-//  HJNetworkDemo
+//  HJCredentialChallenge.m
+//  HJNetwork
 //
-//  Created by navy on 2022/6/8.
+//  Created by navy on 2022/10/27.
 //
 
-#import "DMCredentialChallenge.h"
+#import "HJCredentialChallenge.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <AssertMacros.h>
 #import <arpa/inet.h>
 
-@implementation DMCredentialChallenge
+@implementation HJCredentialChallenge
 
 static NSSet *_globalRootCAs = nil;
 static NSSet *_globalRootCANames = nil;

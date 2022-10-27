@@ -7,19 +7,9 @@
 
 #import "AFSessionManager.h"
 
-#if __has_include(<HJNetwork/HJNetworkPublic.h>)
-#import <HJNetwork/HJNetworkPublic.h>>
-#elif __has_include("HJNetworkPublic.h")
-#import "HJNetworkPublic.h"
-#endif
-
-#if __has_include(<HJNetwork/HJProtocol.h>)
-#import <HJNetwork/HJProtocol.h>>
-#elif __has_include("HJProtocol.h")
-#import "HJProtocol.h"
-#endif
-
-static HJNetworkConfig *_config = nil;
+@interface AFSessionManager ()
+@property (nonatomic, strong) HJNetworkConfig *config;
+@end
 
 @implementation AFSessionManager
 
@@ -27,18 +17,18 @@ static HJNetworkConfig *_config = nil;
     return [[[self class] alloc] initWithBaseURL:nil sessionConfiguration:[HJProtocolManager sharedManager].sessionConfiguration];
 }
 
-+ (instancetype)manager {
-    _config = [HJNetworkConfig sharedConfig];
-    return [[[self class] alloc] initWithBaseURL:nil];
++ (instancetype)manager:(HJNetworkConfig *)config {
+    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];
 }
 
-- (instancetype)initWithBaseURL:(NSURL *)url {
-    self = [super initWithBaseURL:url sessionConfiguration:_config.sessionConfiguration];
+- (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {
+    self = [super initWithBaseURL:url sessionConfiguration:config.sessionConfiguration];
     if (self) {
-        self.securityPolicy = _config.securityPolicy;
-        [self setAuthenticationChallengeHandler:_config.sessionAuthenticationChallengeHandler];
+        self.config = config;
+        self.securityPolicy = self.config.securityPolicy;
+        [self setAuthenticationChallengeHandler:self.config.sessionAuthenticationChallengeHandler];
         if (@available(iOS 10, *)) {
-            [self setTaskDidFinishCollectingMetricsBlock:_config.collectingMetricsBlock];
+            [self setTaskDidFinishCollectingMetricsBlock:self.config.collectingMetricsBlock];
         }
     }
     return self;
@@ -54,10 +44,10 @@ static HJNetworkConfig *_config = nil;
                                          failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure {
     // DNS
     NSString *urlString = URLString;
-    if (self.dnsEnabled) {
+    if (self.config.useDNS) {
         HJDNSNode *node = nil;
-        if (_config.dnsNodeBlock) {
-            node = _config.dnsNodeBlock(urlString);
+        if (self.config.dnsNodeBlock) {
+            node = self.config.dnsNodeBlock(urlString);
         }
         if (node) {
             if (node.realUrl != nil && [node.realUrl length] > 0) {
@@ -87,10 +77,10 @@ static HJNetworkConfig *_config = nil;
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure {
     // DNS
     NSString *urlString = URLString;
-    if (self.dnsEnabled) {
+    if (self.config.useDNS) {
         HJDNSNode *node = nil;
-        if (_config.dnsNodeBlock) {
-            node = _config.dnsNodeBlock(urlString);
+        if (self.config.dnsNodeBlock) {
+            node = self.config.dnsNodeBlock(urlString);
         }
         if (node) {
             if (node.realUrl != nil && [node.realUrl length] > 0) {

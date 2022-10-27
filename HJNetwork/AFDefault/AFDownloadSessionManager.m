@@ -11,12 +11,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#if __has_include(<HJNetwork/HJNetworkPublic.h>)
-#import <HJNetwork/HJNetworkPublic.h>
-#elif __has_include("HJNetworkPublic.h")
-#import "HJNetworkPublic.h"
-#endif
-
 static NSString *const AFURLSessionDownloaderCacheFolderName = @"Incomplete";
 
 typedef void (^AFURLSessionProgressiveOperationProgressBlock)(AFDownloadSessionTask *task, NSInteger bytes,
@@ -193,22 +187,25 @@ typedef void (^AFURLSessionProgressiveOperationProgressBlock)(AFDownloadSessionT
 
 @end
 
-static HJNetworkConfig *_config = nil;
+
+@interface AFDownloadSessionManager ()
+@property (nonatomic, strong) HJNetworkConfig *config;
+@end
 
 @implementation AFDownloadSessionManager {
 }
 
-+ (instancetype)manager {
-    _config = [HJNetworkConfig sharedConfig];
-    return [[[self class] alloc] initWithBaseURL:nil];
++ (instancetype)manager:(HJNetworkConfig *)config {
+    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];
 }
 
-- (instancetype)initWithBaseURL:(NSURL *)url {
-    self = [super initWithBaseURL:url sessionConfiguration:_config.sessionConfiguration];
+- (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {
+    self = [super initWithBaseURL:url sessionConfiguration:config.sessionConfiguration];
     if (self) {
-        self.securityPolicy = _config.securityPolicy;
-        [self setAuthenticationChallengeHandler:_config.sessionAuthenticationChallengeHandler];
-        [self setTaskDidFinishCollectingMetricsBlock:_config.collectingMetricsBlock];
+        self.config = config;
+        self.securityPolicy = self.config.securityPolicy;
+        [self setAuthenticationChallengeHandler:self.config.sessionAuthenticationChallengeHandler];
+        [self setTaskDidFinishCollectingMetricsBlock:self.config.collectingMetricsBlock];
         self.afDownloadTasks = [NSMutableArray array];
     }
     return self;
@@ -244,10 +241,10 @@ static HJNetworkConfig *_config = nil;
     BOOL isResuming = [self updateByteStartRangeForRequestWithRequest:mutableRequest shouldResume:shouldResume tempPath:tempPath];
     
     // DNS
-    if (self.dnsEnabled) {
+    if (self.config.useDNS) {
         HJDNSNode *node = nil;
-        if (_config.dnsNodeBlock) {
-            node = _config.dnsNodeBlock(mutableRequest.URL.absoluteString);
+        if (self.config.dnsNodeBlock) {
+            node = self.config.dnsNodeBlock(mutableRequest.URL.absoluteString);
         }
         if (node) {
             if (node.realUrl != nil && [node.realUrl length] > 0) {

@@ -8,6 +8,12 @@
 
 #import <AFNetworking/AFNetworking.h>
 
+#if __has_include(<HJNetwork/HJNetworkPublic.h>)
+#import <HJNetwork/HJNetworkPublic.h>
+#elif __has_include("HJNetworkPublic.h")
+#import "HJNetworkPublic.h"
+#endif
+
 typedef NS_ENUM(NSUInteger, AFDownloadSessionTaskError) {
     AFDownloadSessionTaskErrorNoSpace = 3,
     AFDownloadSessionTaskErrorOther
@@ -115,7 +121,6 @@ typedef NS_ENUM(NSUInteger, AFDownloadSessionTaskError) {
  The download tasks currently run by the managed session.
  */
 @property (nonatomic, strong) NSMutableArray *afDownloadTasks;
-@property (nonatomic, assign) BOOL dnsEnabled;
 
 - (AFDownloadSessionTask *)downloadTaskBreakPointsWithRequest:(NSURLRequest *)request
                                                    targetPath:(NSString *)targetPath
@@ -123,7 +128,7 @@ typedef NS_ENUM(NSUInteger, AFDownloadSessionTaskError) {
                                                  shouldResume:(BOOL)shouldResume
                                             completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler;
 
-+ (instancetype)manager;
++ (instancetype)manager:(nullable HJNetworkConfig *)config;
 
 @end
 

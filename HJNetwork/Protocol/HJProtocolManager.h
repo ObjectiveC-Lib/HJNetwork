@@ -37,7 +37,7 @@ typedef void (^HJSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *sessi
 @property (nonatomic, strong, nullable) NSURLSessionConfiguration *sessionConfiguration;
 @property (nonatomic,   copy, nullable) HJSessionAuthenticationChallengeBlock sessionAuthenticationChallengeHandler;
 @property (nonatomic,   copy, nullable) HJSessionTaskDidFinishCollectingMetricsBlock collectingMetricsBlock API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
-@property (nonatomic, assign) BOOL dnsEnabled;
+@property (nonatomic, assign) BOOL useDNS;
 @property (nonatomic, assign) BOOL debugLogEnabled;
 
 + (instancetype)sharedManager;

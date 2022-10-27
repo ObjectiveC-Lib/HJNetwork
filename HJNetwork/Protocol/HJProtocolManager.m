@@ -220,7 +220,7 @@ static NSTimeInterval sAppStartTime; // since reference date
 //}
 
 - (HJDNSNode *_Nullable)HJURLProtocol:(HJURLProtocol *)protocol generateDNSNodeWithOriginalURL:(NSURL *)originalURL {
-    if (self.dnsEnabled) {
+    if (self.useDNS) {
         if (self.dnsNodeBlock) {
             return self.dnsNodeBlock([originalURL absoluteString]);
         }

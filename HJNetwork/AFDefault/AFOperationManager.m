@@ -7,26 +7,22 @@
 
 #import "AFOperationManager.h"
 
-#if __has_include(<HJNetwork/HJNetworkPublic.h>)
-#import <HJNetwork/HJNetworkPublic.h>>
-#elif __has_include("HJNetworkPublic.h")
-#import "HJNetworkPublic.h"
-#endif
-
-static HJNetworkConfig *_config = nil;
+@interface AFOperationManager ()
+@property (nonatomic, strong) HJNetworkConfig *config;
+@end
 
 @implementation AFOperationManager
 
-+ (instancetype)manager {
-    _config = [HJNetworkConfig sharedConfig];
-    return [[[self class] alloc] initWithBaseURL:nil];;
++ (instancetype)manager:(HJNetworkConfig *)config {
+    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];;
 }
 
-- (instancetype)initWithBaseURL:(NSURL *)url {
+- (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {
     self = [super initWithBaseURL:url];
     if (self) {
-        self.securityPolicy = _config.securityPolicy;
-        self.authenticationChallengeHandler = _config.connectionAuthenticationChallengeHandler;
+        self.config = config;
+        self.securityPolicy = self.config.securityPolicy;
+        self.authenticationChallengeHandler = self.config.connectionAuthenticationChallengeHandler;
     }
     return self;
 }
@@ -38,10 +34,10 @@ static HJNetworkConfig *_config = nil;
                                                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     NSString *urlString = URLString;
     // DNS
-    if (self.dnsEnabled) {
+    if (self.config.useDNS) {
         HJDNSNode *node = nil;
-        if (_config.dnsNodeBlock) {
-            node = _config.dnsNodeBlock(urlString);
+        if (self.config.dnsNodeBlock) {
+            node = self.config.dnsNodeBlock(urlString);
         }
         if (node) {
             if (node.realUrl != nil && [node.realUrl length] > 0) {
@@ -67,10 +63,10 @@ static HJNetworkConfig *_config = nil;
                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     NSString *urlString = URLString;
     // DNS
-    if (self.dnsEnabled) {
+    if (self.config.useDNS) {
         HJDNSNode *node = nil;
-        if (_config.dnsNodeBlock) {
-            node = _config.dnsNodeBlock(urlString);
+        if (self.config.dnsNodeBlock) {
+            node = self.config.dnsNodeBlock(urlString);
         }
         if (node) {
             if (node.realUrl != nil && [node.realUrl length] > 0) {

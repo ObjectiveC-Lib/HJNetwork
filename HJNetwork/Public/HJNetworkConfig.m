@@ -7,6 +7,8 @@
 //
 
 #import "HJNetworkConfig.h"
+#import "HJNetworkMetrics.h"
+#import "HJCredentialChallenge.h"
 
 #if __has_include(<AFNetworking/AFSecurityPolicy.h>)
 #import <AFNetworking/AFSecurityPolicy.h>
@@ -35,20 +37,77 @@ void HJLog(NSString *format, ...) {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
+        sharedInstance = [[self alloc] initConfig];
     });
     return sharedInstance;
+}
+
+- (instancetype)initConfig {
+    self = [self init];
+    if (self) {
+        _baseUrl = nil;
+        _cdnUrl = nil;
+        _urlFilters = [NSMutableArray array];
+    }
+    return self;
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _baseUrl = @"";
-        _cdnUrl = @"";
-        _urlFilters = [NSMutableArray array];
+        _debugLogEnabled = NO;
         _securityPolicy = [AFSecurityPolicy defaultPolicy];
         _sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        _debugLogEnabled = NO;
+        _sessionAuthenticationChallengeHandler = ^id _Nullable(NSURLSession * _Nonnull session,
+                                                               NSURLSessionTask * _Nonnull task,
+                                                               NSURLAuthenticationChallenge * _Nonnull challenge,
+                                                               void (^ _Nonnull completionHandler)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable)) {
+            NSString *host = task.currentRequest.allHTTPHeaderFields[@"host"];;
+            if (!host || [HJCredentialChallenge isIPAddress:host]) {
+                host = task.currentRequest.URL.host;
+            }
+            __block NSURLCredential *credential = nil;
+            __block NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+            [HJCredentialChallenge challenge:challenge
+                                        host:host
+                           completionHandler:^(NSURLSessionAuthChallengeDisposition disp, NSURLCredential * _Nullable cred) {
+                disposition = disp;
+                credential = cred;
+            }];
+            if (!credential) {
+                if (completionHandler) {
+                    completionHandler(disposition, credential);
+                }
+            }
+            return credential;
+        };
+        _connectionAuthenticationChallengeHandler = ^(NSURLConnection * _Nonnull connection,
+                                                      NSURLAuthenticationChallenge * _Nonnull challenge) {
+            NSString *host = connection.currentRequest.allHTTPHeaderFields[@"host"];;
+            if (!host || [HJCredentialChallenge isIPAddress:host]) {
+                host = connection.currentRequest.URL.host;
+            }
+            NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
+            if ([challenge previousFailureCount] == 0) {
+                if (credential) {
+                    [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+                } else {
+                    [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
+                }
+            } else {
+                [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
+            }
+        };
+        if (@available(iOS 10.0, *)) {
+            _collectingMetricsBlock = ^(NSURLSession * _Nonnull session,
+                                        NSURLSessionTask * _Nonnull task,
+                                        NSURLSessionTaskMetrics * _Nonnull metrics) {
+                HJNetworkMetrics *metric = [[HJNetworkMetrics alloc] initWithMetrics:metrics session:session task:task];
+                if (_debugLogEnabled) {
+                    NSLog(@"%@", metric);
+                }
+            };
+        }
     }
     return self;
 }
@@ -68,7 +127,10 @@ void HJLog(NSString *format, ...) {
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p>{ baseURL: %@ } { cdnURL: %@ }", NSStringFromClass([self class]), self, self.baseUrl, self.cdnUrl];
+    return [NSString stringWithFormat:@"<%@: %p>{ baseURL: %@ } { cdnURL: %@ }",
+            NSStringFromClass([self class]), self,
+            self.baseUrl,
+            self.cdnUrl];
 }
 
 @end

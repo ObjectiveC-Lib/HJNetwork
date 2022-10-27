@@ -8,13 +8,17 @@
 #import "AFHTTPRequestOperationManager.h"
 #import "AFDownloadOperation.h"
 
+#if __has_include(<HJNetwork/HJNetworkPublic.h>)
+#import <HJNetwork/HJNetworkPublic.h>
+#elif __has_include("HJNetworkPublic.h")
+#import "HJNetworkPublic.h"
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AFDownloadOperationManager : AFHTTPRequestOperationManager
 
-@property (nonatomic, assign) BOOL dnsEnabled;
-
-+ (instancetype)manager;
++ (instancetype)manager:(nullable HJNetworkConfig *)config;
 
 - (nullable AFDownloadOperation *)Download:(NSString *)URLString
                             fileIdentifier:(NSString *)fileIdentifier
