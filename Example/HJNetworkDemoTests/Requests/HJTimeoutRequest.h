@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HJNetwork.h"
 
-@interface HJTimeoutRequest : HJRequest
+@interface HJTimeoutRequest : HJBaseRequest
 
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout requestUrl:(NSString *)requestUrl;
 

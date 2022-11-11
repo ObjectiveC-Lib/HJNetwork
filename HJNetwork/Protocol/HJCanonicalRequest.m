@@ -3,6 +3,7 @@
 //  HJNetwork
 //
 //  Created by navy on 2022/5/27.
+//  Copyright © 2022 HJNetwork. All rights reserved.
 //
 
 #import "HJCanonicalRequest.h"
@@ -40,9 +41,9 @@ static CFIndex FixPostSchemeSeparator(NSURL *url, NSMutableData *urlData, CFInde
     NSUInteger  separatorLength;
     NSUInteger  expectedSeparatorLength;
     
-    assert(url != nil);
-    assert(urlData != nil);
-    assert(bytesInserted >= 0);
+    // assert(url != nil);
+    // assert(urlData != nil);
+    // assert(bytesInserted >= 0);
     
     range = CFURLGetByteRangeForComponent( (CFURLRef) url, kCFURLComponentScheme, NULL);
     if (range.location != kCFNotFound) {
@@ -176,10 +177,10 @@ static CFIndex FixEmptyHost(NSURL *url, NSMutableData *urlData, CFIndex bytesIns
 static CFIndex FixEmptyPath(NSURL *url, NSMutableData *urlData, CFIndex bytesInserted) {
     CFRange     range;
     CFRange     rangeWithSeparator;
-    
-    assert(url != nil);
-    assert(urlData != nil);
-    assert(bytesInserted >= 0);
+        
+    // assert(url != nil);
+    // assert(urlData != nil);
+    // assert(bytesInserted >= 0);
     
     range = CFURLGetByteRangeForComponent( (CFURLRef) url, kCFURLComponentPath, &rangeWithSeparator);
     // The following is not a typo.  We use rangeWithSeparator to find where to insert the

@@ -5,11 +5,11 @@
 //  Created by navy on 2022/7/27.
 //
 
-#import "DMBasicRequest.h"
+#import "DMBaseRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DMHTTPRequest : DMBasicRequest
+@interface DMHTTPRequest : DMBaseRequest
 
 - (instancetype)initWithRequestUrl:(NSString *)url;
 - (instancetype)initWithRequestUrl:(NSString *)url method:(HJRequestMethod)method;

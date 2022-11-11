@@ -30,7 +30,7 @@
         for (NSUInteger i = 0; i < targetCount; i++) {
             @autoreleasepool {
                 HJBasicHTTPRequest *req = [[HJBasicHTTPRequest alloc] init];
-                [req startWithCompletionBlockWithSuccess:^(__kindof HJBaseRequest * _Nonnull request) {
+                [req startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
                     NSNumber *result = request.responseObject;
                     XCTAssertTrue([result isEqualToNumber:@(i)]);
                 } failure:nil];

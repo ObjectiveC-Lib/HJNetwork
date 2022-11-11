@@ -6,12 +6,13 @@
 //
 
 #import "AppDelegate.h"
-#import "DMBasicUrlFilter.h"
-#import "DMCredentialChallenge.h"
+#import "DMBaseUrlFilter.h"
+#import "HJCredentialChallenge.h"
 #import "ViewController.h"
 #import "DMSDWebImageOperation.h"
 #import <SDWebImage/SDWebImage.h>
 #import "DMURLProtocol.h"
+#import "DMDNSTest.h"
 
 @interface AppDelegate ()
 @end
@@ -20,7 +21,8 @@
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions {
     [self setupNetworkConfig];
-    [self sdWebImageConfig];
+    [self setupSDWebImageConfig];
+    [DMDNSTest setDefaultDNS];
     
     return YES;
 }
@@ -46,8 +48,8 @@
     
     HJNetworkConfig *config = [HJNetworkConfig sharedConfig];
     config.sessionConfiguration.HTTPShouldSetCookies = YES;
-    config.baseUrl = [DMBasicUrlFilter baseUrl];
-    [config addUrlFilter:[DMBasicUrlFilter filterWithArguments:filterArguments]];
+    config.baseUrl = [DMBaseUrlFilter baseUrl];
+    [config addUrlFilter:[DMBaseUrlFilter filterWithArguments:filterArguments]];
     config.jsonResponseContentTypes = @[@"text/html"];
     config.xmlResponseContentTypes = @[@"text/html"];
     config.securityPolicy.validatesDomainName = YES;
@@ -57,12 +59,12 @@
                                                                  NSURLAuthenticationChallenge * _Nonnull challenge,
                                                                  void (^ _Nonnull completionHandler)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable)) {
         NSString *host = task.currentRequest.allHTTPHeaderFields[@"host"];;
-        if (!host || [DMCredentialChallenge isIPAddress:host]) {
+        if (!host || [HJCredentialChallenge isIPAddress:host]) {
             host = task.currentRequest.URL.host;
         }
         __block NSURLCredential *credential = nil;
         __block NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-        [DMCredentialChallenge challenge:challenge
+        [HJCredentialChallenge challenge:challenge
                                     host:host
                        completionHandler:^(NSURLSessionAuthChallengeDisposition disp, NSURLCredential * _Nullable cred) {
             disposition = disp;
@@ -78,10 +80,10 @@
     config.connectionAuthenticationChallengeHandler = ^(NSURLConnection * _Nonnull connection,
                                                         NSURLAuthenticationChallenge * _Nonnull challenge) {
         NSString *host = connection.currentRequest.allHTTPHeaderFields[@"host"];;
-        if (!host || [DMCredentialChallenge isIPAddress:host]) {
+        if (!host || [HJCredentialChallenge isIPAddress:host]) {
             host = connection.currentRequest.URL.host;
         }
-        NSURLCredential *credential = [DMCredentialChallenge challenge:challenge host:host];
+        NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
         if ([challenge previousFailureCount] == 0) {
             if (credential) {
                 [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
@@ -94,19 +96,24 @@
     };
     config.useDNS = YES;
     config.dnsNodeBlock = ^HJDNSNode * _Nullable(NSString * _Nonnull originalURLString) {
-        return nil;
+        HJDNSNode *node = [[HJDNSResolveManager sharedManager] resolveURL:[NSURL URLWithString:originalURLString]];
+        return node?:nil;
     };
     if (@available(iOS 10.0, *)) {
         config.collectingMetricsBlock = ^(NSURLSession * _Nonnull session,
                                           NSURLSessionTask * _Nonnull task,
                                           NSURLSessionTaskMetrics * _Nonnull metrics) {
             HJNetworkMetrics *metric = [[HJNetworkMetrics alloc] initWithMetrics:metrics session:session task:task];
-            if ([HJNetworkConfig sharedConfig].debugLogEnabled) {
-                NSLog(@"%@", metric);
+            if (metric.status_code == 200) {
+                [[HJDNSResolveManager sharedManager] setPositiveUrl:metric.req_url host:metric.req_headers[@"Host"]];
+            } else {
+//                                NSLog(@"%@", metric);
+                [[HJDNSResolveManager sharedManager] setNegativeUrl:metric.req_url host:metric.req_headers[@"Host"]];
+                //                NSLog(@"%@", [HJDNSResolveManager sharedManager]);
             }
         };
     }
-    config.debugLogEnabled = YES;
+    config.debugLogEnabled = NO;
     
     HJProtocolManager *manager = [HJProtocolManager sharedManager];
     manager.sessionConfiguration = [NSURLSessionConfiguration sharedProtocolConfig:[DMURLProtocol class]];
@@ -115,33 +122,26 @@
                                                                   NSURLAuthenticationChallenge * _Nonnull challenge,
                                                                   void (^ _Nonnull completionHandler)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable)) {
         NSString *host = task.currentRequest.allHTTPHeaderFields[@"host"];;
-        if (!host || [DMCredentialChallenge isIPAddress:host]) {
+        if (!host || [HJCredentialChallenge isIPAddress:host]) {
             host = task.currentRequest.URL.host;
         }
-        NSURLCredential *credential = [DMCredentialChallenge challenge:challenge host:host];
+        NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
         return credential;
     };
     manager.requestHeaderField = @{ @"Cache-Control":@"no-store" };
-    manager.dnsNodeBlock = config.dnsNodeBlock;
     manager.useDNS = config.useDNS;
+    manager.dnsNodeBlock = config.dnsNodeBlock;
     if (@available(iOS 10.0, *)) {
-        manager.collectingMetricsBlock = ^(NSURLSession * _Nonnull session,
-                                           NSURLSessionTask * _Nonnull task,
-                                           NSURLSessionTaskMetrics * _Nonnull metrics) {
-            HJNetworkMetrics *metric = [[HJNetworkMetrics alloc] initWithMetrics:metrics session:session task:task];
-            if ([HJProtocolManager sharedManager].debugLogEnabled) {
-                NSLog(@"%@", metric);
-            }
-        };
+        manager.collectingMetricsBlock = config.collectingMetricsBlock;
     }
-    manager.debugLogEnabled = YES;
+    manager.debugLogEnabled = config.debugLogEnabled;
     
     //    [HJProtocolManager registerProtocol:[DMURLProtocol class]];
-    //    [HJProtocolManager registerCustomScheme:@"http" selector:nil];
-    //    [HJProtocolManager registerCustomScheme:@"https" selector:nil];
+    //    [WKWebView registerCustomScheme:@"http"];
+    //    [WKWebView registerCustomScheme:@"https"];
 }
 
-- (void)sdWebImageConfig {
+- (void)setupSDWebImageConfig {
     SDWebImageDownloaderConfig.defaultDownloaderConfig.sessionConfiguration = [HJProtocolManager sharedManager].sessionConfiguration;
     //    SDWebImageDownloaderConfig.defaultDownloaderConfig.operationClass = [DMImageDownloaderOperation class];
 }

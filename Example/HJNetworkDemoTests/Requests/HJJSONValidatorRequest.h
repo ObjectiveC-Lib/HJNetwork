@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HJNetwork.h"
 
-@interface HJJSONValidatorRequest : HJRequest
+@interface HJJSONValidatorRequest : HJBaseRequest
 
 - (instancetype)initWithJSONValidator:(id)validator requestUrl:(NSString *)requestUrl;
 

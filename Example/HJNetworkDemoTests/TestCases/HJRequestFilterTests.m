@@ -30,7 +30,7 @@
     [[HJNetworkConfig sharedConfig] addUrlFilter:filter];
     
     HJBasicHTTPRequest *req = [[HJBasicHTTPRequest alloc] initWithRequestUrl:@"get"];
-    [self expectSuccess:req withAssertion:^(HJBaseRequest *request) {
+    [self expectSuccess:req withAssertion:^(HJCoreRequest *request) {
         NSDictionary<NSString *, NSString *> *args = request.responseJSONObject[@"args"];
         XCTAssertTrue([args[@"key"] isEqualToString:@"value"]);
     }];

@@ -3,15 +3,16 @@
 //  HJNetwork
 //
 //  Created by navy on 2022/5/30.
+//  Copyright © 2022 HJNetwork. All rights reserved.
 //
 
 #import "HJProtocolManager.h"
 #include <pthread.h>
 
-#if __has_include(<HJNetwork/HJNetworkPublic.h>)
-#import <HJNetwork/HJNetworkPublic.h>
-#elif __has_include("HJNetworkPublic.h")
-#import "HJNetworkPublic.h"
+#if __has_include(<HJNetwork/HJNetworkCommon.h>)
+#import <HJNetwork/HJNetworkCommon.h>
+#elif __has_include("HJNetworkCommon.h")
+#import "HJNetworkCommon.h"
 #endif
 
 @interface HJThreadInfo : NSObject

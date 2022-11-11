@@ -30,13 +30,13 @@
 
 #pragma mark - HJUrlFilterProtocol
 
-- (NSString *)filterUrl:(NSString *)originUrl withRequest:(HJBaseRequest *)request {
+- (NSString *)filterUrl:(NSString *)originUrl withRequest:(HJCoreRequest *)request {
     return [self appendParameters:_arguments originUrl:originUrl request:request];
 }
 
 - (NSString *)appendParameters:(NSDictionary *)parameters
                      originUrl:(NSString *)originUrl
-                       request:(HJBaseRequest *)request {
+                       request:(HJCoreRequest *)request {
     NSString *paraUrlString = AFQueryStringFromParameters(parameters);
     
     if (!(paraUrlString.length > 0)) {

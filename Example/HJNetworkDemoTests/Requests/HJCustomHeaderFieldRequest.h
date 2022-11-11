@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HJNetwork.h"
 
-@interface HJCustomHeaderFieldRequest : HJRequest
+@interface HJCustomHeaderFieldRequest : HJBaseRequest
 
 - (instancetype)initWithCustomHeaderField:(NSDictionary<NSString *, NSString *> *)headers requestUrl:(NSString *)requestUrl;
 

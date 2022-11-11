@@ -32,5 +32,5 @@ schemeName=$1
 # webhost="https:dsssss"
 # buildversion="dddddd"
 
-# dingtalk="https://oapi.dingtalk.com/robot/send?access_token=363b35c7437f6d10ecb48e7ab41ec36f184c55834c3721d5033f21d9534fd5f2"
+# dingtalk="https://oapi.dingtalk.com/robot/send?access_token=11111111111"
 # curl $dingtalk -H 'Content-Type: application/json' -d '{"msgtype": "text","text": {"content":"ios测试包构建成功 内网安装地址: '${webhost}'/ios/ios.'${buildversion}'.html"}}'

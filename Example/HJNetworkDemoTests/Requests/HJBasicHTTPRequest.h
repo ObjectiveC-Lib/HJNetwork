@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HJNetwork.h"
 
-@interface HJBasicHTTPRequest : HJRequest
+@interface HJBasicHTTPRequest : HJBaseRequest
 
 - (instancetype)initWithRequestUrl:(NSString *)url;
 - (instancetype)initWithRequestUrl:(NSString *)url method:(HJRequestMethod)method;

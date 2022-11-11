@@ -10,15 +10,19 @@ target 'HJNetworkDemo' do
   use_frameworks!
   
   pod 'HJNetwork', :path => '../'
-  pod 'HJNetwork/Accessory', :path => '../'
-  pod 'HJNetwork/AFDefault', :path => '../'
+  pod 'HJNetwork/Default', :path => '../'
+  pod 'HJNetwork/DNS', :path => '../'
+  pod 'HJNetwork/Upload', :path => '../'
+  pod 'HJNetwork/Download', :path => '../'
   pod 'HJTask', :path => '../../HJTask'
   
   #  pod 'HJNetwork'
-  #  pod 'HJNetwork/Accessory'
-  #  pod 'HJNetwork/AFDefault'
+  #  pod 'HJNetwork/Default'
+  #  pod 'HJNetwork/DNS'
+  #  pod 'HJNetwork/Upload'
+  #  pod 'HJNetwork/Download'
+  #  pod 'HJTask'
   
-#  pod 'HJTask'
   pod 'HJCache'
   pod 'SDWebImage'
   pod 'WCDB'

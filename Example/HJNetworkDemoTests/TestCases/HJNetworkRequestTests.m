@@ -78,7 +78,7 @@
 
 - (void)testResponseHeaders {
     HJBasicHTTPRequest *req = [[HJBasicHTTPRequest alloc] initWithRequestUrl:@"response-headers?key=value"];
-    [self expectSuccess:req withAssertion:^(HJBaseRequest *request) {
+    [self expectSuccess:req withAssertion:^(HJCoreRequest *request) {
         NSDictionary<NSString *, NSString *> *responseHeaders = request.responseHeaders;
         XCTAssertNotNil(responseHeaders);
         XCTAssertTrue([responseHeaders[@"key"] isEqualToString:@"value"]);
@@ -87,7 +87,7 @@
 
 - (void)testCustomHeaderField {
     HJCustomHeaderFieldRequest *req = [[HJCustomHeaderFieldRequest alloc] initWithCustomHeaderField:@{@"Custom-Header-Field": @"CustomHeaderValue"} requestUrl:@"headers"];
-    [self expectSuccess:req withAssertion:^(HJBaseRequest *request) {
+    [self expectSuccess:req withAssertion:^(HJCoreRequest *request) {
         XCTAssertNotNil(request.responseJSONObject);
         NSDictionary<NSString *, NSString *> *headers = request.responseJSONObject[@"headers"];
         XCTAssertTrue([headers[@"Custom-Header-Field"] isEqualToString:@"CustomHeaderValue"]);
@@ -107,7 +107,7 @@
     [self expectSuccess:validateSuccess];
     
     HJJSONValidatorRequest *validateFailure = [[HJJSONValidatorRequest alloc] initWithJSONValidator:@{@"headers": [NSDictionary class], @"args": [NSString class]} requestUrl:@"get?key1=value&key2=123456"];
-    [self expectFailure:validateFailure withAssertion:^(HJBaseRequest *request) {
+    [self expectFailure:validateFailure withAssertion:^(HJCoreRequest *request) {
         NSError *error = request.error;
         XCTAssertTrue([error.domain isEqualToString:HJRequestValidationErrorDomain]);
         XCTAssertTrue(error.code == HJRequestValidationErrorInvalidJSONFormat);
@@ -116,7 +116,7 @@
 
 - (void)testXMLRequest {
     HJXMLRequest *req = [[HJXMLRequest alloc] initWithRequestUrl:@"xml"];
-    [self expectSuccess:req withAssertion:^(HJBaseRequest *request) {
+    [self expectSuccess:req withAssertion:^(HJCoreRequest *request) {
         XCTAssertNotNil(request);
         XCTAssertTrue([request.responseObject isMemberOfClass:[NSXMLParser class]]);
     }];
@@ -130,7 +130,7 @@
     [self expectSuccess:validateSuccess];
     
     HJStatusCodeValidatorRequest *validateFailure = [[HJStatusCodeValidatorRequest alloc] initWithRequestUrl:@"status/200"];
-    [self expectFailure:validateFailure withAssertion:^(HJBaseRequest *request) {
+    [self expectFailure:validateFailure withAssertion:^(HJCoreRequest *request) {
         NSError *error = request.error;
         XCTAssertTrue([error.domain isEqualToString:HJRequestValidationErrorDomain]);
         XCTAssertTrue(error.code == HJRequestValidationErrorInvalidStatusCode);
@@ -149,19 +149,19 @@
         XCTAssertNotNil(batchRequest);
         XCTAssertEqual(batchRequest.requestArray.count, 3);
         
-        HJRequest *req1 = batchRequest.requestArray[0];
+        HJBaseRequest *req1 = batchRequest.requestArray[0];
         NSDictionary<NSString *, NSString *> *responseArgs1 = req1.responseJSONObject[@"args"];
         XCTAssertTrue([responseArgs1[@"key1"] isEqualToString:@"value1"]);
         XCTAssertNil(req1.successCompletionBlock);
         XCTAssertNil(req1.failureCompletionBlock);
         
-        HJRequest *req2 = batchRequest.requestArray[1];
+        HJBaseRequest *req2 = batchRequest.requestArray[1];
         NSDictionary<NSString *, NSString *> *responseArgs2 = req2.responseJSONObject[@"args"];
         XCTAssertTrue([responseArgs2[@"key2"] isEqualToString:@"value2"]);
         XCTAssertNil(req2.successCompletionBlock);
         XCTAssertNil(req2.failureCompletionBlock);
         
-        HJRequest *req3 = batchRequest.requestArray[2];
+        HJBaseRequest *req3 = batchRequest.requestArray[2];
         NSDictionary<NSString *, NSString *> *responseArgs3 = req3.responseJSONObject[@"args"];
         XCTAssertTrue([responseArgs3[@"key3"] isEqualToString:@"value3"]);
         XCTAssertNil(req3.successCompletionBlock);
@@ -183,19 +183,19 @@
     XCTestExpectation *exp = [self expectationWithDescription:@"Chain Request should succeed"];
     
     HJChainRequest *chain = [[HJChainRequest alloc] init];
-    [chain addRequest:req1 callback:^(HJChainRequest * _Nonnull chainRequest, HJBaseRequest * _Nonnull baseRequest) {
+    [chain addRequest:req1 callback:^(HJChainRequest * _Nonnull chainRequest, HJCoreRequest * _Nonnull baseRequest) {
         NSDictionary<NSString *, NSString *> *responseArgs1 = baseRequest.responseJSONObject[@"args"];
         XCTAssertTrue([responseArgs1[@"key1"] isEqualToString:@"value1"]);
         XCTAssertNil(baseRequest.successCompletionBlock);
         XCTAssertNil(baseRequest.failureCompletionBlock);
         
-        [chainRequest addRequest:req2 callback:^(HJChainRequest * _Nonnull chainRequest, HJBaseRequest * _Nonnull baseRequest) {
+        [chainRequest addRequest:req2 callback:^(HJChainRequest * _Nonnull chainRequest, HJCoreRequest * _Nonnull baseRequest) {
             NSDictionary<NSString *, NSString *> *responseArgs2 = baseRequest.responseJSONObject[@"args"];
             XCTAssertTrue([responseArgs2[@"key2"] isEqualToString:@"value2"]);
             XCTAssertNil(baseRequest.successCompletionBlock);
             XCTAssertNil(baseRequest.failureCompletionBlock);
             
-            [chainRequest addRequest:req3 callback:^(HJChainRequest * _Nonnull chainRequest, HJBaseRequest * _Nonnull baseRequest) {
+            [chainRequest addRequest:req3 callback:^(HJChainRequest * _Nonnull chainRequest, HJCoreRequest * _Nonnull baseRequest) {
                 NSDictionary<NSString *, NSString *> *responseArgs3 = baseRequest.responseJSONObject[@"args"];
                 XCTAssertTrue([responseArgs3[@"key3"] isEqualToString:@"value3"]);
                 XCTAssertNil(baseRequest.successCompletionBlock);

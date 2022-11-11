@@ -8,16 +8,16 @@
 
 #import <XCTest/XCTest.h>
 
-@class HJBaseRequest, HJRequest;
+@class HJCoreRequest, HJBaseRequest;
 
 @interface HJTestCase : XCTestCase
 
 @property (nonatomic, assign) NSTimeInterval networkTimeout;
 
-- (void)expectSuccess:(HJRequest *)request;
-- (void)expectSuccess:(HJRequest *)request withAssertion:(void(^)(HJBaseRequest * request)) assertion;
-- (void)expectFailure:(HJRequest *)request;
-- (void)expectFailure:(HJRequest *)request withAssertion:(void(^)(HJBaseRequest * request)) assertion;
+- (void)expectSuccess:(HJBaseRequest *)request;
+- (void)expectSuccess:(HJBaseRequest *)request withAssertion:(void(^)(HJCoreRequest * request)) assertion;
+- (void)expectFailure:(HJBaseRequest *)request;
+- (void)expectFailure:(HJBaseRequest *)request withAssertion:(void(^)(HJCoreRequest * request)) assertion;
 
 - (void)waitForExpectationsWithCommonTimeout;
 - (void)waitForExpectationsWithCommonTimeoutUsingHandler:(XCWaitCompletionHandler)handler;

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HJNetwork.h"
 
-@interface HJStatusCodeValidatorRequest : HJRequest
+@interface HJStatusCodeValidatorRequest : HJBaseRequest
 
 - (instancetype)initWithRequestUrl:(NSString *)requestUrl;
 

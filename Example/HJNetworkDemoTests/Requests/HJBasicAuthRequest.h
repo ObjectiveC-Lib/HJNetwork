@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <HJNetwork/HJNetwork.h>
 
-@interface HJBasicAuthRequest : HJRequest
+@interface HJBasicAuthRequest : HJBaseRequest
 
 - (instancetype)initWithUsername:(NSString *)username password:(NSString *)password requestUrl:(NSString *)requestUrl;
 

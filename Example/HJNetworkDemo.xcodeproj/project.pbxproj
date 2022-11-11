@@ -13,10 +13,9 @@
 		5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95928911FAA00F85AB4 /* DMHTTPRequest.m */; };
 		5521D95D2891299100F85AB4 /* DMDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95C2891299100F85AB4 /* DMDownloadRequest.m */; };
 		5521D960289148F300F85AB4 /* DMUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95F289148F300F85AB4 /* DMUploadRequest.m */; };
+		5526E5D62963FBB7004FBC71 /* HJUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5526E5D52963FBB7004FBC71 /* HJUploadManager.m */; };
 		5592ED9928BDE86F002A19D6 /* WKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5592ED9828BDE86F002A19D6 /* WKWebViewController.m */; };
 		5592ED9C28BF2F4D002A19D6 /* DMURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */; };
-		5592EDA128C1EDCE002A19D6 /* HJFileBlock.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5592EDA028C1EDCE002A19D6 /* HJFileBlock.mm */; };
-		5592EDA428C1EF2E002A19D6 /* HJFileFragment.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5592EDA328C1EF2E002A19D6 /* HJFileFragment.mm */; };
 		55AF57A6283634A30073E550 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55AF57A4283634A30073E550 /* Main.storyboard */; };
 		55AF57A8283634A50073E550 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55AF57A7283634A50073E550 /* Assets.xcassets */; };
 		55AF57AB283634A50073E550 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55AF57A9283634A50073E550 /* LaunchScreen.storyboard */; };
@@ -24,10 +23,10 @@
 		55AF57B8283634A50073E550 /* HJNetworkDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57B7283634A50073E550 /* HJNetworkDemoTests.m */; };
 		55AF57C2283634A50073E550 /* HJNetworkDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57C1283634A50073E550 /* HJNetworkDemoUITests.m */; };
 		55AF57C4283634A50073E550 /* HJNetworkDemoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57C3283634A50073E550 /* HJNetworkDemoUITestsLaunchTests.m */; };
-		55AF57FF2836477B0073E550 /* DMBasicUrlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E72836477B0073E550 /* DMBasicUrlFilter.m */; };
-		55AF58002836477B0073E550 /* DMBasicRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E82836477B0073E550 /* DMBasicRequest.m */; };
+		55AF57FF2836477B0073E550 /* DMBaseUrlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E72836477B0073E550 /* DMBaseUrlFilter.m */; };
+		55AF58002836477B0073E550 /* DMBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E82836477B0073E550 /* DMBaseRequest.m */; };
 		55AF58062836477B0073E550 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57F72836477B0073E550 /* AppDelegate.m */; };
-		55AF58072836477B0073E550 /* NSObject+HJUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57FD2836477B0073E550 /* NSObject+HJUpload.m */; };
+		55AF58072836477B0073E550 /* NSObject+HJUploadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */; };
 		55AF580E283649640073E550 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF580A283649640073E550 /* ViewController.m */; };
 		55AF583028364B330073E550 /* HJBasicUrlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF581228364B330073E550 /* HJBasicUrlFilter.m */; };
 		55AF583228364B330073E550 /* HJTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF581528364B330073E550 /* HJTestCase.m */; };
@@ -46,16 +45,13 @@
 		55AF583F28364B330073E550 /* HJCustomHeaderFieldRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF582B28364B330073E550 /* HJCustomHeaderFieldRequest.m */; };
 		55AF584028364B330073E550 /* HJBasicHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF582D28364B330073E550 /* HJBasicHTTPRequest.m */; };
 		55AF584128364B330073E550 /* HJDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF582F28364B330073E550 /* HJDownloadRequest.m */; };
+		55B1BC172949CAEB005F4C8F /* movie.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 55B1BC162949CAEB005F4C8F /* movie.mp4 */; };
+		55B838A0292368B100C62DFE /* DMDNSTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8389E292368B100C62DFE /* DMDNSTest.m */; };
+		55CDCA0C296665CC004CFD5E /* DMCommonRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CDCA0B296665CC004CFD5E /* DMCommonRequest.m */; };
 		55D41AAA289BAF5400B9283E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D41AA9289BAF5400B9283E /* ImageViewController.m */; };
 		55D41AAF289D002B00B9283E /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 55D41AAE289D002B00B9283E /* test.txt */; };
 		55D41AB528A1FE4800B9283E /* DMSDWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D41AB428A1FE4800B9283E /* DMSDWebImageOperation.m */; };
-		55DA2A1228607AFB00D9AE00 /* DMCredentialChallenge.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DA2A1128607AFB00D9AE00 /* DMCredentialChallenge.m */; };
-		55F2878228C5970A00A96E88 /* HJFileSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878128C5970A00A96E88 /* HJFileSource.mm */; };
-		55F2878528C5BAE000A96E88 /* HJFileSourceManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878428C5BAE000A96E88 /* HJFileSourceManager.mm */; };
-		55F2878828C5BE2800A96E88 /* HJUploadConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878728C5BE2800A96E88 /* HJUploadConfig.m */; };
-		55F2878B28C5FB9B00A96E88 /* HJFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878A28C5FB9B00A96E88 /* HJFileManager.m */; };
 		55F2878E28C71F3B00A96E88 /* HJUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */; };
-		55F2879428C885A500A96E88 /* HJFileBasic.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55F2879328C885A500A96E88 /* HJFileBasic.mm */; };
 		C6F0D4B471DEE32041A690D5 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D8A66B59C34A2B0366C277 /* Pods_HJNetworkDemo.framework */; };
 		E1DD08EFC7AD7A2B22037B50 /* Pods_HJNetworkDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB98D671979381DA2CFB2108 /* Pods_HJNetworkDemoTests.framework */; };
 /* End PBXBuildFile section */
@@ -90,14 +86,12 @@
 		5521D95C2891299100F85AB4 /* DMDownloadRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDownloadRequest.m; sourceTree = "<group>"; };
 		5521D95E289148F300F85AB4 /* DMUploadRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMUploadRequest.h; sourceTree = "<group>"; };
 		5521D95F289148F300F85AB4 /* DMUploadRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMUploadRequest.m; sourceTree = "<group>"; };
+		5526E5D42963FBB7004FBC71 /* HJUploadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJUploadManager.h; sourceTree = "<group>"; };
+		5526E5D52963FBB7004FBC71 /* HJUploadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJUploadManager.m; sourceTree = "<group>"; };
 		5592ED9728BDE86F002A19D6 /* WKWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebViewController.h; sourceTree = "<group>"; };
 		5592ED9828BDE86F002A19D6 /* WKWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewController.m; sourceTree = "<group>"; };
 		5592ED9A28BF2F4D002A19D6 /* DMURLProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMURLProtocol.h; sourceTree = "<group>"; };
 		5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMURLProtocol.m; sourceTree = "<group>"; };
-		5592ED9F28C1EDCE002A19D6 /* HJFileBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileBlock.h; sourceTree = "<group>"; };
-		5592EDA028C1EDCE002A19D6 /* HJFileBlock.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HJFileBlock.mm; sourceTree = "<group>"; };
-		5592EDA228C1EF2E002A19D6 /* HJFileFragment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileFragment.h; sourceTree = "<group>"; };
-		5592EDA328C1EF2E002A19D6 /* HJFileFragment.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HJFileFragment.mm; sourceTree = "<group>"; };
 		55AF5798283634A30073E550 /* HJNetworkDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HJNetworkDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55AF57A5283634A30073E550 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		55AF57A7283634A50073E550 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -109,15 +103,15 @@
 		55AF57BD283634A50073E550 /* HJNetworkDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HJNetworkDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55AF57C1283634A50073E550 /* HJNetworkDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJNetworkDemoUITests.m; sourceTree = "<group>"; };
 		55AF57C3283634A50073E550 /* HJNetworkDemoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJNetworkDemoUITestsLaunchTests.m; sourceTree = "<group>"; };
-		55AF57E52836477A0073E550 /* DMBasicUrlFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMBasicUrlFilter.h; sourceTree = "<group>"; };
-		55AF57E62836477B0073E550 /* DMBasicRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMBasicRequest.h; sourceTree = "<group>"; };
-		55AF57E72836477B0073E550 /* DMBasicUrlFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMBasicUrlFilter.m; sourceTree = "<group>"; };
-		55AF57E82836477B0073E550 /* DMBasicRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMBasicRequest.m; sourceTree = "<group>"; };
+		55AF57E52836477A0073E550 /* DMBaseUrlFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMBaseUrlFilter.h; sourceTree = "<group>"; };
+		55AF57E62836477B0073E550 /* DMBaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMBaseRequest.h; sourceTree = "<group>"; };
+		55AF57E72836477B0073E550 /* DMBaseUrlFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMBaseUrlFilter.m; sourceTree = "<group>"; };
+		55AF57E82836477B0073E550 /* DMBaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMBaseRequest.m; sourceTree = "<group>"; };
 		55AF57EA2836477B0073E550 /* DMInlineHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
 		55AF57F52836477B0073E550 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55AF57F72836477B0073E550 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		55AF57FA2836477B0073E550 /* NSObject+HJUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+HJUpload.h"; sourceTree = "<group>"; };
-		55AF57FD2836477B0073E550 /* NSObject+HJUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+HJUpload.m"; sourceTree = "<group>"; };
+		55AF57FA2836477B0073E550 /* NSObject+HJUploadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+HJUploadTask.h"; sourceTree = "<group>"; };
+		55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+HJUploadTask.m"; sourceTree = "<group>"; };
 		55AF580A283649640073E550 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		55AF580C283649640073E550 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		55AF581128364B330073E550 /* HJBasicUrlFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJBasicUrlFilter.h; sourceTree = "<group>"; };
@@ -148,29 +142,18 @@
 		55AF582D28364B330073E550 /* HJBasicHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJBasicHTTPRequest.m; sourceTree = "<group>"; };
 		55AF582E28364B330073E550 /* HJCustomCacheRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJCustomCacheRequest.h; sourceTree = "<group>"; };
 		55AF582F28364B330073E550 /* HJDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDownloadRequest.m; sourceTree = "<group>"; };
+		55B1BC162949CAEB005F4C8F /* movie.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = movie.mp4; sourceTree = "<group>"; };
+		55B8389E292368B100C62DFE /* DMDNSTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMDNSTest.m; sourceTree = "<group>"; };
+		55B8389F292368B100C62DFE /* DMDNSTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMDNSTest.h; sourceTree = "<group>"; };
+		55CDCA0A296665CC004CFD5E /* DMCommonRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMCommonRequest.h; sourceTree = "<group>"; };
+		55CDCA0B296665CC004CFD5E /* DMCommonRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMCommonRequest.m; sourceTree = "<group>"; };
 		55D41AA8289BAF5400B9283E /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		55D41AA9289BAF5400B9283E /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		55D41AAE289D002B00B9283E /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		55D41AB328A1FE4800B9283E /* DMSDWebImageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMSDWebImageOperation.h; sourceTree = "<group>"; };
 		55D41AB428A1FE4800B9283E /* DMSDWebImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMSDWebImageOperation.m; sourceTree = "<group>"; };
-		55DA2A1028607AFB00D9AE00 /* DMCredentialChallenge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMCredentialChallenge.h; sourceTree = "<group>"; };
-		55DA2A1128607AFB00D9AE00 /* DMCredentialChallenge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMCredentialChallenge.m; sourceTree = "<group>"; };
-		55F2878028C5970A00A96E88 /* HJFileSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileSource.h; sourceTree = "<group>"; };
-		55F2878128C5970A00A96E88 /* HJFileSource.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HJFileSource.mm; sourceTree = "<group>"; };
-		55F2878328C5BAE000A96E88 /* HJFileSourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileSourceManager.h; sourceTree = "<group>"; };
-		55F2878428C5BAE000A96E88 /* HJFileSourceManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HJFileSourceManager.mm; sourceTree = "<group>"; };
-		55F2878628C5BE2800A96E88 /* HJUploadConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJUploadConfig.h; sourceTree = "<group>"; };
-		55F2878728C5BE2800A96E88 /* HJUploadConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJUploadConfig.m; sourceTree = "<group>"; };
-		55F2878928C5FB9B00A96E88 /* HJFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileManager.h; sourceTree = "<group>"; };
-		55F2878A28C5FB9B00A96E88 /* HJFileManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJFileManager.m; sourceTree = "<group>"; };
 		55F2878C28C71F3B00A96E88 /* HJUploadRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJUploadRequest.h; sourceTree = "<group>"; };
 		55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJUploadRequest.m; sourceTree = "<group>"; };
-		55F2878F28C7251C00A96E88 /* HJFileFragment+WCTTableCoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HJFileFragment+WCTTableCoding.h"; sourceTree = "<group>"; };
-		55F2879028C7257100A96E88 /* HJFileBlock+WCTTableCoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HJFileBlock+WCTTableCoding.h"; sourceTree = "<group>"; };
-		55F2879128C725C400A96E88 /* HJFileSource+WCTTableCoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HJFileSource+WCTTableCoding.h"; sourceTree = "<group>"; };
-		55F2879228C885A500A96E88 /* HJFileBasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFileBasic.h; sourceTree = "<group>"; };
-		55F2879328C885A500A96E88 /* HJFileBasic.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HJFileBasic.mm; sourceTree = "<group>"; };
-		55F2879528C8872300A96E88 /* HJFileBasic+WCTTableCoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HJFileBasic+WCTTableCoding.h"; sourceTree = "<group>"; };
 		843D147DC5BBE7577EC0B837 /* Pods-HJNetworkDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.release.xcconfig"; sourceTree = "<group>"; };
 		86D1E32296641C9833046832 /* Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo-HJNetworkDemoUITests/Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		97945B41131A209C14DFE313 /* Pods-HJNetworkDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemoTests/Pods-HJNetworkDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -209,11 +192,36 @@
 		5515C0442893DAE80008C0CE /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				55B1BC162949CAEB005F4C8F /* movie.mp4 */,
 				55135DD128D179A80028CA16 /* gamker.mp4 */,
 				55D41AAE289D002B00B9283E /* test.txt */,
 				5515C0452893DB060008C0CE /* head.jpeg */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		5526E5D32963E1A8004FBC71 /* Upload */ = {
+			isa = PBXGroup;
+			children = (
+				5521D95E289148F300F85AB4 /* DMUploadRequest.h */,
+				5521D95F289148F300F85AB4 /* DMUploadRequest.m */,
+				5526E5D42963FBB7004FBC71 /* HJUploadManager.h */,
+				5526E5D52963FBB7004FBC71 /* HJUploadManager.m */,
+				55F2878C28C71F3B00A96E88 /* HJUploadRequest.h */,
+				55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */,
+				55AF57FA2836477B0073E550 /* NSObject+HJUploadTask.h */,
+				55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */,
+			);
+			path = Upload;
+			sourceTree = "<group>";
+		};
+		5526E5D829644236004FBC71 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				5521D95B2891299100F85AB4 /* DMDownloadRequest.h */,
+				5521D95C2891299100F85AB4 /* DMDownloadRequest.m */,
+			);
+			path = Download;
 			sourceTree = "<group>";
 		};
 		55AF578F283634A30073E550 = {
@@ -276,31 +284,33 @@
 			children = (
 				55AF57F52836477B0073E550 /* AppDelegate.h */,
 				55AF57F72836477B0073E550 /* AppDelegate.m */,
-				55AF57E42836477A0073E550 /* BasicNetwork */,
+				55AF57E42836477A0073E550 /* BaseNetwork */,
 				55AF57E92836477B0073E550 /* Common */,
-				55AF57F92836477B0073E550 /* HJUpload */,
+				55B8389D292368B100C62DFE /* DNS */,
+				5526E5D829644236004FBC71 /* Download */,
 				55AF57EB2836477B0073E550 /* Request */,
-				5515C0442893DAE80008C0CE /* Resource */,
+				5526E5D32963E1A8004FBC71 /* Upload */,
 				55AF57F42836477B0073E550 /* ViewController */,
+				5515C0442893DAE80008C0CE /* Resource */,
 			);
 			path = HJNetworkDemo;
 			sourceTree = "<group>";
 		};
-		55AF57E42836477A0073E550 /* BasicNetwork */ = {
+		55AF57E42836477A0073E550 /* BaseNetwork */ = {
 			isa = PBXGroup;
 			children = (
-				55AF57E62836477B0073E550 /* DMBasicRequest.h */,
-				55AF57E82836477B0073E550 /* DMBasicRequest.m */,
-				55AF57E52836477A0073E550 /* DMBasicUrlFilter.h */,
-				55AF57E72836477B0073E550 /* DMBasicUrlFilter.m */,
-				55DA2A1028607AFB00D9AE00 /* DMCredentialChallenge.h */,
-				55DA2A1128607AFB00D9AE00 /* DMCredentialChallenge.m */,
+				55AF57E62836477B0073E550 /* DMBaseRequest.h */,
+				55AF57E82836477B0073E550 /* DMBaseRequest.m */,
+				55AF57E52836477A0073E550 /* DMBaseUrlFilter.h */,
+				55AF57E72836477B0073E550 /* DMBaseUrlFilter.m */,
+				55CDCA0A296665CC004CFD5E /* DMCommonRequest.h */,
+				55CDCA0B296665CC004CFD5E /* DMCommonRequest.m */,
 				55D41AB328A1FE4800B9283E /* DMSDWebImageOperation.h */,
 				55D41AB428A1FE4800B9283E /* DMSDWebImageOperation.m */,
 				5592ED9A28BF2F4D002A19D6 /* DMURLProtocol.h */,
 				5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */,
 			);
-			path = BasicNetwork;
+			path = BaseNetwork;
 			sourceTree = "<group>";
 		};
 		55AF57E92836477B0073E550 /* Common */ = {
@@ -314,12 +324,8 @@
 		55AF57EB2836477B0073E550 /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				5521D95B2891299100F85AB4 /* DMDownloadRequest.h */,
-				5521D95C2891299100F85AB4 /* DMDownloadRequest.m */,
 				5521D95828911FAA00F85AB4 /* DMHTTPRequest.h */,
 				5521D95928911FAA00F85AB4 /* DMHTTPRequest.m */,
-				5521D95E289148F300F85AB4 /* DMUploadRequest.h */,
-				5521D95F289148F300F85AB4 /* DMUploadRequest.m */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -335,35 +341,6 @@
 				5592ED9828BDE86F002A19D6 /* WKWebViewController.m */,
 			);
 			path = ViewController;
-			sourceTree = "<group>";
-		};
-		55AF57F92836477B0073E550 /* HJUpload */ = {
-			isa = PBXGroup;
-			children = (
-				55F2879228C885A500A96E88 /* HJFileBasic.h */,
-				55F2879328C885A500A96E88 /* HJFileBasic.mm */,
-				55F2879528C8872300A96E88 /* HJFileBasic+WCTTableCoding.h */,
-				5592ED9F28C1EDCE002A19D6 /* HJFileBlock.h */,
-				5592EDA028C1EDCE002A19D6 /* HJFileBlock.mm */,
-				55F2879028C7257100A96E88 /* HJFileBlock+WCTTableCoding.h */,
-				5592EDA228C1EF2E002A19D6 /* HJFileFragment.h */,
-				5592EDA328C1EF2E002A19D6 /* HJFileFragment.mm */,
-				55F2878F28C7251C00A96E88 /* HJFileFragment+WCTTableCoding.h */,
-				55F2878028C5970A00A96E88 /* HJFileSource.h */,
-				55F2878128C5970A00A96E88 /* HJFileSource.mm */,
-				55F2879128C725C400A96E88 /* HJFileSource+WCTTableCoding.h */,
-				55F2878328C5BAE000A96E88 /* HJFileSourceManager.h */,
-				55F2878428C5BAE000A96E88 /* HJFileSourceManager.mm */,
-				55F2878928C5FB9B00A96E88 /* HJFileManager.h */,
-				55F2878A28C5FB9B00A96E88 /* HJFileManager.m */,
-				55F2878628C5BE2800A96E88 /* HJUploadConfig.h */,
-				55F2878728C5BE2800A96E88 /* HJUploadConfig.m */,
-				55F2878C28C71F3B00A96E88 /* HJUploadRequest.h */,
-				55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */,
-				55AF57FA2836477B0073E550 /* NSObject+HJUpload.h */,
-				55AF57FD2836477B0073E550 /* NSObject+HJUpload.m */,
-			);
-			path = HJUpload;
 			sourceTree = "<group>";
 		};
 		55AF580F28364B330073E550 /* Utils */ = {
@@ -413,6 +390,15 @@
 				55AF582A28364B330073E550 /* HJXMLRequest.m */,
 			);
 			path = Requests;
+			sourceTree = "<group>";
+		};
+		55B8389D292368B100C62DFE /* DNS */ = {
+			isa = PBXGroup;
+			children = (
+				55B8389F292368B100C62DFE /* DMDNSTest.h */,
+				55B8389E292368B100C62DFE /* DMDNSTest.m */,
+			);
+			path = DNS;
 			sourceTree = "<group>";
 		};
 		8A19305C94152CDE97515886 /* Frameworks */ = {
@@ -552,6 +538,7 @@
 				55AF57A8283634A50073E550 /* Assets.xcassets in Resources */,
 				55AF57A6283634A30073E550 /* Main.storyboard in Resources */,
 				55D41AAF289D002B00B9283E /* test.txt in Resources */,
+				55B1BC172949CAEB005F4C8F /* movie.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,28 +666,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55AF57FF2836477B0073E550 /* DMBasicUrlFilter.m in Sources */,
-				5592EDA428C1EF2E002A19D6 /* HJFileFragment.mm in Sources */,
-				55AF58072836477B0073E550 /* NSObject+HJUpload.m in Sources */,
+				55B838A0292368B100C62DFE /* DMDNSTest.m in Sources */,
+				55AF57FF2836477B0073E550 /* DMBaseUrlFilter.m in Sources */,
+				55AF58072836477B0073E550 /* NSObject+HJUploadTask.m in Sources */,
 				55F2878E28C71F3B00A96E88 /* HJUploadRequest.m in Sources */,
 				5592ED9C28BF2F4D002A19D6 /* DMURLProtocol.m in Sources */,
-				55F2878228C5970A00A96E88 /* HJFileSource.mm in Sources */,
-				55F2878828C5BE2800A96E88 /* HJUploadConfig.m in Sources */,
 				55D41AB528A1FE4800B9283E /* DMSDWebImageOperation.m in Sources */,
 				55AF58062836477B0073E550 /* AppDelegate.m in Sources */,
 				55AF580E283649640073E550 /* ViewController.m in Sources */,
-				55F2879428C885A500A96E88 /* HJFileBasic.mm in Sources */,
 				5592ED9928BDE86F002A19D6 /* WKWebViewController.m in Sources */,
 				55D41AAA289BAF5400B9283E /* ImageViewController.m in Sources */,
-				5592EDA128C1EDCE002A19D6 /* HJFileBlock.mm in Sources */,
 				5521D95D2891299100F85AB4 /* DMDownloadRequest.m in Sources */,
 				5521D960289148F300F85AB4 /* DMUploadRequest.m in Sources */,
+				55CDCA0C296665CC004CFD5E /* DMCommonRequest.m in Sources */,
 				55AF57AE283634A50073E550 /* main.m in Sources */,
-				55F2878B28C5FB9B00A96E88 /* HJFileManager.m in Sources */,
-				55AF58002836477B0073E550 /* DMBasicRequest.m in Sources */,
+				55AF58002836477B0073E550 /* DMBaseRequest.m in Sources */,
 				5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */,
-				55F2878528C5BAE000A96E88 /* HJFileSourceManager.mm in Sources */,
-				55DA2A1228607AFB00D9AE00 /* DMCredentialChallenge.m in Sources */,
+				5526E5D62963FBB7004FBC71 /* HJUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

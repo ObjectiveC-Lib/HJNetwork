@@ -3,6 +3,7 @@
 //  HJNetwork
 //
 //  Created by navy on 2022/5/27.
+//  Copyright © 2022 HJNetwork. All rights reserved.
 //
 
 #import "HJURLProtocol.h"
@@ -11,10 +12,10 @@
 #import "HJURLSessionDemux.h"
 #import "HJCustomScheme.h"
 
-#if __has_include(<HJNetwork/HJNetworkPublic.h>)
-#import <HJNetwork/HJNetworkPublic.h>
-#elif __has_include("HJNetworkPublic.h")
-#import "HJNetworkPublic.h"
+#if __has_include(<HJNetwork/HJNetworkCommon.h>)
+#import <HJNetwork/HJNetworkCommon.h>
+#elif __has_include("HJNetworkCommon.h")
+#import "HJNetworkCommon.h"
 #endif
 
 typedef void (^HJChallengeCompletionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * credential);
@@ -216,12 +217,12 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
         node = [strongeDelegate HJURLProtocol:self generateDNSNodeWithOriginalURL:result.URL];
     }
     if (node) {
-        if (node.realUrl != nil && [node.realUrl length] > 0) {
-            newRequest.URL = [NSURL URLWithString:node.realUrl];
+        if (node.url != nil && [node.url length] > 0) {
+            newRequest.URL = [NSURL URLWithString:node.url];
         }
         
-        if (node.realHost != nil && [node.realHost length] > 0) {
-            [newRequest setValue:node.realHost forHTTPHeaderField:@"host"];
+        if (node.host != nil && [node.host length] > 0) {
+            [newRequest setValue:node.host forHTTPHeaderField:@"host"];
         }
     }
     

@@ -36,7 +36,7 @@
                 HJBasicHTTPRequest *req = [[HJBasicHTTPRequest alloc] init];
                 req.tag = i;
                 
-                [req startWithCompletionBlockWithSuccess:nil failure:^(__kindof HJBaseRequest * _Nonnull request) {
+                [req startWithCompletionBlockWithSuccess:nil failure:^(__kindof HJCoreRequest * _Nonnull request) {
                     // Left is from callback, right is captured by block.
                     XCTAssertTrue(request.tag == i);
                     callbackCount ++;

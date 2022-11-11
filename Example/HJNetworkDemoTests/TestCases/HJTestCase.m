@@ -9,7 +9,7 @@
 #import "HJTestCase.h"
 #import "HJNetworkConfig.h"
 #import "HJNetworkAgent.h"
-#import "HJRequest.h"
+#import "HJBaseRequest.h"
 
 NSString * const HJNetworkingTestsBaseURLString = @"https://httpbin.org/";
 
@@ -31,21 +31,21 @@ NSString * const HJNetworkingTestsBaseURLString = @"https://httpbin.org/";
     [[HJNetworkConfig sharedConfig] clearUrlFilter];
 }
 
-- (void)expectSuccess:(HJRequest *)request {
+- (void)expectSuccess:(HJBaseRequest *)request {
     [self expectSuccess:request withAssertion:nil];
 }
 
-- (void)expectSuccess:(HJRequest *)request withAssertion:(void(^)(HJBaseRequest * request)) assertion {
+- (void)expectSuccess:(HJBaseRequest *)request withAssertion:(void(^)(HJCoreRequest * request)) assertion {
     XCTestExpectation *exp = [self expectationWithDescription:@"Request should succeed"];
     
-    [request startWithCompletionBlockWithSuccess:^(__kindof HJBaseRequest * _Nonnull request) {
+    [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
         XCTAssertNotNil(request);
         XCTAssertNil(request.error);
         if (assertion) {
             assertion(request);
         }
         [exp fulfill];
-    } failure:^(__kindof HJBaseRequest * _Nonnull request) {
+    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
         XCTFail(@"Request should succeed, but failed");
         [exp fulfill];
     }];
@@ -53,17 +53,17 @@ NSString * const HJNetworkingTestsBaseURLString = @"https://httpbin.org/";
     [self waitForExpectationsWithCommonTimeout];
 }
 
-- (void)expectFailure:(HJRequest *)request {
+- (void)expectFailure:(HJBaseRequest *)request {
     [self expectFailure:request withAssertion:nil];
 }
 
-- (void)expectFailure:(HJRequest *)request withAssertion:(void(^)(HJBaseRequest * request)) assertion {
+- (void)expectFailure:(HJBaseRequest *)request withAssertion:(void(^)(HJCoreRequest * request)) assertion {
     XCTestExpectation *exp = [self expectationWithDescription:@"Request should fail"];
     
-    [request startWithCompletionBlockWithSuccess:^(__kindof HJBaseRequest * _Nonnull request) {
+    [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
         XCTFail(@"Request should fail, but succeeded");
         [exp fulfill];
-    } failure:^(__kindof HJBaseRequest * _Nonnull request) {
+    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
         XCTAssertNotNil(request);
         XCTAssertNotNil(request.error);
         if (assertion) {
