@@ -10,9 +10,13 @@
 #import "HJCredentialChallenge.h"
 #import "ViewController.h"
 #import "DMSDWebImageOperation.h"
-#import <SDWebImage/SDWebImage.h>
 #import "DMURLProtocol.h"
 #import "DMDNSTest.h"
+#import <SDWebImage/SDWebImage.h>
+#import <SDWebImageWebPCoder/SDWebImageWebPCoder.h>
+#import <SDWebImageFLIFCoder/SDWebImageFLIFCoder.h>
+#import <SDWebImageSVGKitPlugin/SDWebImageSVGKitPlugin.h>
+//#import <SDWebImageSVGCoder/SDWebImageSVGCoder.h>
 
 @interface AppDelegate ()
 @end
@@ -83,7 +87,14 @@
         if (!host || [HJCredentialChallenge isIPAddress:host]) {
             host = connection.currentRequest.URL.host;
         }
-        NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
+        __block NSURLCredential *credential = nil;
+        __block NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        [HJCredentialChallenge challenge:challenge
+                                    host:host
+                       completionHandler:^(NSURLSessionAuthChallengeDisposition disp, NSURLCredential * _Nullable cred) {
+            disposition = disp;
+            credential = cred;
+        }];
         if ([challenge previousFailureCount] == 0) {
             if (credential) {
                 [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
@@ -107,7 +118,7 @@
             if (metric.status_code == 200) {
                 [[HJDNSResolveManager sharedManager] setPositiveUrl:metric.req_url host:metric.req_headers[@"Host"]];
             } else {
-//                                NSLog(@"%@", metric);
+                //                                NSLog(@"%@", metric);
                 [[HJDNSResolveManager sharedManager] setNegativeUrl:metric.req_url host:metric.req_headers[@"Host"]];
                 //                NSLog(@"%@", [HJDNSResolveManager sharedManager]);
             }
@@ -125,7 +136,14 @@
         if (!host || [HJCredentialChallenge isIPAddress:host]) {
             host = task.currentRequest.URL.host;
         }
-        NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
+        __block NSURLCredential *credential = nil;
+        __block NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        [HJCredentialChallenge challenge:challenge
+                                    host:host
+                       completionHandler:^(NSURLSessionAuthChallengeDisposition disp, NSURLCredential * _Nullable cred) {
+            disposition = disp;
+            credential = cred;
+        }];
         return credential;
     };
     manager.requestHeaderField = @{ @"Cache-Control":@"no-store" };
@@ -142,8 +160,34 @@
 }
 
 - (void)setupSDWebImageConfig {
+    SDImageCacheConfig.defaultCacheConfig.maxDiskAge = 60 * 60 * 24 * 180; // 180 day
     SDWebImageDownloaderConfig.defaultDownloaderConfig.sessionConfiguration = [HJProtocolManager sharedManager].sessionConfiguration;
-    //    SDWebImageDownloaderConfig.defaultDownloaderConfig.operationClass = [DMImageDownloaderOperation class];
+    // SDWebImageDownloaderConfig.defaultDownloaderConfig.operationClass = [DMImageDownloaderOperation class];
+    
+    if (@available(iOS 14, *)) {
+        // iOS 14 supports WebP built-in
+        [[SDImageCodersManager sharedManager] addCoder:[SDImageAWebPCoder sharedCoder]];
+    } else {
+        // iOS 13 does not supports WebP, use third-party codec
+        [[SDImageCodersManager sharedManager] addCoder:[SDImageWebPCoder sharedCoder]];
+    }
+    
+    if (@available(iOS 13, *)) {
+        // For HEIC animated image. Animated image is new introduced in iOS 13, but it contains performance issue for now.
+        [[SDImageCodersManager sharedManager] addCoder:[SDImageHEICCoder sharedCoder]];
+    }
+    
+    //    if (@available(iOS 13, *)) {
+    //        // The SVG rendering is done using Apple's framework CoreSVG.framework (introduced in iOS 13/macOS 10.15).
+    //        [[SDImageCodersManager sharedManager] addCoder:[SDImageSVGCoder sharedCoder]];
+    //    } else {
+    //        // Which provide the image loading support for SVG using SVGKit SVG engine.
+    //        [[SDImageCodersManager sharedManager] addCoder:[SDImageSVGKCoder sharedCoder]];
+    //    }
+    
+    [[SDImageCodersManager sharedManager] addCoder:[SDImageSVGKCoder sharedCoder]];
+    
+    [[SDImageCodersManager sharedManager] addCoder:[SDImageFLIFCoder sharedCoder]];
 }
 
 @end

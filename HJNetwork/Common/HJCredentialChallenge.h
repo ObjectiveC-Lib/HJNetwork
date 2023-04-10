@@ -19,10 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isIPAddress:(NSString *)address;
 
-+ (void)challenge:(NSURLAuthenticationChallenge *)challenge host:(nullable NSString *)host
++ (void)challenge:(NSURLAuthenticationChallenge *)challenge
+             host:(nullable NSString *)host
 completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *_Nullable credential))completionHandler;
-
-+ (nullable NSURLCredential *)challenge:(NSURLAuthenticationChallenge *)challenge host:(NSString *)host;
 
 @end
 

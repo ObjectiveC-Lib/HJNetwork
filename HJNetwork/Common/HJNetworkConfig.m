@@ -87,7 +87,15 @@ void HJLog(NSString *format, ...) {
             if (!host || [HJCredentialChallenge isIPAddress:host]) {
                 host = connection.currentRequest.URL.host;
             }
-            NSURLCredential *credential = [HJCredentialChallenge challenge:challenge host:host];
+            __block NSURLCredential *credential = nil;
+            __block NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+            [HJCredentialChallenge challenge:challenge
+                                        host:host
+                           completionHandler:^(NSURLSessionAuthChallengeDisposition disp, NSURLCredential * _Nullable cred) {
+                disposition = disp;
+                credential = cred;
+            }];
+            
             if ([challenge previousFailureCount] == 0) {
                 if (credential) {
                     [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];

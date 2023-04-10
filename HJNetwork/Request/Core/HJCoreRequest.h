@@ -195,6 +195,9 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 ///  Default is YES.
 - (BOOL)allowsCellularAccess;
 
+///  Default is NO.
+- (BOOL)removesKeysWithNullValues;
+
 ///  The validator will be used to test if `responseJSONObject` is correctly formed.
 - (nullable id)jsonValidator;
 

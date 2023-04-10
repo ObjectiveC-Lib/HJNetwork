@@ -24,7 +24,12 @@ target 'HJNetworkDemo' do
   #  pod 'HJTask'
   
   pod 'HJCache'
+  pod 'HJCache/SDBridge'
   pod 'SDWebImage'
+  pod 'SDWebImageWebPCoder'
+  pod 'SDWebImageFLIFCoder'
+  pod 'SDWebImageSVGKitPlugin'
+  
   pod 'WCDB'
   
   target 'HJNetworkDemoTests' do

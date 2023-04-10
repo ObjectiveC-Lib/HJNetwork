@@ -191,6 +191,10 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     return YES;
 }
 
+- (BOOL)removesKeysWithNullValues {
+    return NO;
+}
+
 - (id)jsonValidator {
     return nil;
 }

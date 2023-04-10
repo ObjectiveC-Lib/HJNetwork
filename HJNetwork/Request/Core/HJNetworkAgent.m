@@ -152,12 +152,14 @@
     
     if (request.resumableDownloadPath && [self incompleteDownloadTempPathForDownloadPath:request.resumableDownloadPath] != nil) {
         NSURLSessionDownloadTask *requestTask = (NSURLSessionDownloadTask *)request.requestTask;
-        [requestTask cancelByProducingResumeData:^(NSData *resumeData) {
-            NSURL *localUrl = [self incompleteDownloadTempPathForDownloadPath:request.resumableDownloadPath];
-            if (!request.ignoreResumableData) {
-                [resumeData writeToURL:localUrl atomically:YES];
-            }
-        }];
+        if ([requestTask respondsToSelector:@selector(cancelByProducingResumeData:)]) {
+            [requestTask cancelByProducingResumeData:^(NSData *resumeData) {
+                NSURL *localUrl = [self incompleteDownloadTempPathForDownloadPath:request.resumableDownloadPath];
+                if (!request.ignoreResumableData) {
+                    [resumeData writeToURL:localUrl atomically:YES];
+                }
+            }];
+        }
     } else {
         [request.requestTask cancel];
     }
@@ -594,6 +596,7 @@
             case HJResponseSerializerTypeHTTP: {
             } break;
             case HJResponseSerializerTypeJSON: {
+                self.jsonResponseSerializer.removesKeysWithNullValues = request.removesKeysWithNullValues;
                 request.responseObject = [self.jsonResponseSerializer responseObjectForResponse:task.response
                                                                                            data:request.responseData
                                                                                           error:&serializationError];

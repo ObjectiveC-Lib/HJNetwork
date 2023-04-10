@@ -17,6 +17,35 @@ static NSSet *_globalRootCAs = nil;
 static NSSet *_globalRootCANames = nil;
 static NSMutableSet *_globalExtendCAs = nil;
 
+static void *const HJCredentialChallengeQueueIdentityKey = (void *)&HJCredentialChallengeQueueIdentityKey;
+
+static dispatch_queue_t HJCredentialChallengeQueue() {
+    static dispatch_queue_t hj_credential_challenge_queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void *nonNullValue = HJCredentialChallengeQueueIdentityKey;
+        hj_credential_challenge_queue = dispatch_queue_create("com.hj.credential.challenge", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(hj_credential_challenge_queue, HJCredentialChallengeQueueIdentityKey, nonNullValue, NULL);
+    });
+    
+    return hj_credential_challenge_queue;
+}
+
+static void inline HJDispatchQueueExecute(dispatch_queue_t _Nonnull queue, dispatch_block_t _Nonnull block, BOOL async) {
+    // Check specific to detect queue equal
+    void *specific = dispatch_queue_get_specific(queue, HJCredentialChallengeQueueIdentityKey);
+    void *currentSpecific = dispatch_get_specific(HJCredentialChallengeQueueIdentityKey);
+    if (specific && currentSpecific && CFGetTypeID(specific) == CFUUIDGetTypeID() && CFGetTypeID(currentSpecific) == CFUUIDGetTypeID() && CFEqual(specific, currentSpecific)) {
+        block();
+    } else {
+        if (async) {
+            dispatch_async(queue, block);
+        } else {
+            dispatch_sync(queue, block);
+        }
+    }
+}
+
 static void HJCredentialChallengeInitGlobal() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -635,118 +664,61 @@ static SecTrustRef HJChangedHostForTrust(SecTrustRef serverTrust, NSString *host
     return newTrust;
 }
 
-+ (void)challenge:(NSURLAuthenticationChallenge *)challenge host:(NSString *)host
++ (void)challenge:(NSURLAuthenticationChallenge *)challenge
+             host:(NSString *)host
 completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     HJCredentialChallengeInitGlobal();
-    
-    NSURLCredential *credential = nil;
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    
-    if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
-        int rootCATrust = 0;
-        int extendCATrust = 0;
-        SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
-        SecTrustRef newTrust = HJChangedHostForTrust(serverTrust, host, &rootCATrust, &extendCATrust);
-        NSLog(@"hj_protectionSpace_host = %@, host = %@", challenge.protectionSpace.host, host);
-        if (rootCATrust == 1) {
-            __block BOOL isValid = NO;
-            dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                isValid = HJServerTrustIsValid(newTrust);
-            });
-            if (isValid) {
-                credential = [NSURLCredential credentialForTrust:newTrust];
-                if (credential) {
-                    disposition = NSURLSessionAuthChallengeUseCredential;
-                }
-            } else {
-                if (HJIsIPAddress(challenge.protectionSpace.host)) {
+    HJDispatchQueueExecute(HJCredentialChallengeQueue(), ^{
+        NSURLCredential *credential = nil;
+        NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
+            int rootCATrust = 0;
+            int extendCATrust = 0;
+            SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+            SecTrustRef newTrust = HJChangedHostForTrust(serverTrust, host, &rootCATrust, &extendCATrust);
+            NSLog(@"hj_protectionSpace_host = %@, host = %@", challenge.protectionSpace.host, host);
+            if (rootCATrust == 1) {
+                BOOL isValid = HJServerTrustIsValid(newTrust);
+                if (isValid) {
                     credential = [NSURLCredential credentialForTrust:newTrust];
                     if (credential) {
                         disposition = NSURLSessionAuthChallengeUseCredential;
                     }
-                }
-            }
-        } else if (extendCATrust == 1) {
-            credential = [NSURLCredential credentialForTrust:serverTrust];
-            if (credential) {
-                disposition = NSURLSessionAuthChallengeUseCredential;
-            }
-        } else {
-            BOOL enableProxy = [self proxyEnable];
-            if (enableProxy) {
-                credential = [NSURLCredential credentialForTrust:serverTrust];
-                if (credential) {
-                    disposition = NSURLSessionAuthChallengeUseCredential;
-                    NSLog(@"Enable Proxy CA Trust");
                 } else {
-                    disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-                    NSLog(@"NO CA Trust");
-                }
-            } else {
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-                NSLog(@"NO CA Trust");
-            }
-        }
-    }
-    
-    if (completionHandler) {
-        completionHandler(disposition, credential);
-    }
-}
-
-+ (NSURLCredential *)challenge:(NSURLAuthenticationChallenge *)challenge host:(NSString *)host {
-    HJCredentialChallengeInitGlobal();
-    
-    NSURLCredential *credential = nil;
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
-        int rootCATrust = 0;
-        int extendCATrust = 0;
-        SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
-        SecTrustRef newTrust = HJChangedHostForTrust(serverTrust, host, &rootCATrust, &extendCATrust);
-        NSLog(@"hj_protectionSpace_host = %@, host = %@", challenge.protectionSpace.host, host);
-        if (rootCATrust == 1) {
-            __block BOOL isValid = NO;
-            dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                isValid = HJServerTrustIsValid(newTrust);
-            });
-            if (isValid) {
-                credential = [NSURLCredential credentialForTrust:newTrust];
-                if (credential) {
-                    disposition = NSURLSessionAuthChallengeUseCredential;
-                }
-            } else {
-                if (HJIsIPAddress(challenge.protectionSpace.host)) {
-                    credential = [NSURLCredential credentialForTrust:newTrust];
-                    if (credential) {
-                        disposition = NSURLSessionAuthChallengeUseCredential;
+                    if (HJIsIPAddress(challenge.protectionSpace.host)) {
+                        credential = [NSURLCredential credentialForTrust:newTrust];
+                        if (credential) {
+                            disposition = NSURLSessionAuthChallengeUseCredential;
+                        }
                     }
                 }
-            }
-        } else if (extendCATrust == 1) {
-            credential = [NSURLCredential credentialForTrust:serverTrust];
-            if (credential) {
-                disposition = NSURLSessionAuthChallengeUseCredential;
-            }
-        } else {
-            BOOL enableProxy = [self proxyEnable];
-            if (enableProxy) {
+            } else if (extendCATrust == 1) {
                 credential = [NSURLCredential credentialForTrust:serverTrust];
                 if (credential) {
                     disposition = NSURLSessionAuthChallengeUseCredential;
-                    NSLog(@"Enable Proxy CA Trust");
+                }
+            } else {
+                BOOL enableProxy = [self proxyEnable];
+                if (enableProxy) {
+                    credential = [NSURLCredential credentialForTrust:serverTrust];
+                    if (credential) {
+                        disposition = NSURLSessionAuthChallengeUseCredential;
+                        NSLog(@"Enable Proxy CA Trust");
+                    } else {
+                        disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                        NSLog(@"NO CA Trust");
+                    }
                 } else {
                     disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     NSLog(@"NO CA Trust");
                 }
-            } else {
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-                NSLog(@"NO CA Trust");
             }
         }
-    }
-    
-    return credential;
+        
+        if (completionHandler) {
+            completionHandler(disposition, credential);
+        }
+    }, NO);
 }
 
 @end
