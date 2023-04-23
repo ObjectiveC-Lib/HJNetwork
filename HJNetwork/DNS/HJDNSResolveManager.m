@@ -90,7 +90,9 @@ static BOOL HJIsIPAddress(NSString *str) {
     NSString *mapKey = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:urlKey]];
     NSString *mapValue;
     if (!HJIsIPAddress([NSURL URLWithString:mapKey].host)) {
+        Lock();
         mapValue = [self.dnsMap getDNSValue:mapKey];
+        Unlock();
     }
     
     node.host = [NSURL URLWithString:mapKey].host;
@@ -115,10 +117,13 @@ static BOOL HJIsIPAddress(NSString *str) {
     
     if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
     
+    
+    Lock();
     [self.dnsMap setNegativeDNSValue:mapValue key:mapKey];
     if (![mapKey isEqualToString:mapKey1]) {
         [self.dnsMap setNegativeDNSValue:mapValue key:mapKey1];
     }
+    Unlock();
 }
 
 - (void)setPositiveUrl:(NSString *)url host:(NSString *)host {
@@ -131,10 +136,12 @@ static BOOL HJIsIPAddress(NSString *str) {
     
     if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKey1, mapValue);
     
+    Lock();
     [self.dnsMap setPositiveDNSValue:mapValue key:mapKey];
     if (![mapKey isEqualToString:mapKey1]) {
         [self.dnsMap setPositiveDNSValue:mapValue key:mapKey1];
     }
+    Unlock();
 }
 
 #pragma mark - Default Map
@@ -180,9 +187,8 @@ static BOOL HJIsIPAddress(NSString *str) {
     if (self.remoteDNSDict) {
         [dict addEntriesFromDictionary:self.remoteDNSDict];
     }
-    Unlock();
-    
     self.dnsMap = [[HJDNSMap alloc] initWithDict:dict negativeCount:_negativeCount];
+    Unlock();
     
     if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Map = %@", self.dnsMap);
 }
