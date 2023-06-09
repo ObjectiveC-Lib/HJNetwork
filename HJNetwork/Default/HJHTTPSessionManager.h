@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)manager:(nullable HJNetworkConfig *)config;
 + (instancetype)protocolManager;
+- (void)setupDefaultConfig;
 
 @end
 

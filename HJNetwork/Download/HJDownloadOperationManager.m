@@ -15,7 +15,7 @@
 @implementation HJDownloadOperationManager
 
 + (instancetype)manager:(HJNetworkConfig *)config {
-    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];;
+    return [[[self class] alloc] initWithBaseURL:[NSURL URLWithString:config.baseUrl] config:config];;
 }
 
 - (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {

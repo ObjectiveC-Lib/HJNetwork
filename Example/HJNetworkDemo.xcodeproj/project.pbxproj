@@ -54,6 +54,7 @@
 		55F2878E28C71F3B00A96E88 /* HJUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */; };
 		55FAB01E29DE4E00006FFD8C /* DMSDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FAB01D29DE4E00006FFD8C /* DMSDWebImageManager.m */; };
 		55FAB02129DE50FA006FFD8C /* UIImageView+DM.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FAB02029DE50FA006FFD8C /* UIImageView+DM.m */; };
+		55FB51202A3301BC00E9BC51 /* DMHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */; };
 		C6F0D4B471DEE32041A690D5 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D8A66B59C34A2B0366C277 /* Pods_HJNetworkDemo.framework */; };
 		E1DD08EFC7AD7A2B22037B50 /* Pods_HJNetworkDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB98D671979381DA2CFB2108 /* Pods_HJNetworkDemoTests.framework */; };
 /* End PBXBuildFile section */
@@ -160,6 +161,8 @@
 		55FAB01D29DE4E00006FFD8C /* DMSDWebImageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMSDWebImageManager.m; sourceTree = "<group>"; };
 		55FAB01F29DE50FA006FFD8C /* UIImageView+DM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+DM.h"; sourceTree = "<group>"; };
 		55FAB02029DE50FA006FFD8C /* UIImageView+DM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+DM.m"; sourceTree = "<group>"; };
+		55FB511E2A3301BC00E9BC51 /* DMHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMHTTPSessionManager.h; sourceTree = "<group>"; };
+		55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMHTTPSessionManager.m; sourceTree = "<group>"; };
 		843D147DC5BBE7577EC0B837 /* Pods-HJNetworkDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.release.xcconfig"; sourceTree = "<group>"; };
 		86D1E32296641C9833046832 /* Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo-HJNetworkDemoUITests/Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		97945B41131A209C14DFE313 /* Pods-HJNetworkDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemoTests/Pods-HJNetworkDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -312,6 +315,8 @@
 				55AF57E72836477B0073E550 /* DMBaseUrlFilter.m */,
 				55CDCA0A296665CC004CFD5E /* DMCommonRequest.h */,
 				55CDCA0B296665CC004CFD5E /* DMCommonRequest.m */,
+				55FB511E2A3301BC00E9BC51 /* DMHTTPSessionManager.h */,
+				55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */,
 				5592ED9A28BF2F4D002A19D6 /* DMURLProtocol.h */,
 				5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */,
 			);
@@ -693,6 +698,7 @@
 				55AF58062836477B0073E550 /* AppDelegate.m in Sources */,
 				55AF580E283649640073E550 /* ViewController.m in Sources */,
 				55FAB02129DE50FA006FFD8C /* UIImageView+DM.m in Sources */,
+				55FB51202A3301BC00E9BC51 /* DMHTTPSessionManager.m in Sources */,
 				55FAB01E29DE4E00006FFD8C /* DMSDWebImageManager.m in Sources */,
 				5592ED9928BDE86F002A19D6 /* WKWebViewController.m in Sources */,
 				55D41AAA289BAF5400B9283E /* ImageViewController.m in Sources */,

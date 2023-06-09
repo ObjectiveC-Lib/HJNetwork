@@ -166,6 +166,9 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 ///  Request timeout interval. Default is 60s.
 - (NSTimeInterval)requestTimeoutInterval;
 
+/// The cache policy of the receiver. Default is NSURLRequestUseProtocolCachePolicy
+- (NSURLRequestCachePolicy)requestCachePolicy;
+
 ///  Additional request argument.
 - (nullable id)requestArgument;
 
@@ -184,8 +187,8 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 ///  Additional HTTP request header field.
 - (nullable NSDictionary<NSString *, NSString *> *)requestHeaderFieldValueDictionary;
 
-///  Use this to build custom request. If this method return non-nil value, `requestUrl`, `requestTimeoutInterval`,
-///  `requestArgument`, `allowsCellularAccess`, `requestMethod` and `requestSerializerType` will all be ignored.
+///  Use this to build custom request. If this method return non-nil value, `requestUrl`, `requestTimeoutInterval`, `requestCachePolicy`,
+///  `requestArgument`, `allowsCellularAccess`, `requestMethod`, `requestSerializerType` and `HTTPShouldHandleCookies` will all be ignored.
 - (nullable NSURLRequest *)buildCustomUrlRequest;
 
 - (BOOL)useCDN;
@@ -194,6 +197,11 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 
 ///  Default is YES.
 - (BOOL)allowsCellularAccess;
+
+/// Decide whether default cookie handling will happen for this request
+/// (YES if cookies should be sent with and set for this request; otherwise NO).
+/// The default is YES - in other words, cookies are sent from and stored to the cookie manager by default.
+- (BOOL)HTTPShouldHandleCookies;
 
 ///  Default is NO.
 - (BOOL)removesKeysWithNullValues;

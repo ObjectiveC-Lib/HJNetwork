@@ -147,6 +147,10 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     return 60;
 }
 
+- (NSURLRequestCachePolicy)requestCachePolicy {
+    return NSURLRequestUseProtocolCachePolicy;
+}
+
 - (id)requestArgument {
     return nil;
 }
@@ -191,6 +195,10 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     return YES;
 }
 
+- (BOOL)HTTPShouldHandleCookies {
+    return YES;
+}
+
 - (BOOL)removesKeysWithNullValues {
     return NO;
 }
@@ -213,7 +221,9 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass([self class]), self, self.currentRequest.URL, self.currentRequest.HTTPMethod, self.requestArgument];
+    return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }",
+            NSStringFromClass([self class]), self,
+            self.currentRequest.URL, self.currentRequest.HTTPMethod, self.requestArgument];
 }
 
 @end

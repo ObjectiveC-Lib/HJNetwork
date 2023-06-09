@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HJHTTPOperationManager : AFHTTPRequestOperationManager
 
 + (instancetype)manager:(nullable HJNetworkConfig *)config;
+- (void)setupDefaultConfig;
 
 @end
 

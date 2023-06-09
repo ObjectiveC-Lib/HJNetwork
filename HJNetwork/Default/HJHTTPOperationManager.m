@@ -15,7 +15,7 @@
 @implementation HJHTTPOperationManager
 
 + (instancetype)manager:(HJNetworkConfig *)config {
-    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];;
+    return [[[self class] alloc] initWithBaseURL:[NSURL URLWithString:config.baseUrl] config:config];;
 }
 
 - (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {
@@ -24,8 +24,16 @@
         self.config = config;
         self.securityPolicy = self.config.securityPolicy;
         self.authenticationChallengeHandler = self.config.connectionAuthenticationChallengeHandler;
+        [self setupDefaultConfig];
     }
     return self;
+}
+
+- (void)setupDefaultConfig {
+    self.requestSerializer.allowsCellularAccess = YES;
+    self.requestSerializer.cachePolicy = NSURLRequestUseProtocolCachePolicy;
+    self.requestSerializer.HTTPShouldHandleCookies = YES;
+    self.requestSerializer.timeoutInterval = 60;
 }
 
 - (AFHTTPRequestOperation *)HTTPRequestOperationWithHTTPMethod:(NSString *)method

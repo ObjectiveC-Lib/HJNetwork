@@ -19,7 +19,7 @@
 }
 
 + (instancetype)manager:(HJNetworkConfig *)config {
-    return [[[self class] alloc] initWithBaseURL:config.baseUrl config:config];
+    return [[[self class] alloc] initWithBaseURL:[NSURL URLWithString:config.baseUrl] config:config];
 }
 
 - (instancetype)initWithBaseURL:(NSURL *)url config:(HJNetworkConfig *)config {
@@ -31,8 +31,16 @@
         if (@available(iOS 10, *)) {
             [self setTaskDidFinishCollectingMetricsBlock:self.config.collectingMetricsBlock];
         }
+        [self setupDefaultConfig];
     }
     return self;
+}
+
+- (void)setupDefaultConfig {
+    self.requestSerializer.allowsCellularAccess = YES;
+    self.requestSerializer.cachePolicy = NSURLRequestUseProtocolCachePolicy;
+    self.requestSerializer.HTTPShouldHandleCookies = YES;
+    self.requestSerializer.timeoutInterval = 60;
 }
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method

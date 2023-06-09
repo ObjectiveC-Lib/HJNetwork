@@ -17,6 +17,7 @@
 #import "NSObject+HJUploadTask.h"
 #import "HJUploadManager.h"
 #import "DMDNSTest.h"
+#import "DMHTTPSessionManager.h"
 
 @interface ViewController ()
 @end
@@ -34,7 +35,7 @@
     UIButton *btn0 = [self createButton:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 60 - bottom - 120, 120.0, 60.0)];
     btn0.backgroundColor = [UIColor blueColor];
     [btn0 setTitle:@"Image" forState:UIControlStateNormal];
-    [btn0 addTarget:self action:@selector(iamgeShow:) forControlEvents:UIControlEventTouchUpInside];
+    [btn0 addTarget:self action:@selector(get:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *btn = [self createButton:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 60 - bottom, 120.0, 60.0)];
     btn.backgroundColor = [UIColor blueColor];
@@ -227,16 +228,16 @@ NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.
 }
 
 - (void)get:(id)sender {
-    HJHTTPSessionManager *manager = [HJHTTPSessionManager manager:[HJNetworkConfig new]];
+    DMHTTPSessionManager *manager = [DMHTTPSessionManager manager];
     [manager GET:@"https://httpbin.org/get"
       parameters:nil
          headers:nil
         progress:^(NSProgress * _Nonnull progress) {
-        NSLog(@"HJHTTPSessionManager_progress =  %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+        NSLog(@"DMHTTPSessionManager_progress =  %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"HJHTTPSessionManager_success = %@", responseObject);
+        NSLog(@"DMHTTPSessionManager_success = %@", responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"HJHTTPSessionManager_failure = %@", error);
+        NSLog(@"DMHTTPSessionManager_failure = %@", error);
     }];
 }
 
