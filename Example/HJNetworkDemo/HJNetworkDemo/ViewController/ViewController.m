@@ -9,6 +9,7 @@
 #import "ImageViewController.h"
 #import "WKWebViewController.h"
 
+#import <HJNetwork/HJNetwork.h>
 #import <HJNetwork/HJNetworkPrivate.h>
 #import "DMCommonRequest.h"
 #import "DMHTTPRequest.h"
@@ -35,7 +36,7 @@
     UIButton *btn0 = [self createButton:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 60 - bottom - 120, 120.0, 60.0)];
     btn0.backgroundColor = [UIColor blueColor];
     [btn0 setTitle:@"Image" forState:UIControlStateNormal];
-    [btn0 addTarget:self action:@selector(get:) forControlEvents:UIControlEventTouchUpInside];
+    [btn0 addTarget:self action:@selector(HJRequestManagerRequest:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *btn = [self createButton:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 60 - bottom, 120.0, 60.0)];
     btn.backgroundColor = [UIColor blueColor];
@@ -238,6 +239,31 @@ NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.
         NSLog(@"DMHTTPSessionManager_success = %@", responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"DMHTTPSessionManager_failure = %@", error);
+    }];
+}
+
+- (void)HJRequestManagerRequest:(id)sender {
+    // NSString *geturl = @"https://httpbin.org/get";
+    [self clearDirectory:[DMDownloadRequest saveBasePath]];
+    [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
+    [self createDirectory:[DMDownloadRequest saveBasePath]];
+    HJRetryCommonRequest *request = [[HJRetryCommonRequest alloc] initWithUrl:kTestDownloadURL
+                                                              requestArgument:nil
+                                                                  headerField:nil
+                                                                requestMethod:HJRequestMethodGET
+                                                        requestSerializerType:HJRequestSerializerTypeHTTP
+                                                       responseSerializerType:HJResponseSerializerTypeHTTP];
+    request.resumableDownloadPath = [DMDownloadRequest saveBasePath];
+    request.ignoreCache = YES;
+    request.ignoreResumableData = YES;
+    request.requestCachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+    HJRetryRequestConfig *config = [HJRetryRequestConfig defaultConfig];
+    [HJRetryRequestManager request:request
+                            config:config
+                   requestProgress:^(NSProgress * _Nullable progress) {
+        NSLog(@"HJRetryRequestManager_progress =  %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+    } requestCompletion:^(NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
+        NSLog(@"HJRetryRequestManager_result = callbackInfo = %@, error = %@", callbackInfo, error);
     }];
 }
 

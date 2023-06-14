@@ -14,6 +14,7 @@ target 'HJNetworkDemo' do
   pod 'HJNetwork/DNS', :path => '../'
   pod 'HJNetwork/Upload', :path => '../'
   pod 'HJNetwork/Download', :path => '../'
+  pod 'HJNetwork/RetryRequest', :path => '../'
   pod 'HJTask', :path => '../../HJTask'
   
   #  pod 'HJNetwork'
@@ -21,6 +22,7 @@ target 'HJNetworkDemo' do
   #  pod 'HJNetwork/DNS'
   #  pod 'HJNetwork/Upload'
   #  pod 'HJNetwork/Download'
+  #  pod 'HJNetwork/RetryRequest'
   #  pod 'HJTask'
   
   pod 'HJCache'

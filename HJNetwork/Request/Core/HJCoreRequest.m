@@ -147,10 +147,6 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
     return 60;
 }
 
-- (NSURLRequestCachePolicy)requestCachePolicy {
-    return NSURLRequestUseProtocolCachePolicy;
-}
-
 - (id)requestArgument {
     return nil;
 }

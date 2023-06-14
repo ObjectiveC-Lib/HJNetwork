@@ -75,6 +75,8 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 @property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;
 @property (nonatomic, strong, readonly) NSURLRequest *currentRequest;
 @property (nonatomic, strong, readonly) NSURLRequest *originalRequest;
+/// The cache policy of the receiver. Default is NSURLRequestUseProtocolCachePolicy
+@property (nonatomic, assign) NSURLRequestCachePolicy requestCachePolicy;
 
 @property (nonatomic, strong, readonly) NSHTTPURLResponse *response;
 @property (nonatomic, assign, readonly) NSInteger responseStatusCode;
@@ -165,9 +167,6 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 
 ///  Request timeout interval. Default is 60s.
 - (NSTimeInterval)requestTimeoutInterval;
-
-/// The cache policy of the receiver. Default is NSURLRequestUseProtocolCachePolicy
-- (NSURLRequestCachePolicy)requestCachePolicy;
 
 ///  Additional request argument.
 - (nullable id)requestArgument;

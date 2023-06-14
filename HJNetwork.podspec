@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name            = 'HJNetwork'
-  s.version         = '2.0.7'
+  s.version         = '2.0.8'
   
   s.ios.deployment_target = '9.0'
   
@@ -63,5 +63,11 @@ Pod::Spec.new do |s|
   
   s.subspec 'Upload' do |ss|
     ss.source_files = 'HJNetwork/Upload/*.{h,m}'
+  end
+  
+  s.subspec 'RetryRequest' do |ss|
+    ss.source_files = 'HJNetwork/RetryRequest/**/*.{h,m}'
+    ss.dependency 'HJNetwork/Request'
+    ss.dependency 'HJTask'
   end
 end

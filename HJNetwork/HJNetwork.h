@@ -68,4 +68,10 @@ FOUNDATION_EXPORT const unsigned char HJNetworkVersionString[];
 #import "HJUpload.h"
 #endif
 
+#if __has_include(<HJNetwork/HJRetryRequest.h>)
+#import <HJNetwork/HJRetryRequest.h>
+#elif __has_include("HJRetryRequest.h")
+#import "HJRetryRequest.h"
+#endif
+
 #endif /* _HJNetwork_ */

@@ -346,9 +346,9 @@
     }
     
     requestSerializer.allowsCellularAccess = [request allowsCellularAccess];
-    requestSerializer.cachePolicy = [request requestCachePolicy];
     requestSerializer.HTTPShouldHandleCookies = [request HTTPShouldHandleCookies];
     requestSerializer.timeoutInterval = [request requestTimeoutInterval];
+    requestSerializer.cachePolicy = [request requestCachePolicy];
     
     // If api needs server username and password
     NSArray<NSString *> *authorizationHeaderFieldArray = [request requestAuthorizationHeaderFieldArray];
