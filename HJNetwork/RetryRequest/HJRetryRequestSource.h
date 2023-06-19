@@ -7,17 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
-
-#ifndef dispatch_request_main_async_safe
-#define dispatch_request_main_async_safe(block)\
-if (dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL) == dispatch_queue_get_label(dispatch_get_main_queue())) {\
-    block();\
-} else {\
-    dispatch_async(dispatch_get_main_queue(), block);\
-}
-#endif
-
-@class HJRetryRequestConfig;
+#import <HJNetwork/HJRequest.h>
+#import <HJTask/HJTask.h>
+#import "HJRetryRequestConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,9 +46,11 @@ typedef NSString * _Nullable HJRetryRequestKey;
 static const HJRetryRequestKey HJRetryRequestKeyInvalid = nil;
 
 typedef void (^HJRetryRequestProgressBlock)(NSProgress * _Nullable progress);
-typedef void (^HJRetryRequestCompletionBlock)(HJRetryRequestStatus status, NSDictionary<NSString *, id> * _Nullable callbackInfo, NSError *_Nullable error);
+typedef void (^HJRetryRequestCompletionBlock)(HJRetryRequestStatus status, id _Nullable callbackInfo, NSError *_Nullable error);
 
-@interface HJRetryRequestSource : NSObject <NSSecureCoding, NSCopying>
+@interface HJRetryRequestSource : NSObject <NSSecureCoding, NSCopying, HJTaskProtocol>
+
+@property (nonatomic, copy, nullable) HJTaskKey taskKey;
 /// identifier
 @property (nonatomic, strong) HJRetryRequestKey sourceId;
 /// 状态
@@ -66,20 +60,14 @@ typedef void (^HJRetryRequestCompletionBlock)(HJRetryRequestStatus status, NSDic
 /// 结果
 @property (nonatomic,   copy) HJRetryRequestCompletionBlock completion;
 /// 回调信息
-@property (nonatomic, strong) NSMutableDictionary <NSString *, id> * _Nullable callbackInfo;
+@property (nonatomic, strong) id _Nullable callbackInfo;
 /// 错误
 @property (nonatomic, strong) NSError *_Nullable error;
 
-- (instancetype)initWithRequestUrl:(NSString *)requestUrl
-                            config:(HJRetryRequestConfig *)config
-                   requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-                 requestCompletion:(void (^)(NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
-
-- (void)startWithBlock:(void (^)(HJRetryRequestSource *source))block;
-- (void)cancelWithBlock:(void (^)(HJRetryRequestSource *source))cancelBlock;
-
-+ (void)cancelWithKey:(HJRetryRequestKey)key block:(void (^)(HJRetryRequestSource *source))block;
-
+- (instancetype)initWithRequest:(HJCoreRequest *)request
+                         config:(HJRetryRequestConfig *)config
+                requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
+              requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
 @end
 
 NS_ASSUME_NONNULL_END

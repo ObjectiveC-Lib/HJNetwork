@@ -124,7 +124,7 @@
             }
         };
     }
-    config.debugLogEnabled = NO;
+    config.debugLogEnabled = YES;
     
     HJProtocolManager *manager = [HJProtocolManager sharedManager];
     manager.sessionConfiguration = [NSURLSessionConfiguration sharedProtocolConfig:[DMURLProtocol class]];

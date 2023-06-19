@@ -243,28 +243,39 @@ NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.
 }
 
 - (void)HJRequestManagerRequest:(id)sender {
-    // NSString *geturl = @"https://httpbin.org/get";
-    [self clearDirectory:[DMDownloadRequest saveBasePath]];
-    [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
-    [self createDirectory:[DMDownloadRequest saveBasePath]];
-    HJRetryCommonRequest *request = [[HJRetryCommonRequest alloc] initWithUrl:kTestDownloadURL
-                                                              requestArgument:nil
-                                                                  headerField:nil
-                                                                requestMethod:HJRequestMethodGET
-                                                        requestSerializerType:HJRequestSerializerTypeHTTP
-                                                       responseSerializerType:HJResponseSerializerTypeHTTP];
-    request.resumableDownloadPath = [DMDownloadRequest saveBasePath];
+    BOOL isImage = YES;
+    NSString *url = isImage?kTestDownloadURL:@"https://httpbin.org/get";
+    if (isImage) {
+        [self clearDirectory:[DMDownloadRequest saveBasePath]];
+        [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
+        [self createDirectory:[DMDownloadRequest saveBasePath]];
+    }
+    
+    DMCommonRequest *request = [[DMCommonRequest alloc] initWithUrl:url
+                                                    requestArgument:nil
+                                                        headerField:nil
+                                                      requestMethod:HJRequestMethodGET
+                                              requestSerializerType:HJRequestSerializerTypeHTTP
+                                             responseSerializerType:HJResponseSerializerTypeJSON];
+    if (isImage) {
+        request.resumableDownloadPath = [DMDownloadRequest saveBasePath];
+        request.ignoreResumableData = YES;
+    }
     request.ignoreCache = YES;
-    request.ignoreResumableData = YES;
     request.requestCachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
     HJRetryRequestConfig *config = [HJRetryRequestConfig defaultConfig];
-    [HJRetryRequestManager request:request
-                            config:config
-                   requestProgress:^(NSProgress * _Nullable progress) {
+    config.retryInterval = 2;
+    HJRetryRequestKey key = [HJRetryRequestManager request:request
+                                                    config:config
+                                           requestProgress:^(NSProgress * _Nullable progress) {
         NSLog(@"HJRetryRequestManager_progress =  %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
     } requestCompletion:^(NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
-        NSLog(@"HJRetryRequestManager_result = callbackInfo = %@, error = %@", callbackInfo, error);
+        NSLog(@"HJRetryRequestManager_result:\ncallbackInfo = %@,\nerror = %@", callbackInfo, error);
     }];
+    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+//        [HJRetryRequestManager cancelRequest:key];
+//    });
 }
 
 - (void)createDirectory:(NSString *)path {

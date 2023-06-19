@@ -7,17 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import "HJRetryRequestSource.h"
-#import <HJNetwork/HJRequest.h>
-#import <HJTask/HJTask.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJRetryRequestManager : NSObject
 
-+ (HJRetryRequestKey)request:(HJCoreRequest <HJTaskProtocol>*)request
++ (HJRetryRequestKey)request:(HJCoreRequest *)request
                       config:(HJRetryRequestConfig * _Nullable)config
              requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-           requestCompletion:(void (^)(NSDictionary<NSString *, id> * _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
+           requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
 
 + (void)cancelRequest:(HJRetryRequestKey)key;
 
