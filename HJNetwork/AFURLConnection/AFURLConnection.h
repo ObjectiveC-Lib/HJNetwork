@@ -12,10 +12,6 @@
 #import <HJNetwork/AFURLConnectionOperation.h>
 #import <HJNetwork/AFHTTPRequestOperation.h>
 #import <HJNetwork/AFHTTPRequestOperationManager.h>
-#elif __has_include("AFURLConnection.h")
-#import "AFURLConnectionOperation.h"
-#import "AFHTTPRequestOperation.h"
-#import "AFHTTPRequestOperationManager.h"
 #endif
 
 #endif /* AFURLConnection_h */

@@ -12,9 +12,6 @@
 #if __has_include(<HJNetwork/HJDownload.h>)
 #import <HJNetwork/HJDownloadSessionManager.h>
 #import <HJNetwork/HJDownloadOperationManager.h>
-#elif __has_include("HJDownload.h")
-#import "HJDownloadSessionManager.h"
-#import "HJDownloadOperationManager.h"
 #endif
 
 #endif /* HJDownload_h */

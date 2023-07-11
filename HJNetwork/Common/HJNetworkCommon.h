@@ -14,11 +14,6 @@
 #import <HJNetwork/HJNetworkConfig.h>
 #import <HJNetwork/HJNetworkMetrics.h>
 #import <HJNetwork/HJCredentialChallenge.h>
-#elif __has_include("HJNetworkCommon.h")
-#import "HJDNSNode.h"
-#import "HJNetworkConfig.h"
-#import "HJNetworkMetrics.h"
-#import "HJCredentialChallenge.h"
 #endif
 
 #endif /* HJNetworkCommon_h */

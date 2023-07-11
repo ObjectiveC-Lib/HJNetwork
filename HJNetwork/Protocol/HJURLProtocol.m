@@ -405,8 +405,8 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
     
     [[self class] HJURLProtocol:self logWithFormat:@"challenge %@ received", [[challenge protectionSpace] authenticationMethod]];
     
-    [self performOnThread:nil
-                    modes:nil
+    [self performOnThread:self.clientThread
+                    modes:self.modes
                     block:^{
         [self mainThreadDidReceiveAuthenticationChallenge:challenge
                                                   session:session
@@ -430,7 +430,7 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
                                   completionHandler:(HJChallengeCompletionHandler)completionHandler {
     assert(challenge != nil);
     assert(completionHandler != nil);
-    assert([NSThread isMainThread]);
+    // assert([NSThread isMainThread]);
     
     if (self.pendingChallenge != nil) {
         // Our delegate is not expecting a second authentication challenge before resolving the
@@ -483,7 +483,7 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
 #pragma unused(challenge)
     assert(challenge != nil);
     assert(completionHandler != nil);
-    assert([NSThread isMainThread]);
+    // assert([NSThread isMainThread]);
     
     [self performOnThread:self.clientThread
                     modes:self.modes
@@ -504,8 +504,8 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
     // Just pass the work off to the main thread.  We do this so that all accesses
     // to pendingChallenge are done from the main thread, which avoids the need for
     // extra synchronisation.
-    [self performOnThread:nil
-                    modes:nil
+    [self performOnThread:self.clientThread
+                    modes:self.modes
                     block:^{
         if (self.pendingChallenge == nil) {
             // This is not only not unusual, it's actually very typical.  It happens every time you shut down
@@ -536,8 +536,8 @@ static NSString * kOurCustomSchemeFlagProperty = @"com.apple.domain.HJURLProtoco
                            disposition:(NSURLSessionAuthChallengeDisposition)disposition
                             credential:(NSURLCredential *)credential {
     assert(challenge == self.pendingChallenge);
-    assert([NSThread isMainThread]);
-    assert(self.clientThread != nil);
+    // assert([NSThread isMainThread]);
+    // assert(self.clientThread != nil);
     
     if (challenge != self.pendingChallenge) {
         [[self class] HJURLProtocol:self logWithFormat:@"challenge resolution mismatch (%@ / %@)", challenge, self.pendingChallenge];

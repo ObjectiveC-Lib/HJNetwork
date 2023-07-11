@@ -158,7 +158,7 @@ static NSTimeInterval sAppStartTime; // since reference date
     assert(protocol != nil);
     assert(challenge != nil);
     assert([[[challenge protectionSpace] authenticationMethod] isEqual:NSURLAuthenticationMethodServerTrust]);
-    assert([NSThread isMainThread]);
+    // assert([NSThread isMainThread]);
     
     SecTrustResultType trustResult;
     NSURLCredential *credential = nil;

@@ -12,9 +12,6 @@
 #if __has_include(<HJNetwork/HJDNSResolve.h>)
 #import <HJNetwork/HJDNSMap.h>
 #import <HJNetwork/HJDNSResolveManager.h>
-#elif __has_include("HJDNSResolve.h")
-#import "HJDNSMap.h"
-#import "HJDNSResolveManager.h"
 #endif
 
 #endif /* HJDNSResolve_h */

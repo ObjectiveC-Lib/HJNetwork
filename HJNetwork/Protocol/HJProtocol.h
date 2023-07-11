@@ -13,10 +13,6 @@
 #import <HJNetwork/HJProtocolManager.h>
 #import <WKWebView+CustomScheme.h>
 #import <HJNetwork/NSURLSessionConfiguration+URLProtocol.h>
-#elif __has_include("HJProtocol.h")
-#import "HJProtocolManager.h"
-#import "WKWebView+CustomScheme.h"
-#import "NSURLSessionConfiguration+URLProtocol.h"
 #endif
 
 #endif /* HJProtocol_h */
