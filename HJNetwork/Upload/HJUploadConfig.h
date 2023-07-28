@@ -14,7 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL fragmentEnable;          // default: NO;
 @property (nonatomic, assign) NSUInteger fragmentMaxSize;   // default: 512k=512*1024;
-@property (nonatomic, assign) NSUInteger failureRetryCount; // default: 0;
+
+@property (nonatomic, assign) BOOL retryEnable;             // default: YES;
+@property (nonatomic, assign) NSUInteger retryCount;        // default: 3;
+@property (nonatomic, assign) NSUInteger retryInterval;     // default: 1s;
 
 + (instancetype)defaultConfig;
 

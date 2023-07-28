@@ -65,7 +65,7 @@ static inline NSString * _Nullable HJDataMD5String(NSData * _Nullable data) {
 #pragma clang diagnostic pop
     
     NSMutableString *key = [[NSMutableString alloc] initWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (NSInteger count = 0; count < CC_MD5_DIGEST_LENGTH; count++){
+    for (NSInteger count = 0; count < CC_MD5_DIGEST_LENGTH; count++) {
         [key appendFormat:@"%02x", outputBuffer[count]];
     }
     return key;
@@ -88,7 +88,7 @@ static inline NSError * _Nullable HJErrorWithUnderlyingError(NSError * _Nullable
 
 typedef void(^HJUploadProgressBlock)(NSProgress * _Nullable progress);
 
-typedef void (^HJUploadCompletionBlock)(HJUploadStatus status, NSDictionary<NSString *, id> * _Nullable callbackInfo, NSError *_Nullable error);
+typedef void (^HJUploadCompletionBlock)(HJUploadStatus status, id _Nullable callbackInfo, NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 结果
 @property (nonatomic,   copy) HJUploadCompletionBlock completion;
 /// 回调信息
-@property (nonatomic, strong) NSMutableDictionary <NSString *, id> * _Nullable callbackInfo;
+@property (nonatomic, strong) id _Nullable callbackInfo;
 /// 错误
 @property (nonatomic, strong) NSError *_Nullable error;
 

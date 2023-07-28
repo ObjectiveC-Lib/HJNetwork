@@ -35,7 +35,7 @@
 
 - (void)start {
     if (_nextRequestIndex > 0) {
-        HJLog(@"Error! Chain request has already started.");
+        HJLog(nil, @"Error! Chain request has already started.");
         return;
     }
     
@@ -44,7 +44,7 @@
         [self startNextRequest];
         [[HJChainRequestAgent sharedAgent] addChainRequest:self];
     } else {
-        HJLog(@"Error! Chain request array is empty.");
+        HJLog(nil, @"Error! Chain request array is empty.");
     }
 }
 

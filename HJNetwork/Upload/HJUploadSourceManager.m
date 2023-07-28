@@ -29,12 +29,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        //        NSString *pathOfRoot = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        //        NSString *baseDirectory = [pathOfRoot stringByAppendingPathComponent:@"UploadDB"];
-        //        NSLog(@"Base Directory: %@", baseDirectory);
-        //        NSString *tableName = NSStringFromClass(HJUploadSource.class);
-        //        NSString *tablePath = [baseDirectory stringByAppendingPathComponent:tableName];
-        
         _lock = dispatch_semaphore_create(1);
         _sources = [[NSMutableDictionary alloc] init];
     }

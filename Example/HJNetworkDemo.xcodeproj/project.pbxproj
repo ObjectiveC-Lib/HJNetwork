@@ -13,7 +13,6 @@
 		5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95928911FAA00F85AB4 /* DMHTTPRequest.m */; };
 		5521D95D2891299100F85AB4 /* DMDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95C2891299100F85AB4 /* DMDownloadRequest.m */; };
 		5521D960289148F300F85AB4 /* DMUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95F289148F300F85AB4 /* DMUploadRequest.m */; };
-		5526E5D62963FBB7004FBC71 /* HJUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5526E5D52963FBB7004FBC71 /* HJUploadManager.m */; };
 		5592ED9928BDE86F002A19D6 /* WKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5592ED9828BDE86F002A19D6 /* WKWebViewController.m */; };
 		5592ED9C28BF2F4D002A19D6 /* DMURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */; };
 		55AF57A6283634A30073E550 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55AF57A4283634A30073E550 /* Main.storyboard */; };
@@ -89,8 +88,6 @@
 		5521D95C2891299100F85AB4 /* DMDownloadRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDownloadRequest.m; sourceTree = "<group>"; };
 		5521D95E289148F300F85AB4 /* DMUploadRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMUploadRequest.h; sourceTree = "<group>"; };
 		5521D95F289148F300F85AB4 /* DMUploadRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMUploadRequest.m; sourceTree = "<group>"; };
-		5526E5D42963FBB7004FBC71 /* HJUploadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJUploadManager.h; sourceTree = "<group>"; };
-		5526E5D52963FBB7004FBC71 /* HJUploadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJUploadManager.m; sourceTree = "<group>"; };
 		5592ED9728BDE86F002A19D6 /* WKWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebViewController.h; sourceTree = "<group>"; };
 		5592ED9828BDE86F002A19D6 /* WKWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewController.m; sourceTree = "<group>"; };
 		5592ED9A28BF2F4D002A19D6 /* DMURLProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMURLProtocol.h; sourceTree = "<group>"; };
@@ -214,8 +211,6 @@
 			children = (
 				5521D95E289148F300F85AB4 /* DMUploadRequest.h */,
 				5521D95F289148F300F85AB4 /* DMUploadRequest.m */,
-				5526E5D42963FBB7004FBC71 /* HJUploadManager.h */,
-				5526E5D52963FBB7004FBC71 /* HJUploadManager.m */,
 				55F2878C28C71F3B00A96E88 /* HJUploadRequest.h */,
 				55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */,
 				55AF57FA2836477B0073E550 /* NSObject+HJUploadTask.h */,
@@ -708,7 +703,6 @@
 				55AF57AE283634A50073E550 /* main.m in Sources */,
 				55AF58002836477B0073E550 /* DMBaseRequest.m in Sources */,
 				5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */,
-				5526E5D62963FBB7004FBC71 /* HJUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

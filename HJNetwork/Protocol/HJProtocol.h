@@ -11,7 +11,7 @@
 
 #if __has_include(<HJNetwork/HJProtocol.h>)
 #import <HJNetwork/HJProtocolManager.h>
-#import <WKWebView+CustomScheme.h>
+#import <HJNetwork/WKWebView+CustomScheme.h>
 #import <HJNetwork/NSURLSessionConfiguration+URLProtocol.h>
 #endif
 

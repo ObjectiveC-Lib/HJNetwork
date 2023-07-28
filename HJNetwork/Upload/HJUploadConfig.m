@@ -15,7 +15,10 @@
     if (self) {
         _fragmentEnable = NO;
         _fragmentMaxSize = 512*1024;
-        _failureRetryCount = 0;
+        
+        _retryEnable = YES;
+        _retryCount = 3;
+        _retryInterval = 1;
     }
     return self;
 }
@@ -35,7 +38,9 @@
     if (self = [super init]) {
         self.fragmentEnable = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(fragmentEnable))] boolValue];
         self.fragmentMaxSize = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(fragmentMaxSize))] unsignedIntegerValue];
-        self.failureRetryCount = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(failureRetryCount))] unsignedIntegerValue];
+        self.retryEnable = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryEnable))] boolValue];
+        self.retryCount = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryCount))] unsignedIntegerValue];
+        self.retryInterval = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryInterval))] unsignedIntegerValue];
     }
     return self;
 }
@@ -43,7 +48,9 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:[NSNumber numberWithBool:self.fragmentEnable] forKey:NSStringFromSelector(@selector(fragmentEnable))];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.fragmentMaxSize] forKey:NSStringFromSelector(@selector(fragmentMaxSize))];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.failureRetryCount] forKey:NSStringFromSelector(@selector(failureRetryCount))];
+    [coder encodeObject:[NSNumber numberWithBool:self.retryEnable] forKey:NSStringFromSelector(@selector(retryEnable))];
+    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.retryCount] forKey:NSStringFromSelector(@selector(retryCount))];
+    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.retryInterval] forKey:NSStringFromSelector(@selector(retryInterval))];
 }
 
 #pragma mark - NSCopying
@@ -52,7 +59,9 @@
     HJUploadConfig *config = [[self class] allocWithZone:zone];
     config.fragmentEnable = self.fragmentEnable;
     config.fragmentMaxSize = self.fragmentMaxSize;
-    config.failureRetryCount = self.failureRetryCount;
+    config.retryEnable = self.retryEnable;
+    config.retryCount = self.retryCount;
+    config.retryInterval = self.retryInterval;
     return config;
 }
 

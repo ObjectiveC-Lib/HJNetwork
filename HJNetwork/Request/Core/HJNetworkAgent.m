@@ -140,7 +140,7 @@
         }
     }
     
-    HJLog(@"Start Request: %@", NSStringFromClass([request class]));
+    if (request.debugLogEnabled) HJLog(nil, @"Start Request: %@", request);
     
     // Retain request
     [self addRequestToRecord:request];
@@ -560,7 +560,7 @@
                 }];
                 resumeSucceeded = YES;
             } @catch (NSException *exception) {
-                HJLog(@"Resume download failed, reason = %@", exception.reason);
+                HJLog(nil, @"Resume download failed, reason = %@", exception.reason);
                 resumeSucceeded = NO;
             }
         }
@@ -586,7 +586,7 @@
     
     if (!request) return;
     
-    HJLog(@"Finished Request: %@", NSStringFromClass([request class]));
+    if (request.debugLogEnabled) HJLog(nil, @"Finished Request: %@", request);
     
     NSError * __autoreleasing validationError = nil;
     NSError * __autoreleasing serializationError = nil;
@@ -703,7 +703,17 @@
 
 - (void)requestDidFailWithRequest:(HJCoreRequest *)request error:(NSError *)error {
     request.error = error;
-    HJLog(@"Failed Request %@, status code = %ld, error = %@", NSStringFromClass([request class]), (long)request.responseStatusCode, error.localizedDescription);
+    
+    if (request.debugLogEnabled) HJLog(nil, @"Failed Request: %@\n{\n status code = %ld\n error domain = %@\n error code: %ld\n error desc: %@\n error reason: %@\n error info = %@\n underlying error = %@\n}",
+                                       request,
+                                       (long)request.responseStatusCode,
+                                       request.error.domain,
+                                       (long)request.error.code,
+                                       request.error.localizedDescription,
+                                       request.error.localizedFailureReason,
+                                       request.error.userInfo,
+                                       request.error.userInfo[NSUnderlyingErrorKey]
+                                       );
     
     // Save incomplete download data.
     NSData *incompleteDownloadData = error.userInfo[NSURLSessionDownloadTaskResumeData];
@@ -772,7 +782,7 @@
         return cacheFolder;
     }
     
-    HJLog(@"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
+    HJLog(nil, @"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
     return nil;
 }
 

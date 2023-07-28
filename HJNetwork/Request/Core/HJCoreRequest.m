@@ -26,7 +26,7 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 #pragma mark - Request and Response Information
 
 - (void)dealloc {
-    HJLog(@"%@ dealloc", [self class]);
+    if (self.debugLogEnabled) HJLog(nil, @"Dealloc Request: %@", self);
 }
 
 - (NSHTTPURLResponse *)response {

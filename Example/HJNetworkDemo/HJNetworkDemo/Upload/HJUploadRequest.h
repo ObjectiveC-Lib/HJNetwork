@@ -6,12 +6,11 @@
 //
 
 #import "DMBaseRequest.h"
-#import <HJTask/HJTask.h>
 #import <HJNetwork/HJUpload.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HJUploadRequest : DMBaseRequest <HJTaskProtocol>
+@interface HJUploadRequest : DMBaseRequest
 
 - (instancetype)initWithFragment:(nullable HJUploadFileFragment *)fragment;
 

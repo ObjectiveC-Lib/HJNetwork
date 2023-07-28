@@ -27,7 +27,7 @@
         _finishedCount = 0;
         for (HJBaseRequest * req in _requestArray) {
             if (![req isKindOfClass:[HJBaseRequest class]]) {
-                HJLog(@"Error, request item must be HJBaseRequest instance.");
+                HJLog(nil, @"Error, request item must be HJBaseRequest instance.");
                 return nil;
             }
         }
@@ -37,7 +37,7 @@
 
 - (void)start {
     if (_finishedCount > 0) {
-        HJLog(@"Error! Batch request has already started.");
+        HJLog(nil, @"Error! Batch request has already started.");
         return;
     }
     _failedRequest = nil;

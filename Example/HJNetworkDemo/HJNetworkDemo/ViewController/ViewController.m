@@ -19,6 +19,7 @@
 #import "HJUploadManager.h"
 #import "DMDNSTest.h"
 #import "DMHTTPSessionManager.h"
+#import "HJUploadRequest.h"
 
 @interface ViewController ()
 @end
@@ -83,7 +84,6 @@
     //    NSArray *arr = @[@"a", @"b", @"a"];
     //    NSSet *set = [NSSet setWithArray:arr];
     //    NSLog(@"set = %@", set);
-    
 }
 
 - (UIButton *)createButton:(CGRect)frame {
@@ -192,13 +192,30 @@
     
     
     /*********************************************************************************************/
-    HJUploadSourceKey key = [HJUploadManager uploadWithAbsolutePath:url2.path
-                                                     uploadProgress:^(NSProgress * _Nullable progress) {
-        //        NSLog(@"******************************************************************");
-    } completion:^(NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
-        //        NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+    
+    HJUploadConfig *config = [HJUploadConfig defaultConfig];
+    config.retryEnable = YES;
+    config.fragmentEnable = YES;
+    config.fragmentMaxSize = 512*1024;
+    
+    HJUploadSourceKey key = [HJUploadManager uploadWithAbsolutePath:url4.path
+                                                             config:config
+                                                      uploadRequest:^HJCoreRequest * _Nonnull(HJUploadFileFragment * _Nonnull fragment) {
+        HJUploadRequest *request = [[HJUploadRequest alloc] initWithFragment:fragment];
+        return request;
+    } uploadProgress:^(NSProgress * _Nullable progress) {
+        NSLog(@"HJUpload_progress: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+    } uploadCompletion:^(HJUploadStatus status, id  _Nullable callbackInfo, NSError * _Nullable error) {
+        NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        NSLog(@"HJUpload_completion_stage = %ld", (long)status);
+        NSLog(@"HJUpload_completion_callbackInfo = %@", callbackInfo);
+        NSLog(@"HJUpload_completion_error = %@", error);
     }];
-    //    [HJUploadManager cancelSource:key];
+    
+    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    //        [HJUploadManager cancelUpload:key];
+    //    });
+    
     /*********************************************************************************************/
 }
 
@@ -243,39 +260,39 @@ NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.
 }
 
 - (void)HJRequestManagerRequest:(id)sender {
-    BOOL isImage = YES;
-    NSString *url = isImage?kTestDownloadURL:@"https://httpbin.org/get";
-    if (isImage) {
-        [self clearDirectory:[DMDownloadRequest saveBasePath]];
-        [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
-        [self createDirectory:[DMDownloadRequest saveBasePath]];
-    }
-    
-    DMCommonRequest *request = [[DMCommonRequest alloc] initWithUrl:url
-                                                    requestArgument:nil
-                                                        headerField:nil
-                                                      requestMethod:HJRequestMethodGET
-                                              requestSerializerType:HJRequestSerializerTypeHTTP
-                                             responseSerializerType:HJResponseSerializerTypeJSON];
-    if (isImage) {
-        request.resumableDownloadPath = [DMDownloadRequest saveBasePath];
-        request.ignoreResumableData = YES;
-    }
-    request.ignoreCache = YES;
-    request.requestCachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
     HJRetryRequestConfig *config = [HJRetryRequestConfig defaultConfig];
     config.retryInterval = 2;
-    HJRetryRequestKey key = [HJRetryRequestManager request:request
-                                                    config:config
-                                           requestProgress:^(NSProgress * _Nullable progress) {
+    HJRetryRequestKey key = [HJRetryRequestManager requestWithConfig:config
+                                                        retryRequest:^HJCoreRequest * _Nonnull {
+        BOOL isImage = YES;
+        NSString *url = isImage?kTestDownloadURL:@"https://httpbin.org/get";
+        DMCommonRequest *request = [[DMCommonRequest alloc] initWithUrl:url
+                                                        requestArgument:nil
+                                                            headerField:nil
+                                                          requestMethod:HJRequestMethodGET
+                                                  requestSerializerType:HJRequestSerializerTypeHTTP
+                                                 responseSerializerType:HJResponseSerializerTypeJSON];
+        if (isImage) {
+            [self clearDirectory:[DMDownloadRequest saveBasePath]];
+            [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
+            [self createDirectory:[DMDownloadRequest saveBasePath]];
+        }
+        if (isImage) {
+            request.resumableDownloadPath = [DMDownloadRequest saveBasePath];
+            request.ignoreResumableData = YES;
+        }
+        request.ignoreCache = YES;
+        request.requestCachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+        return request;
+    } requestProgress:^(NSProgress * _Nullable progress) {
         NSLog(@"HJRetryRequestManager_progress =  %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-    } requestCompletion:^(NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
+    } requestCompletion:^(HJRetryRequestStatus status, id  _Nullable callbackInfo, NSError * _Nullable error) {
         NSLog(@"HJRetryRequestManager_result:\ncallbackInfo = %@,\nerror = %@", callbackInfo, error);
     }];
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-//        [HJRetryRequestManager cancelRequest:key];
-//    });
+    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    //        [HJRetryRequestManager cancelRequest:key];
+    //    });
 }
 
 - (void)createDirectory:(NSString *)path {

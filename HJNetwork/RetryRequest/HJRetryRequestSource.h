@@ -63,11 +63,10 @@ typedef void (^HJRetryRequestCompletionBlock)(HJRetryRequestStatus status, id _N
 @property (nonatomic, strong) id _Nullable callbackInfo;
 /// 错误
 @property (nonatomic, strong) NSError *_Nullable error;
+/// Retry Request
+@property (nonatomic,   copy) HJCoreRequest *(^retryRequestBlock)(void);
 
-- (instancetype)initWithRequest:(HJCoreRequest *)request
-                         config:(HJRetryRequestConfig *)config
-                requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-              requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
+- (instancetype)initWithConfig:(HJRetryRequestConfig *)config;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,36 +10,34 @@
 
 @implementation HJRetryRequestManager
 
-+ (HJRetryRequestKey)request:(HJCoreRequest *)request
-                      config:(HJRetryRequestConfig *)config
-             requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-           requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion {
-    if (!request || [request requestUrl].length <= 0) return HJRetryRequestKeyInvalid;
++ (HJRetryRequestKey)requestWithConfig:(HJRetryRequestConfig *)config
+                          retryRequest:(HJCoreRequest *(^)(void))retryRequest
+                       requestProgress:(void (^)(NSProgress *progress))requestProgress
+                     requestCompletion:(void (^)(HJRetryRequestStatus status, id callbackInfo, NSError *error))requestCompletion {
     if (!config) config = [HJRetryRequestConfig defaultConfig];
     
-    HJRetryRequestSource *requestsSource = [[HJRetryRequestSource alloc] initWithRequest:request
-                                                                                  config:config
-                                                                         requestProgress:requestProgress
-                                                                       requestCompletion:requestCompletion];
-    
-    [[HJTaskManager sharedInstance] executor:requestsSource
+    HJRetryRequestSource *source = [[HJRetryRequestSource alloc] initWithConfig:config];
+    source.retryRequestBlock = retryRequest;
+    source.progress = requestProgress;
+    source.completion = requestCompletion;
+    [[HJTaskManager sharedInstance] executor:source
                                     progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
-        if (requestsSource.progress) {
-            requestsSource.progress(taskProgress);
+        if (source.progress) {
+            source.progress(taskProgress);
         }
     } completion:^(HJTaskKey key, HJTaskStage stage, id _Nullable callbackInfo, NSError * _Nullable error) {
-        HJRetryRequestStatus status = requestsSource.status;
+        HJRetryRequestStatus status = source.status;
         if (stage == HJTaskStageFinished) {
             status = error?HJRetryRequestStatusFailure:HJRetryRequestStatusSuccess;
         } else if (stage == HJTaskStageCancelled) {
             status = HJRetryRequestStatusCancel;
         }
-        if (requestsSource.completion) {
-            requestsSource.completion(status, callbackInfo, error);
+        if (source.completion) {
+            source.completion(status, callbackInfo, error);
         }
     }];
     
-    return requestsSource.sourceId;
+    return source.sourceId;
 }
 
 + (void)cancelRequest:(HJRetryRequestKey)key {

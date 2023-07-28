@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJUploadFileFragment : HJUploadFileBasic
-/// 文件块ID
+/// 文件片ID
 @property (nonatomic, strong) NSString *fragmentId;
 /// 片的索引
 @property (nonatomic, assign) NSUInteger index;

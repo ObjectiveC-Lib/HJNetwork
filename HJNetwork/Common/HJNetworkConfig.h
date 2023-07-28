@@ -20,7 +20,7 @@ if (dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL) == dispatch_queue_get
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const HJRequestCacheErrorDomain;
-FOUNDATION_EXPORT void HJLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+FOUNDATION_EXPORT void HJLog(NSString * _Nullable consolePrefix, NSString *format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 @class HJCoreRequest;
 @class AFSecurityPolicy;

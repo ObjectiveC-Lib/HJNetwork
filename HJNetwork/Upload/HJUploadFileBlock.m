@@ -13,9 +13,13 @@
 @interface HJUploadFileBlock ()
 @property (nonatomic, assign) int64_t totalUnitCount;
 @property (nonatomic, assign) int64_t completedUnitCount;
+@property (nonatomic, assign) int64_t uncompletedUnitCount;
 @property (nonatomic, strong) NSProgress *fileProgress;
 @property (nonatomic, assign) NSUInteger fragmentCount;
 @property (nonatomic, assign) NSUInteger completionCount;
+@property (nonatomic, assign) BOOL uploadFragmentFailed;
+@property (nonatomic, assign) BOOL sourceCancelTask;
+@property (nonatomic, strong) HJUploadConfig *config;
 @end
 
 @implementation HJUploadFileBlock
@@ -27,6 +31,8 @@
 - (instancetype)initWithAbsolutePath:(NSString *)path config:(HJUploadConfig *)config {
     self = [super init];
     if (self) {
+        _config = config;
+        
         _fileProgress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
         _fileProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
         [_fileProgress addObserver:self
@@ -37,7 +43,7 @@
         _completedUnitCount = 0;
         
         [self fetchFileInfo:path];
-        [self cutFragments:config];
+        [self cutFragments];
     }
     return self;
 }
@@ -100,9 +106,9 @@
     self.blockId = HJFileCreateId(self.path);
 }
 
-- (void)cutFragments:(HJUploadConfig *)config {
+- (void)cutFragments {
     __weak typeof(self) weakself = self;
-    NSUInteger fragmentMaxSize = config.fragmentEnable?config.fragmentMaxSize:self.size;
+    NSUInteger fragmentMaxSize = self.config.fragmentEnable?self.config.fragmentMaxSize:self.size;
     NSUInteger fragmentCount = (self.size%fragmentMaxSize==0)?(self.size/fragmentMaxSize):(self.size/(fragmentMaxSize)+1);
     NSMutableArray<HJUploadFileFragment *> *fragments = [[NSMutableArray alloc] initWithCapacity:fragmentCount];
     for (NSUInteger i = 0; i < fragmentCount; i++) {
@@ -119,17 +125,23 @@
         fragment.block = self;
         fragment.progress = ^(NSProgress * _Nullable progress) {
             __strong typeof(weakself) self = weakself;
-            self.completedUnitCount += progress.completedUnitCount;
+            if (self.fragments.count == 1) {
+                self.completedUnitCount += progress.completedUnitCount;
+            }
         };
         __weak typeof(fragment) weakfragment = fragment;
-        fragment.completion = ^(HJUploadStatus status, NSDictionary<NSString *,id> * _Nullable callbackInfo, NSError * _Nullable error) {
+        fragment.completion = ^(HJUploadStatus status, id _Nullable callbackInfo, NSError * _Nullable error) {
             __strong typeof(weakself) self = weakself;
             weakfragment.error = error;
             weakfragment.status = status;
-            if (callbackInfo && callbackInfo.count) {
-                weakfragment.callbackInfo = callbackInfo.mutableCopy;
-            } else {
-                weakfragment.callbackInfo = @{}.mutableCopy;
+            weakfragment.callbackInfo = callbackInfo;
+            if (error || status == HJUploadStatusCancel || status == HJUploadStatusFailure) {
+                self.uploadFragmentFailed = YES;
+            }
+            
+            if (self.fragments.count > 1 && status == HJUploadStatusSuccess) {
+                // NSLog(@"weakfragment.size = %d", weakfragment.size);
+                self.completedUnitCount += weakfragment.size;
             }
             self.completionCount += 1;
         };
@@ -146,32 +158,38 @@
     if (_completionCount == self.fragmentCount) {
         self.fragmentCount = 0;
         _completionCount = 0;
+        self.uploadFragmentFailed = NO;
+        self.sourceCancelTask = NO;
         
         __block HJUploadStatus status = HJUploadStatusSuccess;
         __block NSError *error = nil;
         __block NSMutableDictionary <NSString *, id> * _Nullable callbackInfo = [NSMutableDictionary new];
-        if (self.callbackInfo && self.callbackInfo.count) {
-            [callbackInfo addEntriesFromDictionary:self.callbackInfo];
-        }
         __weak typeof(self) weakself = self;
         [self.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (fragment.callbackInfo && fragment.callbackInfo.count) {
-                [callbackInfo setObject:fragment.callbackInfo.copy forKey:fragment.fragmentId];
-            } else {
-                [callbackInfo setObject:@{} forKey:fragment.fragmentId];
+            if (fragment.callbackInfo) {
+                [callbackInfo setObject:fragment.callbackInfo forKey:fragment.fragmentId];
             }
+            
             if (fragment.status == HJUploadStatusFailure || fragment.status == HJUploadStatusCancel) {
-                status = fragment.status;
+                if (fragment.status == HJUploadStatusCancel) {
+                    status = fragment.status;
+                }
+                if (status != HJUploadStatusCancel) {
+                    status = fragment.status;
+                }
                 error = HJErrorWithUnderlyingError(fragment.error, error);
-                weakself.completedUnitCount -= fragment.size;
                 if (fragment.status == HJUploadStatusFailure) {
-                    self.fragmentCount += 1;
+                    weakself.fragmentCount += 1;
+                }
+                if (weakself.fragments.count == 1) {
+                    weakself.uncompletedUnitCount = weakself.completedUnitCount;
+                    weakself.completedUnitCount = 0;
                 }
             }
         }];
         self.status = status;
         self.error = error;
-        self.callbackInfo = callbackInfo.mutableCopy;
+        if (callbackInfo.count) self.callbackInfo = callbackInfo;
         
         if (self.error) {
             if (self.completion) {
@@ -186,6 +204,9 @@
                 }
             }
         }
+    } else if (!self.sourceCancelTask && !self.config.retryEnable && self.uploadFragmentFailed) {
+        self.sourceCancelTask = YES;
+        [self.source cancelTask];
     }
 }
 
@@ -198,8 +219,11 @@
             self.fileProgress.totalUnitCount = self.totalUnitCount;
         }
     } else {
-        self.fileProgress.completedUnitCount = _completedUnitCount;
-        self.fileProgress.totalUnitCount = self.totalUnitCount;
+        if (_completedUnitCount >= self.uncompletedUnitCount) {
+            self.uncompletedUnitCount = 0;
+            self.fileProgress.completedUnitCount = _completedUnitCount;
+            self.fileProgress.totalUnitCount = self.totalUnitCount;
+        }
     }
 }
 
@@ -243,6 +267,7 @@
                         change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if ([object isEqual:self.fileProgress]) {
         if (self.progress) {
+            // NSLog(@"block_completedUnitCount: %lld / %lld", [(NSProgress *)object completedUnitCount], [(NSProgress *)object totalUnitCount]);
             self.progress(object);
         }
     }

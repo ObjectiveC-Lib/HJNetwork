@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJRetryRequestManager : NSObject
 
-+ (HJRetryRequestKey)request:(HJCoreRequest *)request
-                      config:(HJRetryRequestConfig * _Nullable)config
-             requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-           requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
++ (HJRetryRequestKey)requestWithConfig:(HJRetryRequestConfig * _Nullable)config
+                          retryRequest:(HJCoreRequest *(^)(void))retryRequest
+                       requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
+                     requestCompletion:(void (^)(HJRetryRequestStatus status, id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion;
 
 + (void)cancelRequest:(HJRetryRequestKey)key;
 

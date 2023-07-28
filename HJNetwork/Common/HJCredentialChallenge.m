@@ -676,7 +676,7 @@ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NS
             int extendCATrust = 0;
             SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
             SecTrustRef newTrust = HJChangedHostForTrust(serverTrust, host, &rootCATrust, &extendCATrust);
-            NSLog(@"hj_protectionSpace_host = %@, host = %@", challenge.protectionSpace.host, host);
+            // NSLog(@"hj_protectionSpace_host = %@, host = %@", challenge.protectionSpace.host, host);
             if (rootCATrust == 1) {
                 BOOL isValid = HJServerTrustIsValid(newTrust);
                 if (isValid) {

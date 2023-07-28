@@ -12,7 +12,7 @@
 #if __has_include(<HJNetwork/HJUpload.h>)
 #import <HJNetwork/HJFileManager.h>
 #import <HJNetwork/HJUploadSource.h>
-#import <HJNetwork/HJUploadSourceManager.h>
+#import <HJNetwork/HJUploadManager.h>
 #endif
 
 #endif /* HJUpload_h */

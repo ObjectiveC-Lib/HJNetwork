@@ -118,9 +118,9 @@
             if (metric.status_code == 200) {
                 [[HJDNSResolveManager sharedManager] setPositiveUrl:metric.req_url host:metric.req_headers[@"Host"]];
             } else {
-                //                                NSLog(@"%@", metric);
+                // NSLog(@"%@", metric);
                 [[HJDNSResolveManager sharedManager] setNegativeUrl:metric.req_url host:metric.req_headers[@"Host"]];
-                //                NSLog(@"%@", [HJDNSResolveManager sharedManager]);
+                // NSLog(@"%@", [HJDNSResolveManager sharedManager]);
             }
         };
     }

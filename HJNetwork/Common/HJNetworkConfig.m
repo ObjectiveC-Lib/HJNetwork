@@ -18,13 +18,16 @@
 
 NSString *const HJRequestCacheErrorDomain = @"com.hj.request.caching";
 
-void HJLog(NSString *format, ...) {
+void HJLog(NSString *consolePrefix, NSString *format, ...) {
 #ifdef DEBUG
-    if (![HJNetworkConfig sharedConfig].debugLogEnabled) return;
-    
+    NSString *prefix = @"[HJNetwork]";
+    if (consolePrefix && consolePrefix.length) {
+        prefix = consolePrefix;
+    }
+    NSString *logFormat = [NSString stringWithFormat:@"%@ : %@", prefix, format];
     va_list argptr;
     va_start(argptr, format);
-    NSLogv(format, argptr);
+    NSLogv(logFormat, argptr);
     va_end(argptr);
 #endif
 }
@@ -111,9 +114,7 @@ void HJLog(NSString *format, ...) {
                                         NSURLSessionTask * _Nonnull task,
                                         NSURLSessionTaskMetrics * _Nonnull metrics) {
                 HJNetworkMetrics *metric = [[HJNetworkMetrics alloc] initWithMetrics:metrics session:session task:task];
-                if (_debugLogEnabled) {
-                    NSLog(@"%@", metric);
-                }
+                if (_debugLogEnabled) HJLog(nil, @"%@", metric);
             };
         }
     }

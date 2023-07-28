@@ -25,9 +25,23 @@
     NSString *absolutePath = self.block.absolutePath;
     if ([[NSFileManager defaultManager] fileExistsAtPath:absolutePath]) {
         NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:absolutePath];
-        [readHandle seekToFileOffset:self.offset];
-        data = [readHandle readDataOfLength:self.size];
-        [readHandle closeFile];
+        if (@available(iOS 13.0, *)) {
+            NSError *error = nil;
+            [readHandle seekToOffset:self.offset error:&error];
+            if (!error) {
+                data = [readHandle readDataUpToLength:self.size error:&error];
+            }
+            if (!error) {
+                [readHandle closeAndReturnError:&error];
+            }
+            if (error) {
+                NSLog(@"HJUploadSource_fetchData_error = %@", error);
+            }
+        } else {
+            [readHandle seekToFileOffset:self.offset];
+            data = [readHandle readDataOfLength:self.size];
+            [readHandle closeFile];
+        }
     }
     _fileData = data;
     

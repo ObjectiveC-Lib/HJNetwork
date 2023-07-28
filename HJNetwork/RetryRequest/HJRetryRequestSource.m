@@ -12,49 +12,29 @@
 @interface HJRetryRequestSource ()
 @property (nonatomic, strong) HJCoreRequest *request;
 @property (nonatomic, strong) HJRetryRequestConfig *config;
-@property (nonatomic, assign) NSUInteger failureRetryCount;
-//@property (nonatomic,   copy) void (^startBlock)(HJRetryRequestSource *source);
+@property (nonatomic, assign) NSUInteger retryCount;
 @end
 
 @implementation HJRetryRequestSource
 @synthesize taskKey = _taskKey;
 
 - (void)dealloc {
-    HJLog(@"HJRetryRequestSource_%@: dealloc", self.sourceId);
 }
 
-- (instancetype)initWithRequest:(HJCoreRequest *)request
-                         config:(HJRetryRequestConfig *)config
-                requestProgress:(void (^)(NSProgress * _Nullable progress))requestProgress
-              requestCompletion:(void (^)(id _Nullable callbackInfo, NSError * _Nullable error))requestCompletion {
+- (instancetype)initWithConfig:(HJRetryRequestConfig *)config {
     self = [super init];
     if (self) {
         self.config = config;
-        self.request = request;
         self.status = HJRetryRequestStatusWaiting;
-        self.sourceId = HJRetryRequestCreateId([request requestUrl]);
+        self.sourceId = HJRetryRequestCreateId([NSString stringWithFormat:@"%d", arc4random() % 100]);
         self.taskKey = self.sourceId;
-        self.failureRetryCount = config.retryCount;
-        self.progress = ^(NSProgress * _Nullable progress) {
-            dispatch_request_main_async_safe(^{
-                if (requestProgress) {
-                    requestProgress(progress);
-                }
-            });
-        };
-        self.completion = ^(HJRetryRequestStatus status, id _Nullable callbackInfo, NSError * _Nullable error) {
-            dispatch_request_main_async_safe(^{
-                if (requestCompletion) {
-                    requestCompletion(callbackInfo, error);
-                }
-            });
-        };
+        self.retryCount = config.retryCount;
     }
     return self;
 }
 
 - (void)cancelRequest {
-    if (self.request.executing) {
+    if (self.request && self.request.executing) {
         [self.request stop];
     }
 }
@@ -69,6 +49,10 @@
 
 - (void)startRequest {
     __weak typeof(self) _self = self;
+    if (self.retryRequestBlock) {
+        self.request = self.retryRequestBlock();
+    }
+    
     self.request.resumableDownloadProgressBlock = ^(NSProgress * _Nonnull progress) {
         __strong typeof(_self) self = _self;
         if (self.taskProgress) {
@@ -95,29 +79,26 @@
     self.callbackInfo = callbackInfo;
     
     if (self.error) {
-        if (self.failureRetryCount == self.config.retryCount) {
-            HJLog(@"HJRetryRequestSource_Original_result:\ncallbackInfo = %@\nerror = %@", self.callbackInfo, self.error);
+        if (self.retryCount == self.config.retryCount) {
+            // NSLog(@"HJRetryRequestSource_Original_result:\ncallbackInfo = %@\nerror = %@", self.callbackInfo, self.error);
         } else {
-            HJLog(@"HJRetryRequestSource_Retry_result:\ncallbackInfo = %@,\nerror = %@", self.callbackInfo, self.error);
+            // NSLog(@"HJRetryRequestSource_Retry_result:\ncallbackInfo = %@,\nerror = %@", self.callbackInfo, self.error);
         }
     }
     
     if (self.config.retryEnable && self.error) {
-        if (self.failureRetryCount > 0 && self.status == HJRetryRequestStatusFailure) {
+        if (self.retryCount > 0 && self.status == HJRetryRequestStatusFailure) {
             if (self.config.retryInterval) {
-                __weak typeof(self) _self = self;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.config.retryInterval * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
-                    __strong typeof(_self) self = _self;
-                    if (!self) return;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.config.retryInterval * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [self retryRequest];
-                    self.failureRetryCount -= 1;
-                    HJLog(@"HJRetryRequestSource_retryCount = %lu", (self.config.retryCount - self.failureRetryCount));
+                    self.retryCount -= 1;
+                    // NSLog(@"HJRetryRequestSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
                 });
             } else {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [self retryRequest];
-                    self.failureRetryCount -= 1;
-                    HJLog(@"HJRetryRequestSource_retryCount = %lu", (self.config.retryCount - self.failureRetryCount));
+                    self.retryCount -= 1;
+                    // NSLog(@"HJRetryRequestSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
                 });
             }
             return;

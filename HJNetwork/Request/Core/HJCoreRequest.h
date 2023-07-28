@@ -95,6 +95,11 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 @property (nonatomic, readonly, getter=isExecuting) BOOL executing;
 @property (nonatomic, readwrite, getter=isLoadMore) BOOL loadMore;
 
+#pragma mark - Request Debug
+
+/// Default value is NO
+@property (nonatomic, assign) BOOL debugLogEnabled;
+
 #pragma mark - Request Configuration
 
 ///  Tag can be used to identify request. Default value is 0.

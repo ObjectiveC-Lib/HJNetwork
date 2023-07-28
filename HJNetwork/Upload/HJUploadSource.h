@@ -7,28 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HJUploadConfig.h"
-#import "HJUploadFileBasic.h"
 #import "HJUploadFileBlock.h"
+#import <HJNetwork/HJRequest.h>
+#import <HJTask/HJTask.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString * _Nullable HJUploadSourceKey;
 static const HJUploadSourceKey HJUploadSourceKeyInvalid = nil;
 
-@interface HJUploadSource : HJUploadFileBasic
+typedef  HJCoreRequest *(^HJUploadFragmentBlock)(HJUploadFileFragment * _Nonnull fragment);
 
+@interface HJUploadSource : HJUploadFileBasic <HJTaskProtocol>
+
+@property (nonatomic, copy, nullable) HJTaskKey taskKey;
 /// 文件资源ID
 @property (nonatomic, strong) NSString *sourceId;
 /// 该资源下的所有文件块
 @property (nonatomic, strong) NSArray <HJUploadFileBlock *> *blocks;
 
+@property (nonatomic,   copy) HJUploadFragmentBlock uploadFragment;
+
 - (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(HJUploadConfig *)config;
-
-- (void)startWithBlock:(void (^)(HJUploadFileFragment * _Nonnull fragment))block;
-- (void)cancelWithBlock:(void (^)(HJUploadFileFragment * _Nonnull fragment))block;
-
-+ (void)cancelWithKey:(HJUploadSourceKey)key block:(void (^)(HJUploadFileFragment * _Nonnull fragment))block;
 
 @end
 

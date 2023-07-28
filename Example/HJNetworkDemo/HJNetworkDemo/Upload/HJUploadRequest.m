@@ -54,41 +54,8 @@ static inline NSString * DMContentTypeForPathExtension(NSString *extension) {
     };
 }
 
-#pragma mark - HJTaskProtocol
-
-- (BOOL)allowBackground {
+- (BOOL)debugLogEnabled {
     return YES;
-}
-
-- (HJTaskKey)taskKey {
-    return _fragment.fragmentId;
-}
-
-- (void)startTask {
-    __weak typeof(self) _self = self;
-    
-    self.uploadProgressBlock = ^(NSProgress * _Nonnull progress) {
-        __strong typeof(_self) self = _self;
-        if (self.taskProgress) {
-            self.taskProgress(self.taskKey, progress);
-        }
-    };
-    
-    [self startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
-        __strong typeof(_self) self = _self;
-        if (self.taskCompletion) {
-            self.taskCompletion(self.taskKey, HJTaskStageFinished, request.responseJSONObject, nil);
-        }
-    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
-        __strong typeof(_self) self = _self;
-        if (self.taskCompletion) {
-            self.taskCompletion(self.taskKey, HJTaskStageFinished, request.responseJSONObject, request.error);
-        }
-    }];
-}
-
-- (void)cancelTask {
-    [self stop];
 }
 
 @end
