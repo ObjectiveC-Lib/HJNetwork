@@ -7,12 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
 #import "HJNetworkCommon.h"
-#endif
 
 typedef NSDictionary <NSString*, NSArray*> HJDNSDictionary;
 typedef void(^HJDNSDictBlock)(HJDNSDictionary * _Nullable dictionary);

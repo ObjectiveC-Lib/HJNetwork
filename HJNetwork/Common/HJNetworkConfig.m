@@ -7,14 +7,9 @@
 //
 
 #import "HJNetworkConfig.h"
+#import <AFNetworking/AFNetworking.h>
 #import "HJNetworkMetrics.h"
 #import "HJCredentialChallenge.h"
-
-#if __has_include(<AFNetworking/AFSecurityPolicy.h>)
-#import <AFNetworking/AFSecurityPolicy.h>
-#elif __has_include("AFSecurityPolicy.h")
-#import "AFSecurityPolicy.h"
-#endif
 
 NSString *const HJRequestCacheErrorDomain = @"com.hj.request.caching";
 

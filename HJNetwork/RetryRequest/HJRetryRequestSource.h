@@ -7,8 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
-#import <HJNetwork/HJRequest.h>
 #import <HJTask/HJTask.h>
+#import "HJRequest.h"
 #import "HJRetryRequestConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN

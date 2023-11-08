@@ -13,6 +13,10 @@
 #import <HJNetwork/HJFileManager.h>
 #import <HJNetwork/HJUploadSource.h>
 #import <HJNetwork/HJUploadManager.h>
+#elif __has_include("HJUpload.h")
+#import "HJFileManager.h"
+#import "HJUploadSource.h"
+#import "HJUploadManager.h"
 #endif
 
 #endif /* HJUpload_h */

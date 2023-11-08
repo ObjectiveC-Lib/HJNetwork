@@ -7,21 +7,11 @@
 //
 
 #import "HJNetworkAgent.h"
+#import <AFNetworking/AFNetworking.h>
+#import "HJNetworkCommon.h"
 #import "HJNetworkConfig.h"
 #import "HJNetworkPrivate.h"
 #import <pthread/pthread.h>
-
-#if __has_include(<AFNetworking/AFHTTPSessionManager.h>)
-#import <AFNetworking/AFHTTPSessionManager.h>
-#elif __has_include("AFHTTPSessionManager.h")
-#import "AFHTTPSessionManager.h"
-#endif
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
-#import "HJNetworkCommon.h"
-#endif
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)

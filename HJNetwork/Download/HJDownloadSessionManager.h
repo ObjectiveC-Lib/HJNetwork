@@ -7,12 +7,7 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
 #import "HJNetworkCommon.h"
-#endif
 
 typedef NS_ENUM(NSUInteger, HJDownloadSessionTaskError) {
     HJDownloadSessionTaskErrorNoSpace = 3,

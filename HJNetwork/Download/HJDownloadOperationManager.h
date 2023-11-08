@@ -7,13 +7,8 @@
 //
 
 #import "AFHTTPRequestOperationManager.h"
-#import "HJDownloadOperation.h"
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
 #import "HJNetworkCommon.h"
-#endif
+#import "HJDownloadOperation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

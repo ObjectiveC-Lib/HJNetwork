@@ -7,8 +7,6 @@
 //
 
 #import "HJNetworkCache.h"
-#import "HJMemoryCache.h"
-#import "HJDiskCache.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11

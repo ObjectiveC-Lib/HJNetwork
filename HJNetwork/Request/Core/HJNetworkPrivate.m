@@ -7,13 +7,9 @@
 //
 
 #import <CommonCrypto/CommonDigest.h>
+#import <AFNetworking/AFNetworking.h>
 #import "HJNetworkPrivate.h"
 
-#if __has_include(<AFNetworking/AFURLRequestSerialization.h>)
-#import <AFNetworking/AFURLRequestSerialization.h>
-#elif __has_include("AFURLRequestSerialization.h")
-#import "AFURLRequestSerialization.h"
-#endif
 
 BOOL HJNSStringAvailable(NSString *string) {
     return (string != nil && [string isKindOfClass:[NSString class]] && string.length > 0);

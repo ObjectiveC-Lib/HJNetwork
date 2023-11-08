@@ -12,6 +12,9 @@
 #if __has_include(<HJNetwork/HJRetryRequest.h>)
 #import <HJNetwork/HJRetryRequestManager.h>
 #import <HJNetwork/HJRetryRequestConfig.h>
+#elif __has_include("HJRetryRequest.h")
+#import "HJRetryRequestManager.h"
+#import "HJRetryRequestConfig.h"
 #endif
 
 #endif /* HJRetryRequest_h */

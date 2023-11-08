@@ -7,7 +7,6 @@
 //
 
 #import "HJDownloadOperation.h"
-#import "AFURLConnectionOperation.h"
 #import <CommonCrypto/CommonDigest.h>
 #include <fcntl.h>
 #include <unistd.h>

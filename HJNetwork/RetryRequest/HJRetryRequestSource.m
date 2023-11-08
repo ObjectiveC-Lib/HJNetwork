@@ -6,7 +6,7 @@
 //  Copyright © 2023 HJNetwork. All rights reserved.
 
 #import "HJRetryRequestSource.h"
-#import <HJNetwork/HJNetworkCommon.h>
+#import "HJNetworkCommon.h"
 #import "HJRetryRequestSourceManager.h"
 
 @interface HJRetryRequestSource ()

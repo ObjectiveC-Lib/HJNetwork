@@ -7,13 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFNetworking/AFNetworking.h>
 #import "HJURLProtocol.h"
 
-#if __has_include(<AFNetworking/AFSecurityPolicy.h>)
-#import <AFNetworking/AFSecurityPolicy.h>
-#elif __has_include("AFSecurityPolicy.h")
-#import "AFSecurityPolicy.h"
-#endif
 
 @class HJDNSNode;
 

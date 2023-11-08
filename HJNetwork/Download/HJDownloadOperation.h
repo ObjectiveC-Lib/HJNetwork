@@ -6,7 +6,7 @@
 //  Copyright © 2022 HJNetwork. All rights reserved.
 //
 
-#import "AFHTTPRequestOperation.h"
+#import "AFURLConnection.h"
 
 #define kHJOperationIncompleteDownloadFolderName @"HJOperationIncomplete"
 

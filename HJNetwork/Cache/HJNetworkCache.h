@@ -7,10 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#if __has_include(<HJCache/HJCache.h>)
 #import <HJCache/HJCache.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

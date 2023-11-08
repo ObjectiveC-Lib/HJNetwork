@@ -7,16 +7,11 @@
 //
 
 #import "HJURLProtocol.h"
+#import "HJNetworkCommon.h"
 #import "HJCanonicalRequest.h"
 #import "HJCacheStoragePolicy.h"
 #import "HJURLSessionDemux.h"
 #import "HJCustomScheme.h"
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
-#import "HJNetworkCommon.h"
-#endif
 
 typedef void (^HJChallengeCompletionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * credential);
 

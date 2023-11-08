@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HJUploadFileBlock.h"
-#import <HJNetwork/HJRequest.h>
 #import <HJTask/HJTask.h>
+#import "HJUploadFileBlock.h"
+#import "HJRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

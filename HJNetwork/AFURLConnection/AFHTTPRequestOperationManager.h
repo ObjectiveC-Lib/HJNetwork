@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <Availability.h>
+#import <AFNetworking/AFNetworking.h>
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -30,10 +31,6 @@
 #endif
 
 #import "AFHTTPRequestOperation.h"
-#import "AFURLResponseSerialization.h"
-#import "AFURLRequestSerialization.h"
-#import "AFSecurityPolicy.h"
-#import "AFNetworkReachabilityManager.h"
 
 #ifndef NS_DESIGNATED_INITIALIZER
 #if __has_attribute(objc_designated_initializer)

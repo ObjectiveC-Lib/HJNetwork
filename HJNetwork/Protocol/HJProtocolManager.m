@@ -8,12 +8,7 @@
 
 #import "HJProtocolManager.h"
 #include <pthread.h>
-
-#if __has_include(<HJNetwork/HJNetworkCommon.h>)
-#import <HJNetwork/HJNetworkCommon.h>
-#elif __has_include("HJNetworkCommon.h")
 #import "HJNetworkCommon.h"
-#endif
 
 @interface HJThreadInfo : NSObject
 @property (atomic, assign, readonly) uint64_t tid;             ///< The globally unique thread ID.

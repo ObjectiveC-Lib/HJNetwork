@@ -7,9 +7,9 @@
 //
 
 #import "HJBaseRequest.h"
+#import "HJNetworkCache.h"
 #import "HJNetworkConfig.h"
 #import "HJNetworkPrivate.h"
-#import "HJNetworkCache.h"
 
 @interface HJCacheMetadata : NSObject<NSSecureCoding>
 @property (nonatomic, assign) long long version;
