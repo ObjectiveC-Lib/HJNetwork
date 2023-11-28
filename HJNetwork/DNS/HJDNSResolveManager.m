@@ -10,10 +10,6 @@
 #import <arpa/inet.h>
 #import "HJDNSMap.h"
 
-#ifndef HJ_DNS_DEBUG
-#define HJ_DNS_DEBUG 0
-#endif
-
 #define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
 #define Unlock() dispatch_semaphore_signal(self->_lock)
 
@@ -47,6 +43,7 @@ static BOOL HJIsIPAddress(NSString *str) {
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _debug = NO;
         _ignoreNegative = NO;
         _negativeCount = 1;
         _autoFetchInterval = 1 * 60 * 60;
@@ -102,7 +99,7 @@ static BOOL HJIsIPAddress(NSString *str) {
         node.url = originalURL.absoluteString;
     }
     
-    if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Use_Get: MapKey = %@, MapValue = %@", mapKey, mapValue);
+    if (self.debug) NSLog(@"HJ_DNS_Use_Get: MapKey = %@, MapValue = %@", mapKey, mapValue);
     
     return node;
 }
@@ -115,7 +112,7 @@ static BOOL HJIsIPAddress(NSString *str) {
     NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
     if ([mapKey1 isEqualToString:mapValue]) { return; }
     
-    if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
+    if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
     
     
     Lock();
@@ -134,7 +131,7 @@ static BOOL HJIsIPAddress(NSString *str) {
     NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
     if ([mapKey1 isEqualToString:mapValue]) { return; }
     
-    if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKey1, mapValue);
+    if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKey1, mapValue);
     
     Lock();
     [self.dnsMap setPositiveDNSValue:mapValue key:mapKey];
@@ -190,7 +187,7 @@ static BOOL HJIsIPAddress(NSString *str) {
     self.dnsMap = [[HJDNSMap alloc] initWithDict:dict negativeCount:_negativeCount];
     Unlock();
     
-    if (HJ_DNS_DEBUG) NSLog(@"HJ_DNS_Map = %@", self.dnsMap);
+    if (self.debug) NSLog(@"HJ_DNS_Map = %@", self.dnsMap);
 }
 
 #pragma mark - Private

@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJDNSResolveManager : NSObject
 
+@property (nonatomic, assign) BOOL debug;                       // default NO
 @property (nonatomic, assign) BOOL ignoreNegative;              // default NO
 @property (nonatomic, assign) NSUInteger negativeCount;         // default 1
 @property (nonatomic, assign) NSTimeInterval autoFetchInterval; // default 1 hours
