@@ -508,9 +508,8 @@
     
     NSString *downloadTargetPath;
     BOOL isDirectory;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:downloadPath isDirectory:&isDirectory]) {
-        isDirectory = NO;
-    }
+    [[NSFileManager defaultManager] fileExistsAtPath:downloadPath isDirectory:&isDirectory];
+    
     // If targetPath is a directory, use the file name we got from the urlRequest.
     // Make sure downloadTargetPath is always a file, not directory.
     if (isDirectory) {
