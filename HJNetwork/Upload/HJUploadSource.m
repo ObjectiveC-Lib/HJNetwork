@@ -8,9 +8,10 @@
 
 #import "HJUploadSource.h"
 #import "HJUploadSourceManager.h"
+#import <pthread/pthread.h>
 
-#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(self->_lock)
+#define Lock() pthread_mutex_lock(&_lock)
+#define Unlock() pthread_mutex_unlock(&_lock)
 
 @interface HJUploadSource ()
 @property (nonatomic, assign) int64_t totalUnitCount;
@@ -25,7 +26,7 @@
 @end
 
 @implementation HJUploadSource {
-    dispatch_semaphore_t _lock;
+    pthread_mutex_t _lock;
 }
 @synthesize taskKey = _taskKey;
 
@@ -37,7 +38,7 @@
 - (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(HJUploadConfig *)config {
     self = [super init];
     if (self) {
-        _lock = dispatch_semaphore_create(1);
+        pthread_mutex_init(&_lock, NULL);
         _config = config;
         _fileProgress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
         _fileProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;

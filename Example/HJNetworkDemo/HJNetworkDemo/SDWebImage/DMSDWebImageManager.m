@@ -7,10 +7,10 @@
 
 #import "DMSDWebImageManager.h"
 #import "DMSDWebImageOperation.h"
+#import <pthread/pthread.h>
 
-#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(self->_lock)
-
+#define Lock() pthread_mutex_lock(&_lock)
+#define Unlock() pthread_mutex_unlock(&_lock)
 
 #define DM_MAX_FILE_EXTENSION_LENGTH (NAME_MAX - CC_MD5_DIGEST_LENGTH * 2 - 1)
 #pragma clang diagnostic push
@@ -49,7 +49,7 @@ static inline NSString * _Nonnull DMFileNameForKey(NSString * _Nullable key, BOO
 @end
 
 @implementation DMSDWebImageManager {
-    dispatch_semaphore_t _lock;
+    pthread_mutex_t _lock;
 }
 
 // Documents
@@ -92,7 +92,7 @@ static inline NSString * _Nonnull DMFileNameForKey(NSString * _Nullable key, BOO
 
 - (instancetype)initWithPath:(NSString *)diskCachePath {
     if ((self = [super init])) {
-        _lock = dispatch_semaphore_create(1);
+        pthread_mutex_init(&_lock, NULL);
         _diskCachePath = diskCachePath;
         HJCommonCache *cache = [[HJCommonCache alloc] initWithPath:diskCachePath threshold:0];
         if (!cache) return nil;

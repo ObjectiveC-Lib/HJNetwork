@@ -8,7 +8,7 @@
 
 #import "HJDNSMap.h"
 #import <CoreFoundation/CoreFoundation.h>
-#import <pthread.h>
+#import <pthread/pthread.h>
 #import <arpa/inet.h>
 
 static BOOL HJIsIPAddress(NSString *str) {
@@ -289,13 +289,13 @@ void descriptionFunction(const void *key, const void *value, void *context) {
 
 @end
 
-#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(self->_lock)
+#define Lock() pthread_mutex_lock(&_lock)
+#define Unlock() pthread_mutex_unlock(&_lock)
 
 @implementation HJDNSMap {
     HJDNSDict *_dns;
     NSUInteger _negativeCount;
-    dispatch_semaphore_t _lock;
+    pthread_mutex_t _lock;
 }
 
 #pragma mark - Initializer
@@ -303,7 +303,7 @@ void descriptionFunction(const void *key, const void *value, void *context) {
 - (instancetype)initWithDict:(NSDictionary <NSString*, NSArray*> *)dict negativeCount:(NSUInteger)negativeCount {
     self = [super init];
     if (self) {
-        _lock = dispatch_semaphore_create(1);
+        pthread_mutex_init(&_lock, NULL);
         _dns = [[HJDNSDict alloc] initWithDict:dict];
         _negativeCount = negativeCount;
         if (negativeCount <= 0) {

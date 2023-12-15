@@ -7,15 +7,16 @@
 //
 
 #import "HJCustomScheme.h"
+#import <pthread/pthread.h>
 
-#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(self->_lock)
+#define Lock() pthread_mutex_lock(&_lock)
+#define Unlock() pthread_mutex_unlock(&_lock)
 
 @implementation HJSchemeItem
 @end
 
 @interface HJCustomScheme () {
-    dispatch_semaphore_t _lock;
+    pthread_mutex_t _lock;
     NSMutableDictionary *_dict;
 }
 @end
@@ -34,7 +35,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _lock = dispatch_semaphore_create(1);
+        pthread_mutex_init(&_lock, NULL);
         _dict = [[NSMutableDictionary alloc] init];
     }
     return self;

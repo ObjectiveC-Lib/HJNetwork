@@ -16,6 +16,8 @@ target 'HJNetworkDemo' do
   pod 'HJNetwork/Download', :path => '../'
   pod 'HJNetwork/RetryRequest', :path => '../'
   pod 'HJTask', :path => '../../HJTask'
+  pod 'HJCache', :path => '../../HJCache'
+  pod 'HJCache/SDBridge', :path => '../../HJCache'
   
   #  pod 'HJNetwork'
   #  pod 'HJNetwork/Default'
@@ -25,8 +27,8 @@ target 'HJNetworkDemo' do
   #  pod 'HJNetwork/RetryRequest'
   #  pod 'HJTask'
   
-  pod 'HJCache'
-  pod 'HJCache/SDBridge'
+  #  pod 'HJCache'
+  #  pod 'HJCache/SDBridge'
   pod 'SDWebImage'
   pod 'SDWebImageWebPCoder'
   pod 'SDWebImageFLIFCoder'

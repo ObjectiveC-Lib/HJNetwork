@@ -8,10 +8,11 @@
 
 #import "HJDNSResolveManager.h"
 #import <arpa/inet.h>
+#import <pthread/pthread.h>
 #import "HJDNSMap.h"
 
-#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(self->_lock)
+#define Lock() pthread_mutex_lock(&_lock)
+#define Unlock() pthread_mutex_unlock(&_lock)
 
 static BOOL HJIsIPAddress(NSString *str) {
     if (!str) return NO;
@@ -36,7 +37,7 @@ static BOOL HJIsIPAddress(NSString *str) {
 @end
 
 @implementation HJDNSResolveManager {
-    dispatch_semaphore_t _lock;
+    pthread_mutex_t _lock;
     dispatch_queue_t _queue;
 }
 
@@ -47,7 +48,7 @@ static BOOL HJIsIPAddress(NSString *str) {
         _ignoreNegative = NO;
         _negativeCount = 1;
         _autoFetchInterval = 1 * 60 * 60;
-        _lock = dispatch_semaphore_create(1);
+        pthread_mutex_init(&_lock, NULL);
         _queue = dispatch_queue_create("com.hj.dns.resolve", DISPATCH_QUEUE_SERIAL);
         
         [self fetchRecursively];
@@ -194,8 +195,7 @@ static BOOL HJIsIPAddress(NSString *str) {
 
 - (void)fetchRecursively {
     __weak typeof(self) _self = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_autoFetchInterval * NSEC_PER_SEC)),
-                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_autoFetchInterval * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         [self fetchRemoteDNS];
