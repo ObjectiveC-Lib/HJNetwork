@@ -300,6 +300,10 @@ void descriptionFunction(const void *key, const void *value, void *context) {
 
 #pragma mark - Initializer
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 - (instancetype)initWithDict:(NSDictionary <NSString*, NSArray*> *)dict negativeCount:(NSUInteger)negativeCount {
     self = [super init];
     if (self) {

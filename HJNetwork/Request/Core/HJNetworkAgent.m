@@ -30,6 +30,10 @@
     NSIndexSet *_allStatusCodes;
 }
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 + (HJNetworkAgent *)sharedAgent {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;

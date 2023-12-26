@@ -52,6 +52,10 @@ static inline NSString * _Nonnull DMFileNameForKey(NSString * _Nullable key, BOO
     pthread_mutex_t _lock;
 }
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 // Documents
 + (nullable NSString *)userDocumentDirectory {
     NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

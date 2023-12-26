@@ -23,6 +23,10 @@
 
 @implementation HJCustomScheme
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 + (instancetype)sharedInstance {
     static dispatch_once_t once;
     static id instance;

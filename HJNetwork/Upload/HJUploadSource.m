@@ -33,6 +33,7 @@
 - (void)dealloc {
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
     // NSLog(@"HJUploadSource_%@: dealloc", self.sourceId);
+    pthread_mutex_destroy(&_lock);
 }
 
 - (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(HJUploadConfig *)config {

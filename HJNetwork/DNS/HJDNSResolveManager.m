@@ -41,6 +41,10 @@ static BOOL HJIsIPAddress(NSString *str) {
     dispatch_queue_t _queue;
 }
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

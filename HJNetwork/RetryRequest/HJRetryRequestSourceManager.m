@@ -17,6 +17,10 @@
     NSMutableDictionary *_sources;
 }
 
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
 + (instancetype)sharedManager {
     static dispatch_once_t once;
     static id instance;
