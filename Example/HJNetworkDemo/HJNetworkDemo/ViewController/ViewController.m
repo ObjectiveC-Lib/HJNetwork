@@ -220,7 +220,8 @@
 }
 
 //NSString *const kTestDownloadURL = @"https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
-NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.jpg_wh1200.jpg";
+//NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.jpg_wh1200.jpg";
+NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/2401/95b5ee7b-4c51-4067-add2-480f5d98d12e";
 
 - (void)resumDownload:(id)sender {
     [self clearDirectory:[DMDownloadRequest saveBasePath]];

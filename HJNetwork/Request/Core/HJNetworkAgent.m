@@ -512,12 +512,15 @@
     // If targetPath is a directory, use the file name we got from the urlRequest.
     // Make sure downloadTargetPath is always a file, not directory.
     NSString *downloadTargetPath;
-    NSString *ext = downloadPath.pathExtension;
-    if (ext && ext.length) {
-        downloadTargetPath = downloadPath;
-    } else {
+    BOOL isDirectory = NO;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:downloadPath isDirectory:&isDirectory]) {
+        isDirectory = NO;
+    }
+    if (isDirectory) {
         NSString *fileName = [urlRequest.URL lastPathComponent];
         downloadTargetPath = [NSString pathWithComponents:@[downloadPath, fileName]];
+    } else {
+        downloadTargetPath = downloadPath;
     }
     
     // AFN use `moveItemAtURL` to move downloaded file to target path,
