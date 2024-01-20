@@ -110,40 +110,111 @@ static BOOL HJIsIPAddress(NSString *str) {
 }
 
 - (void)setNegativeUrl:(NSString *)url host:(NSString *)host {
+    [self markUrl:url host:host isNegative:YES];
+}
+
+- (void)setNegativeUrl:(NSString *)url key:(NSString *)key {
+    [self markUrl:url key:key isNegative:YES];
+}
+
+- (void)setPositiveUrl:(NSString *)url host:(NSString *)host {
+    [self markUrl:url host:host isNegative:NO];
+}
+
+- (void)setPositiveUrl:(NSString *)url key:(NSString *)key {
+    [self markUrl:url key:key isNegative:NO];
+}
+
+- (void)markUrl:(NSString *)url host:(NSString *)host isNegative:(BOOL)isNegative  {
     if (!url || url.length <= 0 || !host || host.length <= 0 || _ignoreNegative) return;
     
     NSString *mapKey = [self.class getUrlMapKeyWithoutPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
     NSString *mapKey1 = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
     NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
     if ([mapKey1 isEqualToString:mapValue]) { return; }
-    
-    if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
-    
-    
+        
     Lock();
-    [self.dnsMap setNegativeDNSValue:mapValue key:mapKey];
-    if (![mapKey isEqualToString:mapKey1]) {
-        [self.dnsMap setNegativeDNSValue:mapValue key:mapKey1];
+    if (isNegative) {
+        if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
+        [self.dnsMap setNegativeDNSValue:mapValue key:mapKey];
+        if (![mapKey isEqualToString:mapKey1]) {
+            [self.dnsMap setNegativeDNSValue:mapValue key:mapKey1];
+        }
+    } else {
+        if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKey1, mapValue);
+        [self.dnsMap setPositiveDNSValue:mapValue key:mapKey];
+        if (![mapKey isEqualToString:mapKey1]) {
+            [self.dnsMap setPositiveDNSValue:mapValue key:mapKey1];
+        }
     }
     Unlock();
 }
 
-- (void)setPositiveUrl:(NSString *)url host:(NSString *)host {
-    if (!url || url.length <= 0 || !host || host.length <= 0 || _ignoreNegative) return;
+- (void)markUrl:(NSString *)url key:(NSString *)key isNegative:(BOOL)isNegative  {
+    if (!url || url.length <= 0 || !key || key.length <= 0 || _ignoreNegative) return;
     
-    NSString *mapKey = [self.class getUrlMapKeyWithoutPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
-    NSString *mapKey1 = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
-    NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
-    if ([mapKey1 isEqualToString:mapValue]) { return; }
+    NSURL *mapURL = [NSURL URLWithString:url];
+    NSString *mapValue = [self.class getUrlMapKeyWithPort:mapURL];
     
-    if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKey1, mapValue);
+    NSURL *keyURL = [NSURL URLWithString:key];
+    NSString *keyScheme = keyURL.scheme;
+    NSString *keyHost = keyURL.host;
+    NSString *keyPort = keyURL.port.stringValue;
     
-    Lock();
-    [self.dnsMap setPositiveDNSValue:mapValue key:mapKey];
-    if (![mapKey isEqualToString:mapKey1]) {
-        [self.dnsMap setPositiveDNSValue:mapValue key:mapKey1];
+    if (!keyHost || keyHost.length <= 0) return;
+    
+    NSString *mapKeyWithSchemeHostPort = nil;
+    NSString *mapKeyWithSchemeHost = nil;
+    NSString *mapKeyWithHostPort = nil;
+    if (keyScheme && keyScheme.length && keyPort && keyPort.length) {
+        mapKeyWithSchemeHostPort = key;
+    } else if (keyScheme && keyScheme.length) {
+        mapKeyWithSchemeHost = key;
+        if (mapURL.port && mapURL.port.intValue > 0) {
+            mapKeyWithSchemeHostPort = [NSString stringWithFormat:@"%@:%@", mapKeyWithSchemeHost, mapURL.port.stringValue];
+        }
+    } else if (keyPort && keyPort.length) {
+        mapKeyWithHostPort = key;
+        if (mapURL.scheme && mapURL.scheme.length > 0) {
+            mapKeyWithSchemeHostPort = [NSString stringWithFormat:@"%@://%@", mapURL.scheme, mapKeyWithHostPort];
+        }
     }
-    Unlock();
+    
+    if (mapKeyWithSchemeHostPort && ![mapKeyWithSchemeHostPort isEqualToString:url]) {
+        Lock();
+        if (isNegative) {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithSchemeHostPort, mapValue);
+            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithSchemeHostPort];
+        } else {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithSchemeHostPort, mapValue);
+            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithSchemeHostPort];
+        }
+        Unlock();
+    }
+    
+    if (mapKeyWithSchemeHost && ![mapKeyWithSchemeHost isEqualToString:url]) {
+        Lock();
+        if (isNegative) {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithSchemeHost, mapValue);
+            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithSchemeHost];
+        } else {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithSchemeHost, mapValue);
+            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithSchemeHost];
+        }
+        Unlock();
+    }
+    
+    if (mapKeyWithHostPort && ![mapKeyWithHostPort isEqualToString:url]) {
+        Lock();
+        if (isNegative) {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithHostPort, mapValue);
+            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithHostPort];
+        } else {
+            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithHostPort, mapValue);
+            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithHostPort];
+        }
+        Unlock();
+    }
 }
 
 #pragma mark - Default Map
