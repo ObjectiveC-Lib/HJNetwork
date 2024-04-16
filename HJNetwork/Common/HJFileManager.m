@@ -330,6 +330,14 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:path];
 }
 
++ (BOOL)isFileAndExistsAtPath:(NSString *)path {
+    BOOL isDirectory = NO;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory] && !isDirectory) {
+        return YES;
+    }
+    return NO;
+}
+
 + (BOOL)isEmptyItemAtPath:(NSString *)path {
     return [self isEmptyItemAtPath:path error:nil];
 }

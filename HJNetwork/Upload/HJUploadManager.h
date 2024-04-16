@@ -7,19 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HJUploadSource.h"
+#import "HJUploadFileSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJUploadManager : NSObject
 
-+ (HJUploadSourceKey)uploadWithAbsolutePath:(NSString *)path
-                                     config:(HJUploadConfig *_Nullable)config
-                              uploadRequest:(HJCoreRequest *(^)(HJUploadFileFragment * _Nonnull fragment))uploadRequest
-                             uploadProgress:(void (^)(NSProgress * _Nullable progress))uploadProgress
-                           uploadCompletion:(void (^)(HJUploadStatus status, id _Nullable callbackInfo, NSError * _Nullable error))uploadCompletion;
++ (HJUploadKey)uploadWithAbsolutePath:(NSString *)path
+                               config:(id <HJUploadConfig> _Nullable)config
+                           preprocess:(HJUploadPreprocessBlock)preprocess
+                        uploadRequest:(HJUploadRequestBlock)uploadRequest
+                       uploadProgress:(HJUploadProgressBlock)uploadProgress
+                     uploadCompletion:(HJUploadCompletionBlock)uploadCompletion;
 
-+ (void)cancelUpload:(HJUploadSourceKey)key;
++ (void)cancelUpload:(HJUploadKey)key;
 
 @end
 

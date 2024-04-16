@@ -7,18 +7,30 @@
 //
 
 #import "HJUploadConfig.h"
+#import <objc/runtime.h>
 
 @implementation HJUploadConfig
+
+- (void)dealloc {
+    NSLog(@"HJUploadConfig_dealloc");
+}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _fragmentEnable = NO;
-        _fragmentMaxSize = 512*1024;
+        self.fragmentEnable = NO;
+        self.fragmentSize = 2*1024*1024;
         
-        _retryEnable = YES;
-        _retryCount = 3;
-        _retryInterval = 1;
+        self.retryEnable = NO;
+        self.retryCount = 3;
+        self.retryInterval = 1;
+        
+        self.allowBackground = NO;
+        self.maxConcurrentCount = -1;
+        self.formType = HJUploadFormTypeData;
+        
+        self.cryptoEnable = NO;
+        self.bufferSize = 8*1024;
     }
     return self;
 }
@@ -28,41 +40,138 @@
     return config;
 }
 
-#pragma mark - NSSecureCoding
+#pragma mark - HJUploadConfig
 
-+ (BOOL)supportsSecureCoding {
-    return YES;
+- (BOOL)fragmentEnable {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc boolValue];
+    
+    return NO;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)coder {
-    if (self = [super init]) {
-        self.fragmentEnable = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(fragmentEnable))] boolValue];
-        self.fragmentMaxSize = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(fragmentMaxSize))] unsignedIntegerValue];
-        self.retryEnable = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryEnable))] boolValue];
-        self.retryCount = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryCount))] unsignedIntegerValue];
-        self.retryInterval = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(retryInterval))] unsignedIntegerValue];
-    }
-    return self;
+- (unsigned long long)fragmentSize {
+    if (!self.fragmentEnable) return 0;
+    
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc)  return [objc unsignedLongLongValue];
+    
+    return 2*1024*1024;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:[NSNumber numberWithBool:self.fragmentEnable] forKey:NSStringFromSelector(@selector(fragmentEnable))];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.fragmentMaxSize] forKey:NSStringFromSelector(@selector(fragmentMaxSize))];
-    [coder encodeObject:[NSNumber numberWithBool:self.retryEnable] forKey:NSStringFromSelector(@selector(retryEnable))];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.retryCount] forKey:NSStringFromSelector(@selector(retryCount))];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.retryInterval] forKey:NSStringFromSelector(@selector(retryInterval))];
+- (BOOL)retryEnable {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc boolValue];
+    
+    return NO;
 }
 
-#pragma mark - NSCopying
+- (NSUInteger)retryCount {
+    if (!self.retryEnable) return 0;
+    
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc)  return [objc unsignedIntegerValue];
+    
+    return 3;
+}
 
-- (id)copyWithZone:(NSZone *)zone {
-    HJUploadConfig *config = [[self class] allocWithZone:zone];
-    config.fragmentEnable = self.fragmentEnable;
-    config.fragmentMaxSize = self.fragmentMaxSize;
-    config.retryEnable = self.retryEnable;
-    config.retryCount = self.retryCount;
-    config.retryInterval = self.retryInterval;
-    return config;
+- (NSUInteger)retryInterval {
+    if (!self.retryEnable) return 0;
+    
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc)  return [objc unsignedIntegerValue];
+    
+    return 1;
+}
+
+- (BOOL)allowBackground {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc boolValue];
+    
+    return NO;
+}
+
+- (NSInteger)maxConcurrentCount {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc integerValue];
+    
+    return 3;
+}
+
+- (HJUploadFormType)formType {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc)  return (HJUploadFormType)[objc unsignedIntegerValue];
+    
+    return HJUploadFormTypeData;
+}
+
+- (BOOL)cryptoEnable {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc boolValue];
+    
+    return NO;
+}
+
+- (unsigned long long)bufferSize {
+    id objc = objc_getAssociatedObject(self, _cmd);
+    if (objc) return [objc unsignedLongLongValue];
+    
+    return 8*1024;
+}
+
+- (unsigned long long)cryptoDataSize:(unsigned long long)size {
+    if (!self.cryptoEnable) return 0;
+    
+    return size;
+}
+
+- (NSData *)cryptoData:(NSData *)data {
+    if (!self.cryptoEnable) return nil;
+    
+    return data;
+}
+
+@end
+
+@implementation HJUploadConfig (Extension)
+
+- (void)setFragmentEnable:(BOOL)fragmentEnable {
+    objc_setAssociatedObject(self, @selector(fragmentEnable), @(fragmentEnable), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setFragmentSize:(unsigned long long)fragmentSize {
+    objc_setAssociatedObject(self, @selector(fragmentSize), @(fragmentSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setRetryEnable:(BOOL)retryEnable {
+    objc_setAssociatedObject(self, @selector(retryEnable), @(retryEnable), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setRetryCount:(NSUInteger)retryCount {
+    objc_setAssociatedObject(self, @selector(retryCount), @(retryCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setRetryInterval:(NSUInteger)retryInterval {
+    objc_setAssociatedObject(self, @selector(retryInterval), @(retryInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setAllowBackground:(BOOL)allowBackground {
+    objc_setAssociatedObject(self, @selector(allowBackground), @(allowBackground), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setMaxConcurrentCount:(NSInteger)maxConcurrentCount {
+    objc_setAssociatedObject(self, @selector(maxConcurrentCount), @(maxConcurrentCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setFormType:(HJUploadFormType)formType {
+    objc_setAssociatedObject(self, @selector(formType), @(formType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setCryptoEnable:(BOOL)cryptoEnable {
+    objc_setAssociatedObject(self, @selector(cryptoEnable), @(cryptoEnable), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setBufferSize:(unsigned long long)bufferSize {
+    objc_setAssociatedObject(self, @selector(bufferSize), @(bufferSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

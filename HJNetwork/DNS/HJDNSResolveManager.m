@@ -132,7 +132,7 @@ static BOOL HJIsIPAddress(NSString *str) {
     NSString *mapKey1 = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
     NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
     if ([mapKey1 isEqualToString:mapValue]) { return; }
-        
+    
     Lock();
     if (isNegative) {
         if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKey1, mapValue);
@@ -229,29 +229,28 @@ static BOOL HJIsIPAddress(NSString *str) {
     self.defaultDNSDict = [[NSDictionary alloc] initWithDictionary:dict];
     Unlock();
     
-    [self composeDnsMap];
+    [self composeDNSMap];
     [self fetchRemoteDNS];
 }
 
 #pragma mark - Fetch Server Map
 
 - (void)fetchRemoteDNS {
+    __weak typeof(self) weakSelf = self;
     dispatch_async(_queue, ^{
         if (self.dnsRemoteDictBlock) {
-            __weak typeof(self) weakself = self;
             HJDNSDictBlock dnsDict = ^(HJDNSDictionary *dict) {
                 Lock();
-                weakself.remoteDNSDict = [[NSDictionary alloc] initWithDictionary:dict];
+                weakSelf.remoteDNSDict = [[NSDictionary alloc] initWithDictionary:dict];
                 Unlock();
-                
-                [self composeDnsMap];
+                [self composeDNSMap];
             };
             self.dnsRemoteDictBlock(self.dnsRemoteUrl, dnsDict);
         }
     });
 }
 
-- (void)composeDnsMap {
+- (void)composeDNSMap {
     Lock();
     NSMutableDictionary *dict = [NSMutableDictionary new];
     if (self.defaultDNSDict) {

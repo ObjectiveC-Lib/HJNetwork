@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
+
+#if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
+#import <MobileCoreServices/MobileCoreServices.h>
+#else
+#import <CoreServices/CoreServices.h>
+#endif
+
 #import "HJUploadConfig.h"
 
 typedef NS_ENUM(NSUInteger, HJDirectoryType) {
@@ -19,7 +26,7 @@ typedef NS_ENUM(NSUInteger, HJDirectoryType) {
     HJDirectoryTypeMainBundle
 };
 
-/// 文件上传状态
+/// 上传状态
 typedef NS_ENUM(NSUInteger, HJUploadStatus) {
     HJUploadStatusWaiting = 0,    /// 准备
     HJUploadStatusProcessing = 1, /// 进行中
@@ -34,6 +41,16 @@ typedef NS_ENUM(NSInteger, HJFileType) {
     HJFileTypeImage = 1,    /// 图片
     HJFileTypeVideo = 2,    /// 视频
 };
+
+static inline NSString * HJUploadContentTypeForPathExtension(NSString *extension) {
+    NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+    if (!contentType) {
+        return @"application/octet-stream";
+    } else {
+        return contentType;
+    }
+}
 
 static inline NSString * _Nullable HJFileCreateId(NSString * _Nullable identifier) {
     if (identifier == nil || [identifier length] <= 0) return nil;
@@ -71,6 +88,69 @@ static inline NSString * _Nullable HJDataMD5String(NSData * _Nullable data) {
     return key;
 }
 
+static inline CFStringRef HJFileMD5Hash(CFStringRef filePath, size_t bufferSize) {
+    // Declare needed variables
+    CFStringRef result = NULL;
+    CFReadStreamRef readStream = NULL;
+    // Get the file URL
+    CFURLRef fileURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)filePath, kCFURLPOSIXPathStyle, (Boolean)false);
+    if (!fileURL) goto done;
+    
+    // Create and open the read stream
+    readStream = CFReadStreamCreateWithFile(kCFAllocatorDefault, (CFURLRef)fileURL);
+    if (!readStream) goto done;
+    
+    bool didSucceed = (bool)CFReadStreamOpen(readStream);
+    if (!didSucceed) goto done;
+    
+    // Initialize the hash object
+    CC_MD5_CTX hashObject;
+    CC_MD5_Init(&hashObject);
+    
+    // Feed the data to the hash object
+    bool hasMoreData = true;
+    while (hasMoreData) {
+        uint8_t buffer[bufferSize];
+        CFIndex readBytesCount = CFReadStreamRead(readStream, (UInt8 *)buffer, (CFIndex)sizeof(buffer));
+        if (readBytesCount == -1) break;
+        if (readBytesCount == 0) {
+            hasMoreData = false;
+            continue;
+        }
+        CC_MD5_Update(&hashObject, (const void *)buffer, (CC_LONG)readBytesCount);
+    }
+    
+    // Check if the read operation succeeded
+    didSucceed = !hasMoreData;
+    // Compute the hash digest
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5_Final(digest, &hashObject);
+    // Abort if the read operation failed
+    if (!didSucceed) goto done;
+    
+    // Compute the string result
+    char hash[2 * sizeof(digest) + 1];
+    for (size_t i = 0; i < sizeof(digest); ++i) {
+        snprintf(hash + (2 * i), 3, "%02x", (int)(digest[i]));
+    }
+    result = CFStringCreateWithCString(kCFAllocatorDefault, (const char *)hash, kCFStringEncodingUTF8);
+    
+done:
+    if (readStream) {
+        CFReadStreamClose(readStream);
+        CFRelease(readStream);
+    }
+    if (fileURL) {
+        CFRelease(fileURL);
+    }
+    return result;
+}
+
+static inline NSString * _Nullable HJFileMD5String(NSString *_Nullable filePath, NSInteger bufferSize) {
+    if (!filePath) return nil;
+    return (__bridge_transfer NSString *)HJFileMD5Hash((__bridge CFStringRef)filePath, bufferSize);
+}
+
 static inline NSError * _Nullable HJErrorWithUnderlyingError(NSError * _Nullable error, NSError * _Nullable underlyingError) {
     if (!error) {
         return underlyingError;
@@ -86,16 +166,28 @@ static inline NSError * _Nullable HJErrorWithUnderlyingError(NSError * _Nullable
     return [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:mutableUserInfo];
 }
 
-typedef void(^HJUploadProgressBlock)(NSProgress * _Nullable progress);
+typedef NSString * _Nullable HJUploadKey;
+static const HJUploadKey HJUploadKeyInvalid = nil;
+static const HJUploadKey HJUploadKeyPayloadError = @"HJUploadKeyPayloadError";
 
+typedef void (^HJUploadProgressBlock)(NSProgress * _Nullable progress);
 typedef void (^HJUploadCompletionBlock)(HJUploadStatus status, id _Nullable callbackInfo, NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJUploadFileBasic : NSObject <NSSecureCoding, NSCopying>
-
-/// 大小
-@property (nonatomic, assign) NSUInteger size;
+/// 是否加密
+@property (nonatomic, assign) BOOL cryptoEnable;
+/// 原始大小
+@property (nonatomic, assign) unsigned long long size;
+/// 加密后大小
+@property (nonatomic, assign) unsigned long long cryptoSize;
+/// Buffer Size
+@property (nonatomic, assign) unsigned long long bufferSize;
+/// MD5
+@property (nonatomic, strong) NSString *MD5;
+/// 加密后MD5
+@property (nonatomic, strong) NSString *cryptoMD5;
 /// 状态
 @property (nonatomic, assign) HJUploadStatus status;
 /// 进度

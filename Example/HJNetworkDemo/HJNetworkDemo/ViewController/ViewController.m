@@ -15,11 +15,12 @@
 #import "DMHTTPRequest.h"
 #import "DMDownloadRequest.h"
 #import "DMUploadRequest.h"
-#import "NSObject+HJUploadTask.h"
 #import "HJUploadManager.h"
 #import "DMDNSTest.h"
 #import "DMHTTPSessionManager.h"
 #import "HJUploadRequest.h"
+#import "HJUploadConfig.h"
+#import "HJUploadCustomConfig.h"
 
 @interface ViewController ()
 @end
@@ -68,6 +69,11 @@
     [btn5 setTitle:@"positive" forState:UIControlStateNormal];
     btn5.backgroundColor = [UIColor cyanColor];
     [btn5 addTarget:self action:@selector(positive) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *btn6 = [self createButton:CGRectMake(CGRectGetWidth(self.view.frame) - 100, CGRectGetHeight(self.view.frame) - 340 - bottom, 100.0, 60.0)];
+    [btn6 setTitle:@"InputStream" forState:UIControlStateNormal];
+    btn6.backgroundColor = [UIColor cyanColor];
+    [btn6 addTarget:self action:@selector(readLargeFile) forControlEvents:UIControlEventTouchUpInside];
     
     //    NSURL *url = [NSURL URLWithString:@"https://www.cnblogs.com:8080/isItOk/p/5025679.html"];
     //    NSLog(@"host = %@", url.host);
@@ -131,10 +137,10 @@
 }
 
 - (void)upload:(id)sender {
+    NSURL *url0 = [[NSBundle mainBundle] URLForResource:@"test" withExtension:@"txt"];
     NSURL *url1 = [[NSBundle mainBundle] URLForResource:@"head" withExtension:@"jpeg"];
-    NSURL *url2 = [[NSBundle mainBundle] URLForResource:@"test" withExtension:@"txt"];
+    NSURL *url2 = [[NSBundle mainBundle] URLForResource:@"movie" withExtension:@"mp4"];
     NSURL *url3 = [[NSBundle mainBundle] URLForResource:@"gamker" withExtension:@"mp4"];
-    NSURL *url4 = [[NSBundle mainBundle] URLForResource:@"movie" withExtension:@"mp4"];
     
     /*********************************************************************************************/
     //    DMUploadRequest *upload = [[DMUploadRequest alloc] initWithPath:url.absoluteString];
@@ -168,50 +174,45 @@
     
     
     /*********************************************************************************************/
-    //    HJTaskKey uploadkey = [self hj_upload:nil
-    //                                     path:url.path
-    //                                 progress:^(NSProgress * _Nullable taskProgress) {
-    //        NSLog(@"HJUpload_progress: %lld / %lld", taskProgress.completedUnitCount, taskProgress.totalUnitCount);
-    //    } completion:^(HJTaskKey key,
-    //                   HJTaskStage stage,
-    //                   NSDictionary<NSString *,id> * _Nullable callbackInfo,
-    //                   NSError * _Nullable error) {
-    //        NSLog(@"HJUpload_completion_key = %@", key);
-    //        NSLog(@"HJUpload_completion_stage = %ld", (long)stage);
-    //        NSLog(@"HJUpload_completion_callbackInfo = %@", callbackInfo);
-    //        NSLog(@"HJUpload_completion_error = %@", error);
-    //    }];
     
-    //    __weak typeof (self) _self = self;
-    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-    //        __strong typeof(_self) self = _self;
-    //        [self hj_cancelUploadWithKey:uploadkey];
-    //    });
-    //    return;
-    /*********************************************************************************************/
+    HJUploadCustomConfig *config = [HJUploadCustomConfig defaultConfig];
+    // HJUploadConfig *config = [HJUploadConfig defaultConfig];
+    // config.fragmentEnable = YES;
+    // config.fragmentSize = 1024 * 1024;
+    // config.retryEnable = YES;
+    // config.cryptoEnable = YES;
+    // config.formType = HJUploadFormTypeStream;
     
-    
-    /*********************************************************************************************/
-    
-    HJUploadConfig *config = [HJUploadConfig defaultConfig];
-    config.retryEnable = YES;
-    config.fragmentEnable = YES;
-    config.fragmentMaxSize = 512*1024;
-    
-    HJUploadSourceKey key = [HJUploadManager uploadWithAbsolutePath:url4.path
-                                                             config:config
-                                                      uploadRequest:^HJCoreRequest * _Nonnull(HJUploadFileFragment * _Nonnull fragment) {
-        HJUploadRequest *request = [[HJUploadRequest alloc] initWithFragment:fragment];
-        return request;
-    } uploadProgress:^(NSProgress * _Nullable progress) {
-        NSLog(@"HJUpload_progress: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-    } uploadCompletion:^(HJUploadStatus status, id  _Nullable callbackInfo, NSError * _Nullable error) {
-        NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        NSLog(@"HJUpload_completion_stage = %ld", (long)status);
-        NSLog(@"HJUpload_completion_callbackInfo = %@", callbackInfo);
-        NSLog(@"HJUpload_completion_error = %@", error);
-    }];
-    
+    for (int i = 0; i < 4; i++) {
+        NSURL *url = nil;
+        if (i == 0) {
+            url = url0;
+        } else if (i == 1) {
+            url = url1;
+        } else if (i == 2) {
+            url = url2;
+        } else if (i == 3) {
+            url = url3;
+        }
+        
+        [HJUploadManager uploadWithAbsolutePath:url.path
+                                         config:config
+                                     preprocess:^NSDictionary * _Nullable(HJUploadFileBlock * _Nullable block) {
+            NSLog(@"block = %@", block);
+            // block.error = [NSError errorWithDomain:HJUploadKeyPayloadError code:0 userInfo:nil];
+            return nil;
+        } uploadRequest:^HJCoreRequest * _Nonnull(HJUploadFileFragment * _Nonnull fragment) {
+            HJUploadRequest *request = [[HJUploadRequest alloc] initWithFragment:fragment];
+            return request;
+        } uploadProgress:^(NSProgress * _Nullable progress) {
+            NSLog(@"HJUpload_progress: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+        } uploadCompletion:^(HJUploadStatus status, id  _Nullable callbackInfo, NSError * _Nullable error) {
+            NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            NSLog(@"HJUpload_completion_status = %ld", (long)status);
+            NSLog(@"HJUpload_completion_callbackInfo = %@", callbackInfo);
+            NSLog(@"HJUpload_completion_error = %@", error);
+        }];
+    }
     //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
     //        [HJUploadManager cancelUpload:key];
     //    });
@@ -342,6 +343,39 @@ NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/24
 
 - (void)positive {
     [DMDNSTest positive];
+}
+
+#define CHUNK_SIZE 1024
+
+- (void)readLargeFile {
+    //    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"head" withExtension:@"jpeg"];
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"test" withExtension:@"txt"];
+    //    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"gamker" withExtension:@"mp4"];
+    //    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"movie" withExtension:@"mp4"];
+    
+    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:fileURL];
+    [inputStream open];
+    
+    uint8_t buffer[CHUNK_SIZE];
+    
+    while ([inputStream hasBytesAvailable]) {
+        NSInteger bytesRead = [inputStream read:buffer maxLength:CHUNK_SIZE];
+        if (bytesRead < 0) {
+            NSLog(@"Error reading file");
+            break;
+        }
+        
+        if (bytesRead == 0) {
+            NSLog(@"End of file reached");
+            break;
+        }
+        
+        // Process the read data, you can replace this with your own logic
+        NSData *data = [NSData dataWithBytes:buffer length:bytesRead];
+        NSLog(@"Processing chunk with size: %lu", (unsigned long)data.length);
+    }
+    
+    [inputStream close];
 }
 
 @end

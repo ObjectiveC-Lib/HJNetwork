@@ -12,48 +12,86 @@
 
 @interface HJUploadFileFragment ()
 @property (nonatomic, strong) NSData *fileData;
-@property (nonatomic, strong) NSString *md5;
+@property (nonatomic, strong) NSFileHandle *fileHandle;
 @end
 
 @implementation HJUploadFileFragment
+@synthesize MD5 = _MD5;
+@synthesize cryptoMD5 = _cryptoMD5;
+
+- (void)dealloc {
+    NSLog(@"HJUploadFileFragment_dealloc");
+    if (_fileHandle) {
+        if (@available(iOS 13.0, *)) {
+            NSError *error = nil;
+            [_fileHandle closeAndReturnError:&error];
+            if (error) {
+                NSLog(@"HJUploadSource_closeFile_error = %@", error);
+            }
+        } else {
+            [_fileHandle closeFile];
+        }
+        _fileHandle = nil;
+    }
+}
 
 /// 获取片Data
 - (NSData *)fetchData {
-    if (_fileData) return _fileData;
-    
-    NSData *data = nil;
-    NSString *absolutePath = self.block.absolutePath;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:absolutePath]) {
-        NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:absolutePath];
-        if (@available(iOS 13.0, *)) {
-            NSError *error = nil;
-            [readHandle seekToOffset:self.offset error:&error];
-            if (!error) {
-                data = [readHandle readDataUpToLength:self.size error:&error];
-            }
-            if (!error) {
-                [readHandle closeAndReturnError:&error];
-            }
-            if (error) {
-                NSLog(@"HJUploadSource_fetchData_error = %@", error);
-            }
-        } else {
-            [readHandle seekToFileOffset:self.offset];
-            data = [readHandle readDataOfLength:self.size];
-            [readHandle closeFile];
+    if (!_fileData) {
+        _fileData = [self fetchData:self.size offset:0];
+        if (!self.isSingle) {
+            _MD5 = HJDataMD5String(_fileData);
         }
     }
-    _fileData = data;
-    
     return _fileData;
 }
 
-- (NSString *)md5 {
-    if (_md5) return _md5;
-    
-    [self fetchData];
-    _md5 = HJDataMD5String(_fileData);
-    return _md5;
+- (NSData *)fetchData:(NSUInteger)length offset:(unsigned long long)offset {
+    NSData *data = nil;
+    if (@available(iOS 13.0, *)) {
+        NSError *error = nil;
+        [self.fileHandle seekToOffset:self.offset+offset error:&error];
+        if (!error) {
+            data = [self.fileHandle readDataUpToLength:length error:&error];
+        }
+        if (error) {
+            NSLog(@"HJUploadSource_fetchData_error = %@", error);
+            [self.fileHandle closeAndReturnError:&error];
+            NSLog(@"HJUploadSource_fetchData_error = %@", error);
+        }
+    } else {
+        [self.fileHandle seekToFileOffset:self.offset+offset];
+        data = [self.fileHandle readDataOfLength:length];
+    }
+    return data;
+}
+
+- (NSData *)cryptoData:(NSData *)data {
+    return [self.block.config cryptoData:data];
+}
+
+- (NSString *)MD5 {
+    if (!_MD5) {
+        if (self.isSingle) {
+            _MD5 = self.block.MD5;
+        } else {
+            if (self.block.config.formType == HJUploadFormTypeData) {
+                [self fetchData];
+            } else {
+                NSData *data = [self fetchData:self.size offset:0];
+                _MD5 = HJDataMD5String(data);
+            }
+        }
+    }
+    return _MD5;
+}
+
+- (NSFileHandle *)fileHandle {
+    if (!_fileHandle) {
+        NSString *absolutePath = self.block.absolutePath;
+        _fileHandle = [NSFileHandle fileHandleForReadingAtPath:absolutePath];
+    }
+    return _fileHandle;
 }
 
 #pragma mark - NSSecureCoding
@@ -66,7 +104,8 @@
     if (self = [super initWithCoder:coder]) {
         self.fragmentId = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(fragmentId))];
         self.index = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(index))] unsignedIntegerValue];
-        self.offset = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(offset))] unsignedIntegerValue];
+        self.offset = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(offset))] unsignedLongLongValue];
+        self.isSingle = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(isSingle))] boolValue];
         self.block = [coder decodeObjectOfClass:[HJUploadFileBlock class] forKey:NSStringFromSelector(@selector(block))];
     }
     return self;
@@ -76,7 +115,8 @@
     [super encodeWithCoder:coder];
     [coder encodeObject:self.fragmentId forKey:NSStringFromSelector(@selector(fragmentId))];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.index] forKey:NSStringFromSelector(@selector(index))];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.offset] forKey:NSStringFromSelector(@selector(offset))];
+    [coder encodeObject:[NSNumber numberWithUnsignedLongLong:self.offset] forKey:NSStringFromSelector(@selector(offset))];
+    [coder encodeObject:[NSNumber numberWithBool:self.isSingle] forKey:NSStringFromSelector(@selector(isSingle))];
     [coder encodeObject:self.block forKey:NSStringFromSelector(@selector(block))];
 }
 
@@ -87,6 +127,7 @@
     fragment.fragmentId = self.fragmentId;
     fragment.index = self.index;
     fragment.offset = self.offset;
+    fragment.isSingle = self.isSingle;
     fragment.block = self.block;
     return fragment;
 }

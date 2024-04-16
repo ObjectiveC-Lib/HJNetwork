@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		39AEF05BF4D6F76FA2EB65F7 /* Pods_HJNetworkDemo_HJNetworkDemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4685473EF44CC83837A7824F /* Pods_HJNetworkDemo_HJNetworkDemoUITests.framework */; };
+		550ED6A42BC5440800C349FB /* HJUploadCustomConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 550ED6A32BC5440800C349FB /* HJUploadCustomConfig.m */; };
 		55135DD228D179A80028CA16 /* gamker.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 55135DD128D179A80028CA16 /* gamker.mp4 */; };
 		5515C0462893DB060008C0CE /* head.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 5515C0452893DB060008C0CE /* head.jpeg */; };
 		5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521D95928911FAA00F85AB4 /* DMHTTPRequest.m */; };
@@ -25,7 +26,6 @@
 		55AF57FF2836477B0073E550 /* DMBaseUrlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E72836477B0073E550 /* DMBaseUrlFilter.m */; };
 		55AF58002836477B0073E550 /* DMBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57E82836477B0073E550 /* DMBaseRequest.m */; };
 		55AF58062836477B0073E550 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57F72836477B0073E550 /* AppDelegate.m */; };
-		55AF58072836477B0073E550 /* NSObject+HJUploadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */; };
 		55AF580E283649640073E550 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF580A283649640073E550 /* ViewController.m */; };
 		55AF583028364B330073E550 /* HJBasicUrlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF581228364B330073E550 /* HJBasicUrlFilter.m */; };
 		55AF583228364B330073E550 /* HJTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AF581528364B330073E550 /* HJTestCase.m */; };
@@ -80,6 +80,8 @@
 		15D8A66B59C34A2B0366C277 /* Pods_HJNetworkDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E3FCACAA1CC5AA8371EDE90 /* Pods-HJNetworkDemo-HJNetworkDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo-HJNetworkDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo-HJNetworkDemoUITests/Pods-HJNetworkDemo-HJNetworkDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4685473EF44CC83837A7824F /* Pods_HJNetworkDemo_HJNetworkDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HJNetworkDemo_HJNetworkDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		550ED6A22BC5440800C349FB /* HJUploadCustomConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJUploadCustomConfig.h; sourceTree = "<group>"; };
+		550ED6A32BC5440800C349FB /* HJUploadCustomConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJUploadCustomConfig.m; sourceTree = "<group>"; };
 		55135DD128D179A80028CA16 /* gamker.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = gamker.mp4; sourceTree = "<group>"; };
 		5515C0452893DB060008C0CE /* head.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = head.jpeg; sourceTree = "<group>"; };
 		5521D95828911FAA00F85AB4 /* DMHTTPRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMHTTPRequest.h; sourceTree = "<group>"; };
@@ -110,8 +112,6 @@
 		55AF57EA2836477B0073E550 /* DMInlineHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMInlineHeader.h; sourceTree = "<group>"; };
 		55AF57F52836477B0073E550 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55AF57F72836477B0073E550 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		55AF57FA2836477B0073E550 /* NSObject+HJUploadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+HJUploadTask.h"; sourceTree = "<group>"; };
-		55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+HJUploadTask.m"; sourceTree = "<group>"; };
 		55AF580A283649640073E550 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		55AF580C283649640073E550 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		55AF581128364B330073E550 /* HJBasicUrlFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJBasicUrlFilter.h; sourceTree = "<group>"; };
@@ -211,10 +211,10 @@
 			children = (
 				5521D95E289148F300F85AB4 /* DMUploadRequest.h */,
 				5521D95F289148F300F85AB4 /* DMUploadRequest.m */,
+				550ED6A22BC5440800C349FB /* HJUploadCustomConfig.h */,
+				550ED6A32BC5440800C349FB /* HJUploadCustomConfig.m */,
 				55F2878C28C71F3B00A96E88 /* HJUploadRequest.h */,
 				55F2878D28C71F3B00A96E88 /* HJUploadRequest.m */,
-				55AF57FA2836477B0073E550 /* NSObject+HJUploadTask.h */,
-				55AF57FD2836477B0073E550 /* NSObject+HJUploadTask.m */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -686,7 +686,6 @@
 			files = (
 				55B838A0292368B100C62DFE /* DMDNSTest.m in Sources */,
 				55AF57FF2836477B0073E550 /* DMBaseUrlFilter.m in Sources */,
-				55AF58072836477B0073E550 /* NSObject+HJUploadTask.m in Sources */,
 				55F2878E28C71F3B00A96E88 /* HJUploadRequest.m in Sources */,
 				5592ED9C28BF2F4D002A19D6 /* DMURLProtocol.m in Sources */,
 				55D41AB528A1FE4800B9283E /* DMSDWebImageOperation.m in Sources */,
@@ -698,6 +697,7 @@
 				5592ED9928BDE86F002A19D6 /* WKWebViewController.m in Sources */,
 				55D41AAA289BAF5400B9283E /* ImageViewController.m in Sources */,
 				5521D95D2891299100F85AB4 /* DMDownloadRequest.m in Sources */,
+				550ED6A42BC5440800C349FB /* HJUploadCustomConfig.m in Sources */,
 				5521D960289148F300F85AB4 /* DMUploadRequest.m in Sources */,
 				55CDCA0C296665CC004CFD5E /* DMCommonRequest.m in Sources */,
 				55AF57AE283634A50073E550 /* main.m in Sources */,

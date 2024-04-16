@@ -16,17 +16,19 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HJUploadFileFragment : HJUploadFileBasic
 /// 文件片ID
 @property (nonatomic, strong) NSString *fragmentId;
-/// 片的索引
+/// 文件片的索引
 @property (nonatomic, assign) NSUInteger index;
-/// 片的偏移量
-@property (nonatomic, assign) NSUInteger offset;
+/// 文件片的偏移量
+@property (nonatomic, assign) unsigned long long offset;
+/// 文件只有一个fragment
+@property (nonatomic, assign) BOOL isSingle;
 /// 该片所处的文件块
 @property (nonatomic,   weak) HJUploadFileBlock *block;
 
 /// 获取片Data
 - (NSData *)fetchData;
-/// MD5
-- (NSString *)md5;
+- (NSData *)fetchData:(NSUInteger)length offset:(unsigned long long)offset;
+- (NSData *)cryptoData:(NSData *)data;
 
 @end
 

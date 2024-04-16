@@ -140,6 +140,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 判断文件路径是否存在
 + (BOOL)isExistsAtPath:(NSString *)path;
+// 判断目录是否是文件是否存在
++ (BOOL)isFileAndExistsAtPath:(NSString *)path;
 // 判断路径是否为空(判空条件是文件大小为0，或者是文件夹下没有子文件)
 + (BOOL)isEmptyItemAtPath:(NSString *)path;
 // 判断路径是否为空(错误信息error)

@@ -317,7 +317,7 @@ void descriptionFunction(const void *key, const void *value, void *context) {
     return self;
 }
 
-- (nullable NSString *)getDNSValue:(NSString *)key {
+- (NSString *)getDNSValue:(NSString *)key {
     if (!key || key.length <= 0) return nil;
     
     NSString *value = nil;

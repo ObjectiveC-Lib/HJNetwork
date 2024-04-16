@@ -8,6 +8,21 @@
 #import "HJRetryRequestManager.h"
 #import <HJTask/HJTask.h>
 
+@interface HJRetryTaskManager : HJTaskManager
++ (instancetype)sharedInstance;
+@end
+
+@implementation HJRetryTaskManager
++ (instancetype)sharedInstance {
+    static dispatch_once_t once;
+    static HJRetryTaskManager *sharedInstance;
+    dispatch_once(&once, ^ {
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+}
+@end
+
 @implementation HJRetryRequestManager
 
 + (HJRetryRequestKey)requestWithConfig:(HJRetryRequestConfig *)config
@@ -20,8 +35,8 @@
     source.retryRequestBlock = retryRequest;
     source.progress = requestProgress;
     source.completion = requestCompletion;
-    [[HJTaskManager sharedInstance] executor:source
-                                    progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
+    [[HJRetryTaskManager sharedInstance] executor:source
+                                         progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
         if (source.progress) {
             source.progress(taskProgress);
         }
@@ -41,7 +56,7 @@
 }
 
 + (void)cancelRequest:(HJRetryRequestKey)key {
-    [[HJTaskManager sharedInstance] cancelWithKey:key];
+    [[HJRetryTaskManager sharedInstance] cancelWithKey:key];
 }
 
 @end

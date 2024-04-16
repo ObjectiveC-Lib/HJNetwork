@@ -1,19 +1,85 @@
 //
-//  HJUploadSource.m
+//  HJUploadFileSource.m
 //  HJNetwork
 //
 //  Created by navy on 2022/9/5.
 //  Copyright © 2022 HJNetwork. All rights reserved.
 //
 
-#import "HJUploadSource.h"
-#import "HJUploadSourceManager.h"
+#import "HJUploadFileSource.h"
 #import <pthread/pthread.h>
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)
 
-@interface HJUploadSource ()
+@interface HJUploadSourceManager : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
++ (instancetype)sharedManager;
+
+- (void)addSource:(HJUploadFileSource *)source;
+- (void)removeSource:(HJUploadFileSource *)source;
+- (nullable HJUploadFileSource *)getSource:(NSString *)sourceId;
+
+@end
+
+@implementation HJUploadSourceManager {
+    pthread_mutex_t _lock;
+    NSMutableDictionary *_sources;
+}
+
+- (void)dealloc {
+    pthread_mutex_destroy(&_lock);
+}
+
++ (instancetype)sharedManager {
+    static dispatch_once_t once;
+    static id instance;
+    dispatch_once(&once, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        pthread_mutex_init(&_lock, NULL);
+        _sources = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+}
+
+- (void)addSource:(HJUploadFileSource *)source {
+    if (!source) return;
+    Lock();
+    [_sources setObject:source forKey:source.sourceId];
+    Unlock();
+}
+
+- (void)removeSource:(HJUploadFileSource *)source {
+    if (!source) return;
+    Lock();
+    [_sources removeObjectForKey:source.sourceId];
+    Unlock();
+}
+
+- (HJUploadFileSource *)getSource:(NSString *)sourceId {
+    if (!sourceId || sourceId.length <= 0) return nil;
+    HJUploadFileSource *source = nil;
+    Lock();
+    if (_sources.count) {
+        source = [_sources objectForKey:sourceId];
+    }
+    Unlock();
+    return source;
+}
+
+@end
+
+@interface HJUploadFileSource ()
 @property (nonatomic, assign) int64_t totalUnitCount;
 @property (nonatomic, assign) int64_t completedUnitCount;
 @property (nonatomic, strong) NSProgress *fileProgress;
@@ -21,22 +87,21 @@
 @property (nonatomic, assign) NSUInteger completionCount;
 @property (nonatomic, assign) NSUInteger retryCount;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, id> *requestDict;
-@property (nonatomic, strong) HJUploadConfig *config;
 //@property (nonatomic,   copy) void (^startBlock)(HJUploadFileFragment *fragment);
 @end
 
-@implementation HJUploadSource {
+@implementation HJUploadFileSource {
     pthread_mutex_t _lock;
 }
-@synthesize taskKey = _taskKey;
 
 - (void)dealloc {
+    NSLog(@"HJUploadSource_dealloc_%@: dealloc", self.sourceId);
+    
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
-    // NSLog(@"HJUploadSource_%@: dealloc", self.sourceId);
     pthread_mutex_destroy(&_lock);
 }
 
-- (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(HJUploadConfig *)config {
+- (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(id <HJUploadConfig>)config {
     self = [super init];
     if (self) {
         pthread_mutex_init(&_lock, NULL);
@@ -51,16 +116,18 @@
         _completedUnitCount = 0;
         _requestDict = [NSMutableDictionary new];
         
-        __weak typeof(self) weakself = self;
+        __weak typeof(self) weakSelf = self;
         NSMutableString *sourceId = [NSMutableString new];
         NSMutableArray *blocks = [NSMutableArray new];
         __block NSUInteger size = 0;
+        __block NSUInteger bufferSize = 0;
         [paths enumerateObjectsUsingBlock:^(NSString * _Nonnull path, NSUInteger idx, BOOL * _Nonnull stop) {
             HJUploadFileBlock *block = [[HJUploadFileBlock alloc] initWithAbsolutePath:path config:config];
             block.source = self;
             size += block.size;
+            bufferSize += block.bufferSize;
             block.progress = ^(NSProgress * _Nullable progress) {
-                __strong typeof(weakself) self = weakself;
+                __strong typeof(weakSelf) self = weakSelf;
                 if (self.blocks.count > 1) {
                     self.completedUnitCount += progress.completedUnitCount;
                 } else {
@@ -68,12 +135,12 @@
                 }
                 // NSLog(@"block_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
             };
-            __weak typeof(block) weakblock = block;
+            __weak typeof(block) weakBlock = block;
             block.completion = ^(HJUploadStatus status, id _Nullable callbackInfo, NSError * _Nullable error) {
-                __strong typeof(weakself) self = weakself;
-                weakblock.error = error;
-                weakblock.status = status;
-                weakblock.callbackInfo = callbackInfo;
+                __strong typeof(weakSelf) self = weakSelf;
+                weakBlock.error = error;
+                weakBlock.status = status;
+                weakBlock.callbackInfo = callbackInfo;
                 self.completionCount += 1;
             };
             [blocks addObject:block];
@@ -83,27 +150,32 @@
         _blocks = [blocks copy];
         
         self.size = size;
-        self.totalUnitCount = self.size;
+        self.cryptoSize = bufferSize;
+        self.retryCount = self.config.retryCount;
+        self.bufferSize = self.config.bufferSize;
+        self.cryptoEnable = self.config.cryptoEnable;
+        self.totalUnitCount = self.cryptoEnable?self.cryptoSize:self.size;
         self.status = HJUploadStatusWaiting;
-        self.retryCount = config.retryCount;
         self.blockCount = self.blocks.count;
         self.taskKey = self.sourceId;
+        self.taskAllowBackground = self.config.allowBackground;
+        self.taskMaxConcurrentCount = self.config.maxConcurrentCount;
     }
     return self;
 }
 
 - (void)reStartRequest {
+    __weak typeof(self) weakSelf = self;
     [self.blocks enumerateObjectsUsingBlock:^(HJUploadFileBlock * _Nonnull block, NSUInteger idx, BOOL * _Nonnull stop) {
         block.error = nil;
         [block.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
             if (fragment.status == HJUploadStatusFailure) {
                 fragment.status = HJUploadStatusProcessing;
                 fragment.error = nil;
-                if (self.uploadFragment) {
-                    __weak typeof(self) weakself = self;
-                    HJCoreRequest *request = self.uploadFragment(fragment);
+                if (weakSelf.request) {
+                    HJCoreRequest *request = weakSelf.request(fragment);
                     Lock();
-                    [self.requestDict setObject:request forKey:fragment.fragmentId];
+                    [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
                     Unlock();
                     request.uploadProgressBlock = ^(NSProgress *progress) {
                         fragment.status = HJUploadStatusProcessing;
@@ -118,19 +190,19 @@
                             fragment.completion(HJUploadStatusSuccess, request.responseObject, nil);
                         }
                         Lock();
-                        [weakself.requestDict removeObjectForKey:fragment.fragmentId];
+                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
                         Unlock();
                     } failure:^(__kindof HJCoreRequest * _Nonnull request) {
                         fragment.status = HJUploadStatusFailure;
                         NSString *errorDesc = request.error.localizedDescription;
-                        if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakself.status == HJUploadStatusCancel) {
+                        if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
                             fragment.status = HJUploadStatusCancel;
                         }
                         if (fragment.completion) {
                             fragment.completion(fragment.status, request.responseObject, request.error);
                         }
                         Lock();
-                        [weakself.requestDict removeObjectForKey:fragment.fragmentId];
+                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
                         Unlock();
                     }];
                 }
@@ -140,56 +212,74 @@
 }
 
 - (void)startRequest {
-    __weak typeof(self) weakself = self;
+    __weak typeof(self) weakSelf = self;
     [self.blocks enumerateObjectsUsingBlock:^(HJUploadFileBlock * _Nonnull block, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (weakSelf.preprocess) {
+            NSDictionary *payload = weakSelf.preprocess(block);
+            if (block.error) {
+                if (block.completion) {
+                    block.completion(HJUploadStatusFailure, payload, block.error);
+                }
+                *stop = YES;
+                return;
+            } else {
+                
+            }
+        }
         block.error = nil;
         [block.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
-            fragment.status = HJUploadStatusProcessing;
-            if (self.uploadFragment) {
-                HJCoreRequest *request = self.uploadFragment(fragment);
-                Lock();
-                [self.requestDict setObject:request forKey:fragment.fragmentId];
-                Unlock();
-                request.uploadProgressBlock = ^(NSProgress *progress) {
-                    fragment.status = HJUploadStatusProcessing;
-                    // NSLog(@"startRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-                    if (fragment.progress) {
-                        fragment.progress(progress);
-                    }
-                };
-                [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
-                    fragment.status = HJUploadStatusSuccess;
-                    if (fragment.completion) {
-                        fragment.completion(HJUploadStatusSuccess, request.responseObject, nil);
-                    }
+            if (fragment.status == HJUploadStatusSuccess) {
+                if (fragment.completion) {
+                    fragment.completion(fragment.status, nil, nil);
+                }
+            } else {
+                fragment.status = HJUploadStatusProcessing;
+                if (weakSelf.request) {
+                    HJCoreRequest *request = weakSelf.request(fragment);
                     Lock();
-                    [weakself.requestDict removeObjectForKey:fragment.fragmentId];
+                    [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
                     Unlock();
-                } failure:^(__kindof HJCoreRequest * _Nonnull request) {
-                    fragment.status = HJUploadStatusFailure;
-                    NSString *errorDesc = request.error.localizedDescription;
-                    if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakself.status == HJUploadStatusCancel) {
-                        fragment.status = HJUploadStatusCancel;
-                    }
-                    if (fragment.completion) {
-                        fragment.completion(fragment.status, request.responseObject, request.error);
-                    }
-                    Lock();
-                    [weakself.requestDict removeObjectForKey:fragment.fragmentId];
-                    Unlock();
-                }];
+                    request.uploadProgressBlock = ^(NSProgress *progress) {
+                        fragment.status = HJUploadStatusProcessing;
+                        // NSLog(@"startRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+                        if (fragment.progress) {
+                            fragment.progress(progress);
+                        }
+                    };
+                    [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
+                        fragment.status = HJUploadStatusSuccess;
+                        if (fragment.completion) {
+                            fragment.completion(HJUploadStatusSuccess, request.responseObject, nil);
+                        }
+                        Lock();
+                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                        Unlock();
+                    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
+                        fragment.status = HJUploadStatusFailure;
+                        NSString *errorDesc = request.error.localizedDescription;
+                        if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
+                            fragment.status = HJUploadStatusCancel;
+                        }
+                        if (fragment.completion) {
+                            fragment.completion(fragment.status, request.responseObject, request.error);
+                        }
+                        Lock();
+                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                        Unlock();
+                    }];
+                }
             }
         }];
     }];
 }
 
 - (void)cancelRequest {
-    __weak typeof(self) weakself = self;
+    __weak typeof(self) weakSelf = self;
     [self.blocks enumerateObjectsUsingBlock:^(HJUploadFileBlock * _Nonnull block, NSUInteger idx, BOOL * _Nonnull stop) {
         [block.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
             if (fragment.status == HJUploadStatusProcessing) {
                 Lock();
-                HJCoreRequest *request = self.requestDict[fragment.fragmentId];
+                HJCoreRequest *request = weakSelf.requestDict[fragment.fragmentId];
                 Unlock();
                 if (request && request.executing) {
                     [request stop];
@@ -209,14 +299,14 @@
         
         __block HJUploadStatus status = HJUploadStatusSuccess;
         __block NSError *error = nil;
-        __weak typeof(self) weakself = self;
+        __weak typeof(self) weakSelf = self;
         [self.blocks enumerateObjectsUsingBlock:^(HJUploadFileBlock * _Nonnull block, NSUInteger idx, BOOL * _Nonnull stop) {
-            weakself.callbackInfo = block.callbackInfo;
+            weakSelf.callbackInfo = block.callbackInfo;
             if (block.status == HJUploadStatusFailure || block.status == HJUploadStatusCancel) {
                 status = HJUploadStatusFailure;
                 error = HJErrorWithUnderlyingError(block.error, error);
-                if (block.status == HJUploadStatusFailure) {
-                    self.blockCount += 1;
+                if (block.status == HJUploadStatusFailure && ![block.error.domain isEqualToString:HJUploadKeyPayloadError]) {
+                    weakSelf.blockCount += 1;
                 }
             }
         }];
@@ -224,18 +314,21 @@
         self.error = error;
         
         if (self.error) {
-            if (self.config.retryEnable && self.retryCount > 0 && self.status == HJUploadStatusFailure) {
+            if (self.config.retryEnable &&
+                self.retryCount > 0 &&
+                self.blockCount > 0 &&
+                self.status == HJUploadStatusFailure) {
                 if (self.config.retryInterval) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.config.retryInterval * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         [self reStartRequest];
                         self.retryCount -= 1;
-                        NSLog(@"HJUploadSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
+                        // NSLog(@"HJUploadSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
                     });
                 } else {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         [self reStartRequest];
                         self.retryCount -= 1;
-                        NSLog(@"HJUploadSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
+                        // NSLog(@"HJUploadSource_retryCount = %lu", (self.config.retryCount - self.retryCount));
                     });
                 }
             } else {
@@ -281,24 +374,12 @@
     if ([object isEqual:self.fileProgress]) {
         if (self.taskProgress) {
             // NSLog(@"source_completedUnitCount: %lld / %lld", [(NSProgress *)object completedUnitCount], [(NSProgress *)object totalUnitCount]);
-            self.taskProgress(self.taskKey, object);
+            self.taskProgress(self.taskKey, self.fileProgress);
         }
     }
 }
 
 #pragma mark - HJTaskProtocol
-
-- (BOOL)allowBackground {
-    return YES;
-}
-
-- (void)setTaskKey:(HJTaskKey)taskKey {
-    _taskKey = taskKey;
-}
-
-- (HJTaskKey)taskKey {
-    return _taskKey;
-}
 
 - (void)startTask {
     [[HJUploadSourceManager sharedManager] addSource:self];
@@ -351,7 +432,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    HJUploadSource *source = [super copyWithZone:zone];
+    HJUploadFileSource *source = [super copyWithZone:zone];
     source.sourceId = self.sourceId;
     source.blocks = self.blocks;
     

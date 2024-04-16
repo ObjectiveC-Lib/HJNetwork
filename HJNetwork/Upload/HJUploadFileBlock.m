@@ -8,7 +8,7 @@
 
 #import "HJUploadFileBlock.h"
 #import "HJFileManager.h"
-#import "HJUploadSource.h"
+#import "HJUploadFileSource.h"
 
 @interface HJUploadFileBlock ()
 @property (nonatomic, assign) int64_t totalUnitCount;
@@ -19,16 +19,18 @@
 @property (nonatomic, assign) NSUInteger completionCount;
 @property (nonatomic, assign) BOOL uploadFragmentFailed;
 @property (nonatomic, assign) BOOL sourceCancelTask;
-@property (nonatomic, strong) HJUploadConfig *config;
 @end
 
 @implementation HJUploadFileBlock
+@synthesize MD5 = _MD5;
+@synthesize cryptoMD5 = _cryptoMD5;
 
 - (void)dealloc {
+    NSLog(@"HJUploadFileBlock_dealloc");
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
 }
 
-- (instancetype)initWithAbsolutePath:(NSString *)path config:(HJUploadConfig *)config {
+- (instancetype)initWithAbsolutePath:(NSString *)path config:(id <HJUploadConfig>)config {
     self = [super init];
     if (self) {
         _config = config;
@@ -41,6 +43,7 @@
                            context:NULL];
         _totalUnitCount = 0;
         _completedUnitCount = 0;
+        _originalPath = path;
         
         [self fetchFileInfo:path];
         [self cutFragments];
@@ -49,47 +52,49 @@
 }
 
 /// 获取文件信息
-- (void)fetchFileInfo:(NSString *)absolutePath {
-    if (![HJFileManager isExistsAtPath:absolutePath]) {
-        NSLog(@"HJUploadFileBlock_文件不存在:%@", absolutePath);
+- (void)fetchFileInfo:(NSString *)path {
+    if (![HJFileManager isFileAndExistsAtPath:path]) {
+        NSLog(@"HJUploadFileBlock_文件不存在:%@", path);
         return;
     }
     
     /// 存取文件路径
-    NSURL *url = [NSURL URLWithString:absolutePath];
-    if ([absolutePath containsString:[HJFileManager tmpDir]]) {
+    NSURL *url = [NSURL URLWithString:path];
+    if ([path containsString:[HJFileManager tmpDir]]) {
         self.dirType = HJDirectoryTypeTemporary;
         self.path = [self cutPath:url.path withString:[HJFileManager tmpDir]];
     }
     
-    if ([absolutePath containsString:[HJFileManager documentsDir]]) {
+    if ([path containsString:[HJFileManager documentsDir]]) {
         self.dirType = HJDirectoryTypeDocument;
         self.path = [self cutPath:url.path withString:[HJFileManager documentsDir]];
     }
     
-    if ([absolutePath containsString:[HJFileManager libraryDir]]) {
+    if ([path containsString:[HJFileManager libraryDir]]) {
         self.dirType = HJDirectoryTypeLibrary;
         self.path = [self cutPath:url.path withString:[HJFileManager libraryDir]];
     }
     
-    if ([absolutePath containsString:[HJFileManager cachesDir]]) {
+    if ([path containsString:[HJFileManager cachesDir]]) {
         self.dirType = HJDirectoryTypeCaches;
         self.path = [self cutPath:url.path withString:[HJFileManager cachesDir]];
     }
     
-    if ([absolutePath containsString:[HJFileManager mainBundleDir]]) {
+    if ([path containsString:[HJFileManager mainBundleDir]]) {
         self.dirType = HJDirectoryTypeMainBundle;
         self.path = [self cutPath:url.path withString:[HJFileManager mainBundleDir]];
     }
     
     /// 文件大小
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
-    NSDictionary *attr =[fileMgr attributesOfItemAtPath:absolutePath error:nil];
-    self.size = attr.fileSize;
-    self.totalUnitCount = self.size;
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    self.size = attributes.fileSize;
+    self.bufferSize = self.config.bufferSize;
+    self.cryptoEnable = self.config.cryptoEnable;
+    self.cryptoSize = self.cryptoEnable?[self.config cryptoDataSize:self.size]:0;
+    self.totalUnitCount = self.cryptoEnable?self.cryptoSize:self.size;
     
     /// 文件名
-    self.name = [absolutePath lastPathComponent];
+    self.name = [path lastPathComponent];
     
     /// 文件类型
     NSString *pathExtension = self.name.pathExtension.lowercaseString;
@@ -107,41 +112,45 @@
 }
 
 - (void)cutFragments {
-    __weak typeof(self) weakself = self;
-    NSUInteger fragmentMaxSize = self.config.fragmentEnable?self.config.fragmentMaxSize:self.size;
-    NSUInteger fragmentCount = (self.size%fragmentMaxSize==0)?(self.size/fragmentMaxSize):(self.size/(fragmentMaxSize)+1);
+    __weak typeof(self) weakSelf = self;
+    NSUInteger fragmentSize = self.config.fragmentEnable?self.config.fragmentSize:self.size;
+    NSUInteger fragmentCount = (self.size%fragmentSize==0)?(self.size/fragmentSize):(self.size/(fragmentSize)+1);
     NSMutableArray<HJUploadFileFragment *> *fragments = [[NSMutableArray alloc] initWithCapacity:fragmentCount];
     for (NSUInteger i = 0; i < fragmentCount; i++) {
         HJUploadFileFragment *fragment = [[HJUploadFileFragment alloc] init];
         fragment.fragmentId = HJFileCreateId([NSString stringWithFormat:@"%@_%lu", self.name, (unsigned long)i]);
         fragment.index = i;
-        fragment.offset = i * fragmentMaxSize;
+        fragment.offset = i * fragmentSize;
         if (i != fragmentCount - 1) {
-            fragment.size = fragmentMaxSize;
+            fragment.size = fragmentSize;
         } else {
             fragment.size = self.size - fragment.offset;
         }
+        fragment.bufferSize = self.config.bufferSize;
+        fragment.cryptoEnable = self.config.cryptoEnable;
+        fragment.cryptoSize = fragment.cryptoEnable?[self.config cryptoDataSize:fragment.size]:0;
+        fragment.isSingle = (fragmentCount==1)?YES:NO;
         fragment.status = HJUploadStatusWaiting;
         fragment.block = self;
         fragment.progress = ^(NSProgress * _Nullable progress) {
-            __strong typeof(weakself) self = weakself;
+            __strong typeof(weakSelf) self = weakSelf;
             if (self.fragments.count == 1) {
                 self.completedUnitCount += progress.completedUnitCount;
             }
         };
-        __weak typeof(fragment) weakfragment = fragment;
+        __weak typeof(fragment) weakFragment = fragment;
         fragment.completion = ^(HJUploadStatus status, id _Nullable callbackInfo, NSError * _Nullable error) {
-            __strong typeof(weakself) self = weakself;
-            weakfragment.error = error;
-            weakfragment.status = status;
-            weakfragment.callbackInfo = callbackInfo;
+            __strong typeof(weakSelf) self = weakSelf;
+            weakFragment.error = error;
+            weakFragment.status = status;
+            weakFragment.callbackInfo = callbackInfo;
             if (error || status == HJUploadStatusCancel || status == HJUploadStatusFailure) {
                 self.uploadFragmentFailed = YES;
             }
             
             if (self.fragments.count > 1 && status == HJUploadStatusSuccess) {
-                // NSLog(@"weakfragment.size = %d", weakfragment.size);
-                self.completedUnitCount += weakfragment.size;
+                // NSLog(@"weakFragment.size = %d", weakFragment.cryptoEnable?weakFragment.cryptoSize:weakFragment.size);
+                self.completedUnitCount += weakFragment.cryptoEnable?weakFragment.cryptoSize:weakFragment.size;
             }
             self.completionCount += 1;
         };
@@ -156,15 +165,15 @@
     _completionCount = completionCount;
     
     if (_completionCount == self.fragmentCount) {
-        self.fragmentCount = 0;
         _completionCount = 0;
+        self.fragmentCount = 0;
         self.uploadFragmentFailed = NO;
         self.sourceCancelTask = NO;
         
         __block HJUploadStatus status = HJUploadStatusSuccess;
         __block NSError *error = nil;
         __block NSMutableDictionary <NSString *, id> * _Nullable callbackInfo = [NSMutableDictionary new];
-        __weak typeof(self) weakself = self;
+        __weak typeof(self) weakSelf = self;
         [self.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
             if (fragment.callbackInfo) {
                 [callbackInfo setObject:fragment.callbackInfo forKey:fragment.fragmentId];
@@ -179,11 +188,16 @@
                 }
                 error = HJErrorWithUnderlyingError(fragment.error, error);
                 if (fragment.status == HJUploadStatusFailure) {
-                    weakself.fragmentCount += 1;
+                    weakSelf.fragmentCount += 1;
                 }
-                if (weakself.fragments.count == 1) {
-                    weakself.uncompletedUnitCount = weakself.completedUnitCount;
-                    weakself.completedUnitCount = 0;
+                if (weakSelf.fragments.count == 1) {
+                    weakSelf.uncompletedUnitCount = weakSelf.completedUnitCount;
+                    weakSelf.completedUnitCount = 0;
+                }
+            } else if (fragment.status == HJUploadStatusSuccess) {
+                if (weakSelf.fragments.count == 1) {
+                    weakSelf.uncompletedUnitCount = 0;
+                    weakSelf.completedUnitCount = fragment.cryptoEnable?fragment.cryptoSize:fragment.size;
                 }
             }
         }];
@@ -229,35 +243,55 @@
 
 - (NSString *)cutPath:(NSString *)path withString:(NSString *)string {
     NSString *tmpPath = [path stringByReplacingOccurrencesOfString:string withString:@""];
-    if ([tmpPath hasPrefix:@"/"]) {
+    while ([tmpPath hasPrefix:@"/"]) {
         tmpPath = [tmpPath stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
     }
     return tmpPath;
 }
 
 - (NSString *)absolutePath {
-    NSString *absolutePath = self.path;
-    switch (self.dirType) {
-        case HJDirectoryTypeDocument:
-            absolutePath = [[HJFileManager documentsDir] stringByAppendingPathComponent:self.path];
-            break;
-        case HJDirectoryTypeLibrary:
-            absolutePath = [[HJFileManager libraryDir] stringByAppendingPathComponent:self.path];
-            break;
-        case HJDirectoryTypeCaches:
-            absolutePath = [[HJFileManager cachesDir] stringByAppendingPathComponent:self.path];
-            break;
-        case HJDirectoryTypeTemporary:
-            absolutePath = [[HJFileManager tmpDir] stringByAppendingPathComponent:self.path];
-            break;
-        case HJDirectoryTypeMainBundle:
-            absolutePath = [[HJFileManager mainBundleDir] stringByAppendingPathComponent:self.path];
-            break;
-        default:
-            break;
+    if (!_absolutePath) {
+        NSString *absolutePath = self.path;
+        switch (self.dirType) {
+            case HJDirectoryTypeDocument:
+                absolutePath = [[HJFileManager documentsDir] stringByAppendingPathComponent:self.path];
+                break;
+            case HJDirectoryTypeLibrary:
+                absolutePath = [[HJFileManager libraryDir] stringByAppendingPathComponent:self.path];
+                break;
+            case HJDirectoryTypeCaches:
+                absolutePath = [[HJFileManager cachesDir] stringByAppendingPathComponent:self.path];
+                break;
+            case HJDirectoryTypeTemporary:
+                absolutePath = [[HJFileManager tmpDir] stringByAppendingPathComponent:self.path];
+                break;
+            case HJDirectoryTypeMainBundle:
+                absolutePath = [[HJFileManager mainBundleDir] stringByAppendingPathComponent:self.path];
+                break;
+            default:
+                break;
+        }
+        _absolutePath = absolutePath;
     }
-    
-    return absolutePath;
+    return _absolutePath;
+}
+
+- (NSURL *)absolutePathURL {
+    if (!_absolutePathURL) {
+        NSString *absolutePath = self.absolutePath;
+        if (![absolutePath hasPrefix:@"file:///"]) {
+            absolutePath = [NSString stringWithFormat:@"file://%@", absolutePath];
+        }
+        _absolutePathURL = [NSURL URLWithString:absolutePath];
+    }
+    return _absolutePathURL;
+}
+
+- (NSString *)MD5 {
+    if (!_MD5) {
+        _MD5 = HJFileMD5String(self.absolutePath, self.bufferSize);
+    }
+    return _MD5;
 }
 
 #pragma mark - NSProgress Tracking
@@ -268,7 +302,7 @@
     if ([object isEqual:self.fileProgress]) {
         if (self.progress) {
             // NSLog(@"block_completedUnitCount: %lld / %lld", [(NSProgress *)object completedUnitCount], [(NSProgress *)object totalUnitCount]);
-            self.progress(object);
+            self.progress(self.fileProgress);
         }
     }
 }
@@ -284,11 +318,13 @@
         self.blockId = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(blockId))];
         self.name = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
         self.path = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(path))];
+        self.originalPath = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(originalPath))];
         self.absolutePath = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(absolutePath))];
+        self.absolutePathURL = [coder decodeObjectOfClass:[NSURL class] forKey:NSStringFromSelector(@selector(absolutePathURL))];
         self.fileType = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(fileType))] unsignedIntegerValue];
         self.dirType = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(dirType))] unsignedIntegerValue];
         self.fragments = [coder decodeObjectOfClass:[NSArray class] forKey:NSStringFromSelector(@selector(fragments))];
-        self.source = [coder decodeObjectOfClass:[HJUploadSource class] forKey:NSStringFromSelector(@selector(source))];
+        self.source = [coder decodeObjectOfClass:[HJUploadFileSource class] forKey:NSStringFromSelector(@selector(source))];
         
         self.totalUnitCount = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(totalUnitCount))] longLongValue];
         self.completedUnitCount = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(completedUnitCount))] longLongValue];
@@ -304,7 +340,9 @@
     [coder encodeObject:self.blockId forKey:NSStringFromSelector(@selector(blockId))];
     [coder encodeObject:self.name forKey:NSStringFromSelector(@selector(name))];
     [coder encodeObject:self.path forKey:NSStringFromSelector(@selector(path))];
+    [coder encodeObject:self.originalPath forKey:NSStringFromSelector(@selector(originalPath))];
     [coder encodeObject:self.absolutePath forKey:NSStringFromSelector(@selector(absolutePath))];
+    [coder encodeObject:self.absolutePathURL forKey:NSStringFromSelector(@selector(absolutePathURL))];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.fileType] forKey:NSStringFromSelector(@selector(fileType))];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.dirType] forKey:NSStringFromSelector(@selector(dirType))];
     [coder encodeObject:self.fragments forKey:NSStringFromSelector(@selector(fragments))];
@@ -323,7 +361,9 @@
     HJUploadFileBlock *block = [super copyWithZone:zone];
     block.blockId = self.blockId;
     block.path = self.path;
+    block.originalPath = self.originalPath;
     block.absolutePath = self.absolutePath;
+    block.absolutePathURL = self.absolutePathURL;
     block.fileType = self.fileType;
     block.dirType = self.dirType;
     block.fragments = self.fragments;

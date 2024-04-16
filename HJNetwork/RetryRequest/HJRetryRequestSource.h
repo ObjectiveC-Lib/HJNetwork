@@ -49,8 +49,6 @@ typedef void (^HJRetryRequestProgressBlock)(NSProgress * _Nullable progress);
 typedef void (^HJRetryRequestCompletionBlock)(HJRetryRequestStatus status, id _Nullable callbackInfo, NSError *_Nullable error);
 
 @interface HJRetryRequestSource : NSObject <NSSecureCoding, NSCopying, HJTaskProtocol>
-
-@property (nonatomic, copy, nullable) HJTaskKey taskKey;
 /// identifier
 @property (nonatomic, strong) HJRetryRequestKey sourceId;
 /// 状态

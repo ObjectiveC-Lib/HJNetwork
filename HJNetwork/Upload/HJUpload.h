@@ -10,12 +10,12 @@
 #define HJUpload_h
 
 #if __has_include(<HJNetwork/HJUpload.h>)
-#import <HJNetwork/HJFileManager.h>
-#import <HJNetwork/HJUploadSource.h>
+#import <HJNetwork/HJUploadConfig.h>
+#import <HJNetwork/HJUploadInputStream.h>
 #import <HJNetwork/HJUploadManager.h>
 #elif __has_include("HJUpload.h")
-#import "HJFileManager.h"
-#import "HJUploadSource.h"
+#import "HJUploadConfig.h"
+#import "HJUploadInputStream.h"
 #import "HJUploadManager.h"
 #endif
 

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HJRetryRequestConfig : NSObject <NSSecureCoding, NSCopying>
 
 @property (nonatomic, assign) BOOL retryEnable;         // default: YES;
+@property (nonatomic, assign) BOOL allowBackground;     // default: YES;
 @property (nonatomic, assign) NSUInteger retryCount;    // default: 3;
 @property (nonatomic, assign) NSUInteger retryInterval; // default: 1s;
 

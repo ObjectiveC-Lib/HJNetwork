@@ -12,10 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJDNSMap : NSObject
 
-- (instancetype)initWithDict:(NSDictionary <NSString*, NSArray*> *)dict
-               negativeCount:(NSUInteger)negativeCount;
+- (instancetype)initWithDict:(NSDictionary <NSString*, NSArray*> *)dict negativeCount:(NSUInteger)negativeCount;
 
-- (nullable NSString *)getDNSValue:(NSString *)key;
+- (NSString *_Nullable)getDNSValue:(NSString *)key;
 - (void)setNegativeDNSValue:(NSString *)value key:(NSString *)key;
 - (void)setPositiveDNSValue:(NSString *)value key:(NSString *)key;
 

@@ -7,23 +7,41 @@
 //
 
 #import "HJUploadManager.h"
+#import <HJTask/HJTask.h>
+
+@interface HJUploadTaskManager : HJTaskManager
++ (instancetype)sharedInstance;
+@end
+
+@implementation HJUploadTaskManager
++ (instancetype)sharedInstance {
+    static dispatch_once_t once;
+    static HJUploadTaskManager *sharedInstance;
+    dispatch_once(&once, ^ {
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+}
+@end
 
 @implementation HJUploadManager
 
-+ (HJUploadSourceKey)uploadWithAbsolutePath:(NSString *)path
-                                     config:(HJUploadConfig *)config
-                              uploadRequest:(HJCoreRequest *(^)(HJUploadFileFragment *fragment))uploadRequest
-                             uploadProgress:(void (^)(NSProgress *progress))uploadProgress
-                           uploadCompletion:(void (^)(HJUploadStatus status, id callbackInfo, NSError *error))uploadCompletion {
-    if (!path || path.length < 0) return HJUploadSourceKeyInvalid;
++ (HJUploadKey)uploadWithAbsolutePath:(NSString *)path
+                               config:(id <HJUploadConfig>)config
+                           preprocess:(HJUploadPreprocessBlock)preprocess
+                        uploadRequest:(HJUploadRequestBlock)uploadRequest
+                       uploadProgress:(HJUploadProgressBlock)uploadProgress
+                     uploadCompletion:(HJUploadCompletionBlock)uploadCompletion {
+    if (!path || path.length < 0) return HJUploadKeyInvalid;
     if (!config) config = [HJUploadConfig defaultConfig];
     
-    HJUploadSource *source = [[HJUploadSource alloc] initWithAbsolutePaths:@[path] config:config];
-    source.uploadFragment = uploadRequest;
+    HJUploadFileSource *source = [[HJUploadFileSource alloc] initWithAbsolutePaths:@[path] config:config];
+    source.preprocess = preprocess;
+    source.request = uploadRequest;
     source.progress = uploadProgress;
     source.completion = uploadCompletion;
-    [[HJTaskManager sharedInstance] executor:source
-                                    progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
+    [[HJUploadTaskManager sharedInstance] executor:source
+                                          progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
         if (source.progress) {
             source.progress(taskProgress);
         }
@@ -42,8 +60,8 @@
     return source.sourceId;
 }
 
-+ (void)cancelUpload:(HJUploadSourceKey)key {
-    [[HJTaskManager sharedInstance] cancelWithKey:key];
++ (void)cancelUpload:(HJUploadKey)key {
+    [[HJUploadTaskManager sharedInstance] cancelWithKey:key];
 }
 
 @end
