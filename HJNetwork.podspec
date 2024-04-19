@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name            = 'HJNetwork'
-  s.version         = '2.1.10'
+  s.version         = '2.1.11'
   
   s.ios.deployment_target = '9.0'
   

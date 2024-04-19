@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NSDictionary * _Nullable (^HJUploadPreprocessBlock)(HJUploadFileBlock * _Nullable block);
-typedef HJCoreRequest *(^HJUploadRequestBlock)(HJUploadFileFragment *fragment);
+typedef HJCoreRequest * _Nullable (^HJUploadRequestBlock)(HJUploadFileFragment * _Nullable fragment);
 
 @interface HJUploadFileSource : HJUploadFileBasic <HJTaskProtocol>
 /// 文件资源ID
@@ -28,7 +28,7 @@ typedef HJCoreRequest *(^HJUploadRequestBlock)(HJUploadFileFragment *fragment);
 
 @property (nonatomic, strong) id<HJUploadConfig> config;
 
-- (instancetype)initWithAbsolutePaths:(NSArray <NSString *>*)paths config:(id <HJUploadConfig>)config;
+- (instancetype)initWithFilePaths:(NSArray <NSString *>*)paths urls:(NSArray <NSString *>*)urls config:(id <HJUploadConfig>)config;
 
 @end
 

@@ -37,12 +37,13 @@ typedef NS_ENUM(NSUInteger, HJUploadStatus) {
 
 /// 文件类型
 typedef NS_ENUM(NSInteger, HJFileType) {
-    HJFileTypeNone = 0,
+    HJFileTypeUnknown = 0,
     HJFileTypeImage = 1,    /// 图片
     HJFileTypeVideo = 2,    /// 视频
+    HJFileTypeAudio = 3,    /// 音频
 };
 
-static inline NSString * HJUploadContentTypeForPathExtension(NSString *extension) {
+static inline NSString * _Nullable HJUploadContentTypeForPathExtension(NSString * _Nullable extension) {
     NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
     NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
     if (!contentType) {
@@ -52,13 +53,10 @@ static inline NSString * HJUploadContentTypeForPathExtension(NSString *extension
     }
 }
 
-static inline NSString * _Nullable HJFileCreateId(NSString * _Nullable identifier) {
-    if (identifier == nil || [identifier length] <= 0) return nil;
+static inline NSString * _Nullable HJStringMD5String(NSString * _Nullable string) {
+    if (!string) return nil;
     
-    identifier = [identifier stringByAppendingString:[NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]]];
-    identifier = [identifier stringByAppendingString:[NSString stringWithFormat:@"%d",arc4random()%10000]];
-    
-    const char *value = [identifier UTF8String];
+    const char *value = [string UTF8String];
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -88,20 +86,47 @@ static inline NSString * _Nullable HJDataMD5String(NSData * _Nullable data) {
     return key;
 }
 
-static inline CFStringRef HJFileMD5Hash(CFStringRef filePath, size_t bufferSize) {
+static inline CFStringRef _Nullable HJFileMD5CFString(CFStringRef _Nullable filePath, size_t bufferSize) {
     // Declare needed variables
     CFStringRef result = NULL;
     CFReadStreamRef readStream = NULL;
     // Get the file URL
     CFURLRef fileURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)filePath, kCFURLPOSIXPathStyle, (Boolean)false);
-    if (!fileURL) goto done;
+    if (!fileURL) {
+        if (readStream) {
+            CFReadStreamClose(readStream);
+            CFRelease(readStream);
+        }
+        if (fileURL) {
+            CFRelease(fileURL);
+        }
+        return result;
+    }
     
     // Create and open the read stream
     readStream = CFReadStreamCreateWithFile(kCFAllocatorDefault, (CFURLRef)fileURL);
-    if (!readStream) goto done;
+    if (!readStream) {
+        if (readStream) {
+            CFReadStreamClose(readStream);
+            CFRelease(readStream);
+        }
+        if (fileURL) {
+            CFRelease(fileURL);
+        }
+        return result;
+    }
     
     bool didSucceed = (bool)CFReadStreamOpen(readStream);
-    if (!didSucceed) goto done;
+    if (!didSucceed) {
+        if (readStream) {
+            CFReadStreamClose(readStream);
+            CFRelease(readStream);
+        }
+        if (fileURL) {
+            CFRelease(fileURL);
+        }
+        return result;
+    }
     
     // Initialize the hash object
     CC_MD5_CTX hashObject;
@@ -126,7 +151,16 @@ static inline CFStringRef HJFileMD5Hash(CFStringRef filePath, size_t bufferSize)
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5_Final(digest, &hashObject);
     // Abort if the read operation failed
-    if (!didSucceed) goto done;
+    if (!didSucceed) {
+        if (readStream) {
+            CFReadStreamClose(readStream);
+            CFRelease(readStream);
+        }
+        if (fileURL) {
+            CFRelease(fileURL);
+        }
+        return result;
+    }
     
     // Compute the string result
     char hash[2 * sizeof(digest) + 1];
@@ -135,7 +169,6 @@ static inline CFStringRef HJFileMD5Hash(CFStringRef filePath, size_t bufferSize)
     }
     result = CFStringCreateWithCString(kCFAllocatorDefault, (const char *)hash, kCFStringEncodingUTF8);
     
-done:
     if (readStream) {
         CFReadStreamClose(readStream);
         CFRelease(readStream);
@@ -148,7 +181,16 @@ done:
 
 static inline NSString * _Nullable HJFileMD5String(NSString *_Nullable filePath, NSInteger bufferSize) {
     if (!filePath) return nil;
-    return (__bridge_transfer NSString *)HJFileMD5Hash((__bridge CFStringRef)filePath, bufferSize);
+    return (__bridge_transfer NSString *)HJFileMD5CFString((__bridge CFStringRef)filePath, bufferSize);
+}
+
+static inline NSString * _Nullable HJFileCreateId(NSString * _Nullable identifier) {
+    if (identifier == nil || [identifier length] <= 0) return nil;
+    
+    identifier = [identifier stringByAppendingString:[NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]]];
+    identifier = [identifier stringByAppendingString:[NSString stringWithFormat:@"%d",arc4random()%10000]];
+    
+    return HJStringMD5String(identifier);
 }
 
 static inline NSError * _Nullable HJErrorWithUnderlyingError(NSError * _Nullable error, NSError * _Nullable underlyingError) {
@@ -166,16 +208,14 @@ static inline NSError * _Nullable HJErrorWithUnderlyingError(NSError * _Nullable
     return [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:mutableUserInfo];
 }
 
-typedef NSString * _Nullable HJUploadKey;
-static const HJUploadKey HJUploadKeyInvalid = nil;
-static const HJUploadKey HJUploadKeyPayloadError = @"HJUploadKeyPayloadError";
-
 typedef void (^HJUploadProgressBlock)(NSProgress * _Nullable progress);
-typedef void (^HJUploadCompletionBlock)(HJUploadStatus status, id _Nullable callbackInfo, NSError *_Nullable error);
+typedef void (^HJUploadCompletionBlock)(HJUploadStatus status, HJUploadKey key, id _Nullable callbackInfo, NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJUploadFileBasic : NSObject <NSSecureCoding, NSCopying>
+/// 文件只有一个fragment
+@property (nonatomic, assign) BOOL isSingle;
 /// 是否加密
 @property (nonatomic, assign) BOOL cryptoEnable;
 /// 原始大小
@@ -188,6 +228,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *MD5;
 /// 加密后MD5
 @property (nonatomic, strong) NSString *cryptoMD5;
+/// 上传url
+@property (nonatomic, strong) NSString *requestUrl;
 /// 状态
 @property (nonatomic, assign) HJUploadStatus status;
 /// 进度

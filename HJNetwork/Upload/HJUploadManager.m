@@ -26,16 +26,17 @@
 
 @implementation HJUploadManager
 
-+ (HJUploadKey)uploadWithAbsolutePath:(NSString *)path
-                               config:(id <HJUploadConfig>)config
-                           preprocess:(HJUploadPreprocessBlock)preprocess
-                        uploadRequest:(HJUploadRequestBlock)uploadRequest
-                       uploadProgress:(HJUploadProgressBlock)uploadProgress
-                     uploadCompletion:(HJUploadCompletionBlock)uploadCompletion {
++ (HJUploadKey)uploadWithFilePath:(NSString *)path
+                              url:(NSString *)url
+                           config:(id <HJUploadConfig>)config
+                       preprocess:(HJUploadPreprocessBlock)preprocess
+                    uploadRequest:(HJUploadRequestBlock)uploadRequest
+                   uploadProgress:(HJUploadProgressBlock)uploadProgress
+                 uploadCompletion:(HJUploadCompletionBlock)uploadCompletion {
     if (!path || path.length < 0) return HJUploadKeyInvalid;
     if (!config) config = [HJUploadConfig defaultConfig];
     
-    HJUploadFileSource *source = [[HJUploadFileSource alloc] initWithAbsolutePaths:@[path] config:config];
+    HJUploadFileSource *source = [[HJUploadFileSource alloc] initWithFilePaths:@[path] urls:url?@[url]:@[] config:config];
     source.preprocess = preprocess;
     source.request = uploadRequest;
     source.progress = uploadProgress;
@@ -53,7 +54,7 @@
             status = HJUploadStatusCancel;
         }
         if (source.completion) {
-            source.completion(status, callbackInfo, error);
+            source.completion(status, key, callbackInfo, error);
         }
     }];
     
@@ -62,6 +63,10 @@
 
 + (void)cancelUpload:(HJUploadKey)key {
     [[HJUploadTaskManager sharedInstance] cancelWithKey:key];
+}
+
++ (void)cancelAllUpload {
+    [[HJUploadTaskManager sharedInstance] cancelAll];
 }
 
 @end

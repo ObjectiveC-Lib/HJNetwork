@@ -30,10 +30,11 @@
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
 }
 
-- (instancetype)initWithAbsolutePath:(NSString *)path config:(id <HJUploadConfig>)config {
+- (instancetype)initWithFilePath:(NSString *)path url:(NSString *)url config:(id <HJUploadConfig>)config {
     self = [super init];
     if (self) {
         _config = config;
+        self.requestUrl = url;
         
         _fileProgress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
         _fileProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
@@ -98,12 +99,17 @@
     
     /// 文件类型
     NSString *pathExtension = self.name.pathExtension.lowercaseString;
-    NSArray *videoTypes = @[@"mp4", @"mov"];
+    NSArray *videoTypes = @[@"mp4", @"mov", @"avi", @"wmv", @"flv", @"mkv", @"webm"];
     if ([videoTypes containsObject:pathExtension]) {
         self.fileType = HJFileTypeVideo;
     }
     
-    NSArray *imageTypes = @[@"png", @"jpg", @"gif", @"jpeg", @"webp"];
+    NSArray *audioTypes = @[@"amr", @"mp3", @"wav", @"flac", @"ogg", @"aiff", @"alac"];
+    if ([audioTypes containsObject:pathExtension]) {
+        self.fileType = HJFileTypeAudio;
+    }
+    
+    NSArray *imageTypes = @[@"png", @"jpg", @"gif", @"jpeg", @"webp", @"bmp", @"tiff", @"heif"];
     if ([imageTypes containsObject:pathExtension]) {
         self.fileType = HJFileTypeImage;
     }
@@ -118,6 +124,7 @@
     NSMutableArray<HJUploadFileFragment *> *fragments = [[NSMutableArray alloc] initWithCapacity:fragmentCount];
     for (NSUInteger i = 0; i < fragmentCount; i++) {
         HJUploadFileFragment *fragment = [[HJUploadFileFragment alloc] init];
+        fragment.requestUrl = self.requestUrl;
         fragment.fragmentId = HJFileCreateId([NSString stringWithFormat:@"%@_%lu", self.name, (unsigned long)i]);
         fragment.index = i;
         fragment.offset = i * fragmentSize;
@@ -139,7 +146,7 @@
             }
         };
         __weak typeof(fragment) weakFragment = fragment;
-        fragment.completion = ^(HJUploadStatus status, id _Nullable callbackInfo, NSError * _Nullable error) {
+        fragment.completion = ^(HJUploadStatus status, HJUploadKey key, id _Nullable callbackInfo, NSError * _Nullable error) {
             __strong typeof(weakSelf) self = weakSelf;
             weakFragment.error = error;
             weakFragment.status = status;
@@ -159,6 +166,7 @@
     
     self.fragments = fragments.copy;
     self.fragmentCount = self.fragments.count;
+    self.isSingle = (fragmentCount==1)?YES:NO;
 }
 
 - (void)setCompletionCount:(NSUInteger)completionCount {
@@ -207,14 +215,14 @@
         
         if (self.error) {
             if (self.completion) {
-                self.completion(self.status, self.callbackInfo, self.error);
+                self.completion(self.status, self.source.sourceId, self.callbackInfo, self.error);
             }
         } else {
             if (_completedUnitCount >= self.totalUnitCount) {
                 self.fileProgress.completedUnitCount = self.totalUnitCount;
                 self.fileProgress.totalUnitCount = self.totalUnitCount;
                 if (self.completion) {
-                    self.completion(self.status, self.callbackInfo, self.error);
+                    self.completion(self.status, self.source.sourceId, self.callbackInfo, self.error);
                 }
             }
         }
@@ -292,6 +300,15 @@
         _MD5 = HJFileMD5String(self.absolutePath, self.bufferSize);
     }
     return _MD5;
+}
+
+- (NSString *)cryptoMD5 {
+    if (!_cryptoMD5) {
+        if (self.isSingle) {
+            _cryptoMD5 = self.fragments.firstObject.cryptoMD5;
+        }
+    }
+    return _cryptoMD5;
 }
 
 #pragma mark - NSProgress Tracking

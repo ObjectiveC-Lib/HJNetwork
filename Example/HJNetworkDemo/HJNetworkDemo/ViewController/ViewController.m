@@ -183,7 +183,7 @@
     // config.cryptoEnable = YES;
     // config.formType = HJUploadFormTypeStream;
     
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 1; i++) {
         NSURL *url = nil;
         if (i == 0) {
             url = url0;
@@ -194,19 +194,20 @@
         } else if (i == 3) {
             url = url3;
         }
-        
-        [HJUploadManager uploadWithAbsolutePath:url.path
-                                         config:config
-                                     preprocess:^NSDictionary * _Nullable(HJUploadFileBlock * _Nullable block) {
+        url = url3;
+        [HJUploadManager uploadWithFilePath:url.path
+                                        url:nil
+                                     config:config
+                                 preprocess:^NSDictionary * _Nullable(HJUploadFileBlock * _Nullable block) {
             NSLog(@"block = %@", block);
-            // block.error = [NSError errorWithDomain:HJUploadKeyPayloadError code:0 userInfo:nil];
+            // block.error = [NSError errorWithDomain:HJUploadKeyDomainError code:0 userInfo:nil];
             return nil;
-        } uploadRequest:^HJCoreRequest * _Nonnull(HJUploadFileFragment * _Nonnull fragment) {
+        } uploadRequest:^HJCoreRequest * _Nullable(HJUploadFileFragment * _Nullable fragment) {
             HJUploadRequest *request = [[HJUploadRequest alloc] initWithFragment:fragment];
             return request;
         } uploadProgress:^(NSProgress * _Nullable progress) {
             NSLog(@"HJUpload_progress: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-        } uploadCompletion:^(HJUploadStatus status, id  _Nullable callbackInfo, NSError * _Nullable error) {
+        } uploadCompletion:^(HJUploadStatus status, HJUploadKey key, id  _Nullable callbackInfo, NSError * _Nullable error) {
             NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             NSLog(@"HJUpload_completion_status = %ld", (long)status);
             NSLog(@"HJUpload_completion_callbackInfo = %@", callbackInfo);

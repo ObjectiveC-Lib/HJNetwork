@@ -31,6 +31,8 @@
         
         self.cryptoEnable = NO;
         self.bufferSize = 8*1024;
+        
+        self.payload = [NSMutableDictionary new];
     }
     return self;
 }
@@ -172,6 +174,14 @@
 
 - (void)setBufferSize:(unsigned long long)bufferSize {
     objc_setAssociatedObject(self, @selector(bufferSize), @(bufferSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setPayload:(NSMutableDictionary *)payload {
+    objc_setAssociatedObject(self, @selector(payload), payload, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSMutableDictionary *)payload {
+    return objc_getAssociatedObject(self, _cmd);;
 }
 
 @end

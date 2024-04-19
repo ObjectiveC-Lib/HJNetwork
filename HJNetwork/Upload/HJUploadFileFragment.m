@@ -105,7 +105,6 @@
         self.fragmentId = [coder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(fragmentId))];
         self.index = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(index))] unsignedIntegerValue];
         self.offset = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(offset))] unsignedLongLongValue];
-        self.isSingle = [[coder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(isSingle))] boolValue];
         self.block = [coder decodeObjectOfClass:[HJUploadFileBlock class] forKey:NSStringFromSelector(@selector(block))];
     }
     return self;
@@ -116,7 +115,6 @@
     [coder encodeObject:self.fragmentId forKey:NSStringFromSelector(@selector(fragmentId))];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:self.index] forKey:NSStringFromSelector(@selector(index))];
     [coder encodeObject:[NSNumber numberWithUnsignedLongLong:self.offset] forKey:NSStringFromSelector(@selector(offset))];
-    [coder encodeObject:[NSNumber numberWithBool:self.isSingle] forKey:NSStringFromSelector(@selector(isSingle))];
     [coder encodeObject:self.block forKey:NSStringFromSelector(@selector(block))];
 }
 
@@ -127,7 +125,6 @@
     fragment.fragmentId = self.fragmentId;
     fragment.index = self.index;
     fragment.offset = self.offset;
-    fragment.isSingle = self.isSingle;
     fragment.block = self.block;
     return fragment;
 }

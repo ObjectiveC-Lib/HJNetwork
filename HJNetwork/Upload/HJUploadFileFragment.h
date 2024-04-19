@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSUInteger index;
 /// 文件片的偏移量
 @property (nonatomic, assign) unsigned long long offset;
-/// 文件只有一个fragment
-@property (nonatomic, assign) BOOL isSingle;
 /// 该片所处的文件块
 @property (nonatomic,   weak) HJUploadFileBlock *block;
 

@@ -9,6 +9,7 @@
 #import "HJUploadInputStream.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "HJUploadFileFragment.h"
+#import "HJUploadFileBlock.h"
 
 @interface NSStream ()
 @property (readwrite) NSStreamStatus streamStatus;
@@ -66,6 +67,9 @@
         NSString *md5 = (__bridge_transfer NSString *)md5HashResult;
         if (_fragment.cryptoEnable) {
             _fragment.cryptoMD5 = md5;
+            if (_fragment.isSingle) {
+                _fragment.block.cryptoMD5 = md5;
+            }
         } else {
             _fragment.MD5 = md5;
         }

@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NSString * _Nullable HJUploadKey;
+static const HJUploadKey HJUploadKeyInvalid = nil;
+static const HJUploadKey HJUploadKeyDomainError = @"HJUploadKeyDomainError";
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// 上传表单类型
@@ -32,6 +36,8 @@ typedef NS_ENUM(NSUInteger, HJUploadFormType) {
 
 @property (nonatomic, assign) BOOL cryptoEnable;                // default: NO;
 @property (nonatomic, assign) unsigned long long bufferSize;    // default: 8KB=8*1024Bytes;
+
+@property (nonatomic, strong) NSMutableDictionary *_Nullable payload; // custom information
 
 - (unsigned long long)cryptoDataSize:(unsigned long long)size;
 - (NSData *)cryptoData:(NSData *)data;

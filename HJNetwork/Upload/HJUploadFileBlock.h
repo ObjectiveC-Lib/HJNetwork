@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) id<HJUploadConfig> config;
 
-- (instancetype)initWithAbsolutePath:(NSString *)path config:(id <HJUploadConfig>)config;
+- (instancetype)initWithFilePath:(NSString *)path url:(NSString *)url config:(id <HJUploadConfig>)config;
 
 @end
 
