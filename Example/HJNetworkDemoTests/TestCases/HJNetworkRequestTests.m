@@ -7,7 +7,6 @@
 //
 
 #import "HJTestCase.h"
-#import "HJNetworkConfig.h"
 #import "HJNetworkAgent.h"
 #import "HJBasicHTTPRequest.h"
 #import "HJXMLRequest.h"
@@ -32,10 +31,8 @@
 }
 
 - (void)_testBuildRequestURLWithBaseURL:(NSString *)baseURL detailURL:(NSString *)detailURL resultURL:(NSString *)resultURL {
-    HJNetworkConfig *config = [HJNetworkConfig sharedConfig];
     HJNetworkAgent *agent = [HJNetworkAgent sharedAgent];
-    
-    config.baseUrl = baseURL;
+    agent.config.baseUrl = baseURL;
     
     HJBasicHTTPRequest *request = [[HJBasicHTTPRequest alloc] initWithRequestUrl:detailURL];
     NSString *url = [agent buildRequestUrl:request];

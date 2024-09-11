@@ -7,8 +7,13 @@
 
 #import "DMBaseRequest.h"
 #import "DMInlineHeader.h"
+#import "DMNetworkAgent.h"
 
 @implementation DMBaseRequest
+
++ (Class)agentClass {
+    return [DMNetworkAgent class];
+}
 
 - (void)requestCompletePreprocessor {
     [super requestCompletePreprocessor];

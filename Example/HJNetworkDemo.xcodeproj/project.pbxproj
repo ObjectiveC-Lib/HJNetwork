@@ -54,6 +54,15 @@
 		55FAB01E29DE4E00006FFD8C /* DMSDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FAB01D29DE4E00006FFD8C /* DMSDWebImageManager.m */; };
 		55FAB02129DE50FA006FFD8C /* UIImageView+DM.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FAB02029DE50FA006FFD8C /* UIImageView+DM.m */; };
 		55FB51202A3301BC00E9BC51 /* DMHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */; };
+		55FF6FBC2C8EF95B00FAF46F /* DMDNSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FBB2C8EF95B00FAF46F /* DMDNSManager.m */; };
+		55FF6FBD2C8EF95B00FAF46F /* DMDNSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FBB2C8EF95B00FAF46F /* DMDNSManager.m */; };
+		55FF6FBE2C8EF95B00FAF46F /* DMDNSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FBB2C8EF95B00FAF46F /* DMDNSManager.m */; };
+		55FF6FC12C900D6900FAF46F /* DMNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC02C900D6900FAF46F /* DMNetworkConfig.m */; };
+		55FF6FC22C900D6900FAF46F /* DMNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC02C900D6900FAF46F /* DMNetworkConfig.m */; };
+		55FF6FC32C900D6900FAF46F /* DMNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC02C900D6900FAF46F /* DMNetworkConfig.m */; };
+		55FF6FC62C9054C000FAF46F /* DMNetworkAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC52C9054C000FAF46F /* DMNetworkAgent.m */; };
+		55FF6FC72C9054C000FAF46F /* DMNetworkAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC52C9054C000FAF46F /* DMNetworkAgent.m */; };
+		55FF6FC82C9054C000FAF46F /* DMNetworkAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FF6FC52C9054C000FAF46F /* DMNetworkAgent.m */; };
 		C6F0D4B471DEE32041A690D5 /* Pods_HJNetworkDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D8A66B59C34A2B0366C277 /* Pods_HJNetworkDemo.framework */; };
 		E1DD08EFC7AD7A2B22037B50 /* Pods_HJNetworkDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB98D671979381DA2CFB2108 /* Pods_HJNetworkDemoTests.framework */; };
 /* End PBXBuildFile section */
@@ -160,6 +169,12 @@
 		55FAB02029DE50FA006FFD8C /* UIImageView+DM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+DM.m"; sourceTree = "<group>"; };
 		55FB511E2A3301BC00E9BC51 /* DMHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMHTTPSessionManager.h; sourceTree = "<group>"; };
 		55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMHTTPSessionManager.m; sourceTree = "<group>"; };
+		55FF6FBA2C8EF95B00FAF46F /* DMDNSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMDNSManager.h; sourceTree = "<group>"; };
+		55FF6FBB2C8EF95B00FAF46F /* DMDNSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMDNSManager.m; sourceTree = "<group>"; };
+		55FF6FBF2C900D6900FAF46F /* DMNetworkConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMNetworkConfig.h; sourceTree = "<group>"; };
+		55FF6FC02C900D6900FAF46F /* DMNetworkConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMNetworkConfig.m; sourceTree = "<group>"; };
+		55FF6FC42C9054C000FAF46F /* DMNetworkAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMNetworkAgent.h; sourceTree = "<group>"; };
+		55FF6FC52C9054C000FAF46F /* DMNetworkAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMNetworkAgent.m; sourceTree = "<group>"; };
 		843D147DC5BBE7577EC0B837 /* Pods-HJNetworkDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo.release.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo/Pods-HJNetworkDemo.release.xcconfig"; sourceTree = "<group>"; };
 		86D1E32296641C9833046832 /* Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemo-HJNetworkDemoUITests/Pods-HJNetworkDemo-HJNetworkDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		97945B41131A209C14DFE313 /* Pods-HJNetworkDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJNetworkDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-HJNetworkDemoTests/Pods-HJNetworkDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -312,6 +327,10 @@
 				55CDCA0B296665CC004CFD5E /* DMCommonRequest.m */,
 				55FB511E2A3301BC00E9BC51 /* DMHTTPSessionManager.h */,
 				55FB511F2A3301BC00E9BC51 /* DMHTTPSessionManager.m */,
+				55FF6FC42C9054C000FAF46F /* DMNetworkAgent.h */,
+				55FF6FC52C9054C000FAF46F /* DMNetworkAgent.m */,
+				55FF6FBF2C900D6900FAF46F /* DMNetworkConfig.h */,
+				55FF6FC02C900D6900FAF46F /* DMNetworkConfig.m */,
 				5592ED9A28BF2F4D002A19D6 /* DMURLProtocol.h */,
 				5592ED9B28BF2F4D002A19D6 /* DMURLProtocol.m */,
 			);
@@ -400,6 +419,8 @@
 		55B8389D292368B100C62DFE /* DNS */ = {
 			isa = PBXGroup;
 			children = (
+				55FF6FBA2C8EF95B00FAF46F /* DMDNSManager.h */,
+				55FF6FBB2C8EF95B00FAF46F /* DMDNSManager.m */,
 				55B8389F292368B100C62DFE /* DMDNSTest.h */,
 				55B8389E292368B100C62DFE /* DMDNSTest.m */,
 			);
@@ -684,8 +705,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55FF6FC12C900D6900FAF46F /* DMNetworkConfig.m in Sources */,
 				55B838A0292368B100C62DFE /* DMDNSTest.m in Sources */,
 				55AF57FF2836477B0073E550 /* DMBaseUrlFilter.m in Sources */,
+				55FF6FBC2C8EF95B00FAF46F /* DMDNSManager.m in Sources */,
 				55F2878E28C71F3B00A96E88 /* HJUploadRequest.m in Sources */,
 				5592ED9C28BF2F4D002A19D6 /* DMURLProtocol.m in Sources */,
 				55D41AB528A1FE4800B9283E /* DMSDWebImageOperation.m in Sources */,
@@ -703,6 +726,7 @@
 				55AF57AE283634A50073E550 /* main.m in Sources */,
 				55AF58002836477B0073E550 /* DMBaseRequest.m in Sources */,
 				5521D95A28911FAA00F85AB4 /* DMHTTPRequest.m in Sources */,
+				55FF6FC62C9054C000FAF46F /* DMNetworkAgent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,6 +735,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55AF584128364B330073E550 /* HJDownloadRequest.m in Sources */,
+				55FF6FC22C900D6900FAF46F /* DMNetworkConfig.m in Sources */,
 				55AF583A28364B330073E550 /* HJStatusCodeValidatorRequest.m in Sources */,
 				55AF583B28364B330073E550 /* HJBasicAuthRequest.m in Sources */,
 				55AF583228364B330073E550 /* HJTestCase.m in Sources */,
@@ -721,11 +746,13 @@
 				55AF583528364B330073E550 /* HJNetworkRequestTests.m in Sources */,
 				55AF583428364B330073E550 /* HJRequestFilterTests.m in Sources */,
 				55AF57B8283634A50073E550 /* HJNetworkDemoTests.m in Sources */,
+				55FF6FC72C9054C000FAF46F /* DMNetworkAgent.m in Sources */,
 				55AF583D28364B330073E550 /* HJJSONValidatorRequest.m in Sources */,
 				55AF583628364B330073E550 /* HJJSONValidatorTests.m in Sources */,
 				55AF583928364B330073E550 /* HJTimeoutRequest.m in Sources */,
 				55AF584028364B330073E550 /* HJBasicHTTPRequest.m in Sources */,
 				55AF583828364B330073E550 /* HJResumableDownloadTests.m in Sources */,
+				55FF6FBD2C8EF95B00FAF46F /* DMDNSManager.m in Sources */,
 				55AF583328364B330073E550 /* HJConcurrencyTests.m in Sources */,
 				55AF583C28364B330073E550 /* HJCustomCacheRequest.m in Sources */,
 			);
@@ -736,6 +763,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				55AF57C4283634A50073E550 /* HJNetworkDemoUITestsLaunchTests.m in Sources */,
+				55FF6FC32C900D6900FAF46F /* DMNetworkConfig.m in Sources */,
+				55FF6FC82C9054C000FAF46F /* DMNetworkAgent.m in Sources */,
+				55FF6FBE2C8EF95B00FAF46F /* DMDNSManager.m in Sources */,
 				55AF57C2283634A50073E550 /* HJNetworkDemoUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

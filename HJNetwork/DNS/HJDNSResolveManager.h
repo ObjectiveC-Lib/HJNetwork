@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSString *dnsRemoteUrl;
 @property (nonatomic,   copy, nullable) HJDNSRemoteDictBlock dnsRemoteDictBlock;
 
-+ (instancetype)sharedManager;
++ (instancetype)manager;
 
 - (void)fetchRemoteDNS;
 - (void)setDefaultDNS:(HJDNSDictionary *)dict;

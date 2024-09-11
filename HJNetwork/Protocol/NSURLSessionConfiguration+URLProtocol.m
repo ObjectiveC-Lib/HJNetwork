@@ -12,7 +12,7 @@
 
 + (instancetype)sharedProtocolConfig:(Class)protocol {
     static dispatch_once_t once;
-    static NSURLSessionConfiguration *config;
+    static NSURLSessionConfiguration *config = nil;
     dispatch_once(&once, ^{
         config = [NSURLSessionConfiguration defaultSessionConfiguration];
         if (protocol) {

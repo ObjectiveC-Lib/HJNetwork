@@ -7,7 +7,6 @@
 //
 
 #import "HJTestCase.h"
-#import "HJNetworkConfig.h"
 #import "HJNetworkAgent.h"
 #import "HJBaseRequest.h"
 
@@ -19,16 +18,18 @@ NSString * const HJNetworkingTestsBaseURLString = @"https://httpbin.org/";
     [super setUp];
     
     self.networkTimeout = 20.0;
-    [HJNetworkConfig sharedConfig].baseUrl = HJNetworkingTestsBaseURLString;
+    
+    HJNetworkAgent *agent = [HJNetworkAgent sharedAgent];
+    agent.config.baseUrl = HJNetworkingTestsBaseURLString;
 }
 
 - (void)tearDown {
     [super tearDown];
-    
-    [[HJNetworkAgent sharedAgent] cancelAllRequests];
-    [HJNetworkConfig sharedConfig].baseUrl = @"";
-    [HJNetworkConfig sharedConfig].cdnUrl = @"";
-    [[HJNetworkConfig sharedConfig] clearUrlFilter];
+    HJNetworkAgent *agent = [HJNetworkAgent sharedAgent];
+    [agent cancelAllRequests];
+    agent.config.baseUrl = @"";
+    agent.config.cdnUrl = @"";
+    [agent.config clearUrlFilter];
 }
 
 - (void)expectSuccess:(HJBaseRequest *)request {

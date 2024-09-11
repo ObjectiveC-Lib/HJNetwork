@@ -27,9 +27,9 @@
     pthread_mutex_destroy(&_lock);
 }
 
-+ (instancetype)sharedInstance {
++ (instancetype)sharedScheme {
+    static id instance = nil;
     static dispatch_once_t once;
-    static id instance;
     dispatch_once(&once, ^{
         instance = [[self alloc] init];
     });
@@ -114,19 +114,19 @@
 }
 
 + (void)registerScheme:(NSString *)urlString selector:(SEL)selector {
-    [[HJCustomScheme sharedInstance] registerScheme:urlString selector:selector];
+    [[HJCustomScheme sharedScheme] registerScheme:urlString selector:selector];
 }
 
 + (void)unregisterScheme:(NSString *)urlString {
-    [[HJCustomScheme sharedInstance] unregisterScheme:urlString];
+    [[HJCustomScheme sharedScheme] unregisterScheme:urlString];
 }
 
 + (BOOL)containsScheme:(NSString *)urlString {
-    return [[HJCustomScheme sharedInstance] containsScheme:urlString];
+    return [[HJCustomScheme sharedScheme] containsScheme:urlString];
 }
 
 + (HJSchemeItem *)objectSchemeForKey:(NSString *)urlString {
-    return [[HJCustomScheme sharedInstance] objectSchemeForKey:urlString];
+    return [[HJCustomScheme sharedScheme] objectSchemeForKey:urlString];
 }
 
 @end

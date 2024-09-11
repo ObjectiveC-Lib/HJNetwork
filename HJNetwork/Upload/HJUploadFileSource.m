@@ -35,8 +35,8 @@
 }
 
 + (instancetype)sharedManager {
+    static id instance = nil;
     static dispatch_once_t once;
-    static id instance;
     dispatch_once(&once, ^{
         instance = [[self alloc] init];
     });

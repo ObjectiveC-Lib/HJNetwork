@@ -31,28 +31,16 @@ void HJLog(NSString *consolePrefix, NSString *format, ...) {
     NSMutableArray<id<HJUrlFilterProtocol>> *_urlFilters;
 }
 
-+ (HJNetworkConfig *)sharedConfig {
-    static id sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] initConfig];
-    });
-    return sharedInstance;
-}
-
-- (instancetype)initConfig {
-    self = [self init];
-    if (self) {
-        _baseUrl = nil;
-        _cdnUrl = nil;
-        _urlFilters = [NSMutableArray array];
-    }
-    return self;
++ (instancetype)config {
+    return [[self class] init];
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _baseUrl = nil;
+        _cdnUrl = nil;
+        _urlFilters = [NSMutableArray array];
         _debugLogEnabled = NO;
         _securityPolicy = [AFSecurityPolicy defaultPolicy];
         _sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];

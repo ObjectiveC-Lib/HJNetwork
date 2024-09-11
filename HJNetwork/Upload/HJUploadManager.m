@@ -10,17 +10,17 @@
 #import <HJTask/HJTask.h>
 
 @interface HJUploadTaskManager : HJTaskManager
-+ (instancetype)sharedInstance;
++ (instancetype)sharedManager;
 @end
 
 @implementation HJUploadTaskManager
-+ (instancetype)sharedInstance {
++ (instancetype)sharedManager {
+    static id instance = nil;
     static dispatch_once_t once;
-    static HJUploadTaskManager *sharedInstance;
     dispatch_once(&once, ^ {
-        sharedInstance = [[self alloc] init];
+        instance = [[self alloc] init];
     });
-    return sharedInstance;
+    return instance;
 }
 @end
 
@@ -41,8 +41,8 @@
     source.request = uploadRequest;
     source.progress = uploadProgress;
     source.completion = uploadCompletion;
-    [[HJUploadTaskManager sharedInstance] executor:source
-                                          progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
+    [[HJUploadTaskManager sharedManager] executor:source
+                                         progress:^(HJTaskKey key, NSProgress * _Nullable taskProgress) {
         if (source.progress) {
             source.progress(taskProgress);
         }
@@ -62,11 +62,11 @@
 }
 
 + (void)cancelUpload:(HJUploadKey)key {
-    [[HJUploadTaskManager sharedInstance] cancelWithKey:key];
+    [[HJUploadTaskManager sharedManager] cancelWithKey:key];
 }
 
 + (void)cancelAllUpload {
-    [[HJUploadTaskManager sharedInstance] cancelAll];
+    [[HJUploadTaskManager sharedManager] cancelAll];
 }
 
 @end

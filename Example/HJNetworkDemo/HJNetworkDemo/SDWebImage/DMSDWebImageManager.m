@@ -86,8 +86,8 @@ static inline NSString * _Nonnull DMFileNameForKey(NSString * _Nullable key, BOO
 }
 
 + (instancetype)sharedManager {
+    static id instance = nil;
     static dispatch_once_t once;
-    static id instance;
     dispatch_once(&once, ^{
         instance = [[self alloc] initWithNamespace:@"Store" diskDirectory:[self.class defaultDiskDocumentDirectory]];
     });

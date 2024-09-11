@@ -13,11 +13,13 @@
 #import <HJNetwork/HJBaseRequest.h>
 #import <HJNetwork/HJBatchRequest.h>
 #import <HJNetwork/HJChainRequest.h>
+#import <HJNetwork/HJNetworkAgent.h>
 #import <HJNetwork/HJNetworkAccessory.h>
 #elif __has_include("HJRequest.h")
 #import "HJBaseRequest.h"
 #import "HJBatchRequest.h"
 #import "HJChainRequest.h"
+#import "HJNetworkAgent.h"
 #import "HJNetworkAccessory.h"
 #endif
 

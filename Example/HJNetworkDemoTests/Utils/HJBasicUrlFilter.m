@@ -7,7 +7,7 @@
 //
 
 #import "HJBasicUrlFilter.h"
-#import "HJNetworkConfig.h"
+#import "HJCoreRequest.h"
 #import <AFNetworking/AFNetworking.h>
 
 @interface HJBasicUrlFilter ()

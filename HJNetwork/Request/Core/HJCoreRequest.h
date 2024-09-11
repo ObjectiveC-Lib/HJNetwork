@@ -150,6 +150,8 @@ typedef void(^HJRequestCompletionBlock)(__kindof HJCoreRequest *request);
 
 #pragma mark - Subclass Override
 
++ (Class)agentClass;
+
 - (void)requestCompletePreprocessor;
 
 - (void)requestCompleteFilter;

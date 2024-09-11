@@ -45,6 +45,10 @@ static BOOL HJIsIPAddress(NSString *str) {
     pthread_mutex_destroy(&_lock);
 }
 
++ (instancetype)manager {
+    return [[self class] init];
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -58,15 +62,6 @@ static BOOL HJIsIPAddress(NSString *str) {
         [self fetchRecursively];
     }
     return self;
-}
-
-+ (instancetype)sharedManager {
-    static dispatch_once_t once;
-    static id instance;
-    dispatch_once(&once, ^{
-        instance = [[self alloc] init];
-    });
-    return instance;
 }
 
 #pragma mark - Resolve Url

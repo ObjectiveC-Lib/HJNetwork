@@ -6,11 +6,12 @@
 //
 
 #import "DMHTTPSessionManager.h"
+#import "DMNetworkConfig.h"
 
 @implementation DMHTTPSessionManager
 
 + (instancetype)manager {
-    return [super manager:[HJNetworkConfig sharedConfig]];
+    return [super manager:[DMNetworkConfig sharedConfig]];
 }
 
 - (void)setupDefaultConfig {

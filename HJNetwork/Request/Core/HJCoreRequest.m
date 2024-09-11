@@ -89,14 +89,14 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 
 - (void)start {
     [self toggleAccessoriesWillStartCallBack];
-    [[HJNetworkAgent sharedAgent] addRequest:self];
+    [[[[self class] agentClass] sharedAgent] addRequest:self];
 }
 
 - (void)stop {
     [self toggleAccessoriesWillStopCallBack];
     self.loadMore = NO;
     self.delegate = nil;
-    [[HJNetworkAgent sharedAgent] cancelRequest:self];
+    [[[[self class] agentClass] sharedAgent] cancelRequest:self];
     [self toggleAccessoriesDidStopCallBack];
 }
 
@@ -114,6 +114,10 @@ NSString *const HJRequestValidationErrorDomain = @"com.hj.request.validation";
 }
 
 #pragma mark - Subclass Override
+
++ (Class)agentClass {
+    return [HJNetworkAgent class];
+}
 
 - (void)requestCompletePreprocessor {
 }

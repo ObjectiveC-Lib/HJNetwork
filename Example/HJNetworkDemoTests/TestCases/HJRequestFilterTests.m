@@ -27,7 +27,8 @@
 
 - (void)testBasicFilter {
     HJBasicUrlFilter *filter = [HJBasicUrlFilter filterWithArguments:@{@"key": @"value"}];
-    [[HJNetworkConfig sharedConfig] addUrlFilter:filter];
+    HJNetworkAgent *agent = [HJNetworkAgent sharedAgent];
+    [agent.config addUrlFilter:filter];
     
     HJBasicHTTPRequest *req = [[HJBasicHTTPRequest alloc] initWithRequestUrl:@"get"];
     [self expectSuccess:req withAssertion:^(HJCoreRequest *request) {

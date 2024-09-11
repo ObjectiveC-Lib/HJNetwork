@@ -8,7 +8,6 @@
 
 #import "HJBaseRequest.h"
 #import "HJNetworkCache.h"
-#import "HJNetworkConfig.h"
 #import "HJNetworkPrivate.h"
 
 @interface HJCacheMetadata : NSObject<NSSecureCoding>
@@ -321,9 +320,10 @@
     if (_cacheKey) return _cacheKey;
     
     NSString *requestUrl = [self requestUrl];
-    NSString *baseUrl = [HJNetworkConfig sharedConfig].baseUrl;
+    HJNetworkAgent *agent = [[[self class] agentClass] sharedAgent];
+    NSString *baseUrl = agent.config.baseUrl;
     id argument = [self cacheFileNameFilterForRequestArgument:[self requestArgument]];
-    NSString *requestInfo = [NSString stringWithFormat:@"Method:%ld Host:%@ Url:%@ Argument:%@", (long)[self requestMethod], baseUrl, requestUrl, argument];
+    NSString *requestInfo = [NSString stringWithFormat:@"Agent:%@ Method:%ld Host:%@ Url:%@ Argument:%@", NSStringFromClass([agent class]), (long)[self requestMethod], baseUrl, requestUrl, argument];
     _cacheKey = [HJNetworkUtils md5StringFromString:requestInfo];
     
     return _cacheKey;

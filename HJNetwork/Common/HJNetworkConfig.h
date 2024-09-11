@@ -63,7 +63,7 @@ typedef void (^HJURLConnectionAuthenticationChallengeBlock)(NSURLConnection *con
 @property (nonatomic, assign) BOOL useDNS;
 @property (nonatomic, assign) BOOL debugLogEnabled;
 
-+ (HJNetworkConfig *)sharedConfig;
++ (instancetype)config;
 
 - (void)addUrlFilter:(id<HJUrlFilterProtocol>)filter;
 - (void)clearUrlFilter;

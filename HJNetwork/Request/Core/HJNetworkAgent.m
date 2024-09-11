@@ -9,7 +9,6 @@
 #import "HJNetworkAgent.h"
 #import <AFNetworking/AFNetworking.h>
 #import "HJNetworkCommon.h"
-#import "HJNetworkConfig.h"
 #import "HJNetworkPrivate.h"
 #import <pthread/pthread.h>
 
@@ -18,11 +17,14 @@
 
 #define kHJNetworkIncompleteDownloadFolderName @"HJNetworkIncomplete"
 
+@interface HJNetworkAgent ()
+@property (nonatomic, strong) HJNetworkConfig *config;
+@property (nonatomic, strong) AFJSONResponseSerializer *jsonResponseSerializer;
+@property (nonatomic, strong) AFXMLParserResponseSerializer *xmlParserResponseSerializer;
+@end
+
 @implementation HJNetworkAgent {
     AFHTTPSessionManager *_manager;
-    HJNetworkConfig *_config;
-    AFJSONResponseSerializer *_jsonResponseSerializer;
-    AFXMLParserResponseSerializer *_xmlParserResponseSerialzier;
     NSMutableDictionary<NSNumber *, HJCoreRequest *> *_requestsRecord;
     
     dispatch_queue_t _processingQueue;
@@ -34,19 +36,24 @@
     pthread_mutex_destroy(&_lock);
 }
 
-+ (HJNetworkAgent *)sharedAgent {
-    static id sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
++ (instancetype)sharedAgent {
+    static id instance = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        instance = [[self class] agentWithConfig:nil];
     });
-    return sharedInstance;
+    return instance;
 }
 
-- (instancetype)init {
++ (instancetype)agentWithConfig:(HJNetworkConfig *)config {
+    HJNetworkAgent *agent = [[self alloc] initWithConfig:config];
+    return agent;
+}
+
+- (instancetype)initWithConfig:(HJNetworkConfig *)config {
     self = [super init];
     if (self) {
-        _config = [HJNetworkConfig sharedConfig];
+        _config = config?:[HJNetworkConfig config];
         _manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
         _processingQueue = dispatch_queue_create("com.hj.networkagent.processing", DISPATCH_QUEUE_CONCURRENT);
@@ -64,8 +71,7 @@
 }
 
 - (AFJSONResponseSerializer *)jsonResponseSerializer {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (!_jsonResponseSerializer) {
         _jsonResponseSerializer = [AFJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
         if (_config.jsonResponseContentTypes.count) {
@@ -73,22 +79,21 @@
             [set addObjectsFromArray:_config.jsonResponseContentTypes];
             _jsonResponseSerializer.acceptableContentTypes = [set copy];
         }
-    });
+    }
     return _jsonResponseSerializer;
 }
 
-- (AFXMLParserResponseSerializer *)xmlParserResponseSerialzier {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _xmlParserResponseSerialzier = [AFXMLParserResponseSerializer serializer];
-        _xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
+- (AFXMLParserResponseSerializer *)xmlParserResponseSerializer {
+    if (!_xmlParserResponseSerializer) {
+        _xmlParserResponseSerializer = [AFXMLParserResponseSerializer serializer];
+        _xmlParserResponseSerializer.acceptableStatusCodes = _allStatusCodes;
         if (_config.xmlResponseContentTypes.count) {
-            NSMutableSet *set = [[NSMutableSet alloc] initWithSet:_xmlParserResponseSerialzier.acceptableContentTypes];
+            NSMutableSet *set = [[NSMutableSet alloc] initWithSet:_xmlParserResponseSerializer.acceptableContentTypes];
             [set addObjectsFromArray:_config.xmlResponseContentTypes];
-            _xmlParserResponseSerialzier.acceptableContentTypes = [set copy];
+            _xmlParserResponseSerializer.acceptableContentTypes = [set copy];
         }
-    });
-    return _xmlParserResponseSerialzier;
+    }
+    return _xmlParserResponseSerializer;
 }
 
 #pragma mark -
@@ -249,87 +254,6 @@
     
     return requestUrl;
 }
-
-/*
- - (NSString *)buildRequestUrl:(HJCoreRequest *)request {
- NSParameterAssert(request != nil);
- 
- NSURL *tempUrl = [self handleRequestURL:request urlEncode:YES];
- 
- if (tempUrl && tempUrl.host && tempUrl.scheme) {
- if (request.requestMethod == HJRequestMethodGET ||
- request.requestMethod == HJRequestMethodHEAD ||
- request.requestMethod == HJRequestMethodDELETE) return tempUrl.absoluteString;
- } else {
- NSString *baseUrl;
- if ([request useCDN]) {
- if ([request cdnUrl].length > 0) {
- baseUrl = [request cdnUrl];
- } else {
- baseUrl = [_config cdnUrl];
- }
- } else {
- if ([request baseUrl].length > 0) {
- baseUrl = [request baseUrl];
- } else {
- baseUrl = [_config baseUrl];
- }
- }
- // URL slash compability
- NSURL *url = [NSURL URLWithString:baseUrl];
- if (baseUrl.length > 0 && ![baseUrl hasSuffix:@"/"]) {
- url = [url URLByAppendingPathComponent:@""];
- }
- tempUrl = [NSURL URLWithString:tempUrl.absoluteString relativeToURL:url];
- if (request.requestMethod == HJRequestMethodGET ||
- request.requestMethod == HJRequestMethodHEAD ||
- request.requestMethod == HJRequestMethodDELETE) return tempUrl.absoluteString;
- }
- return [[tempUrl.absoluteString componentsSeparatedByString:@"?"] objectAtIndex:0]?:@"";
- }
- 
- - (id)buildRequestArgument:(HJCoreRequest *)request {
- NSParameterAssert(request != nil);
- if (request.requestMethod == HJRequestMethodGET ||
- request.requestMethod == HJRequestMethodHEAD ||
- request.requestMethod == HJRequestMethodDELETE) return @{};
- return [self handleRequestArgument:request urlEncode:YES];
- }
- 
- - (NSURL *)handleRequestURL:(HJCoreRequest *)request urlEncode:(BOOL)urlEncode {
- NSString *detailUrl = [request requestUrl];
- NSArray *filters = [_config urlFilters];
- for (id<HJUrlFilterProtocol> f in filters) {
- detailUrl = [f filterUrl:detailUrl urlEncode:urlEncode withRequest:request];
- }
- return [NSURL URLWithString:detailUrl?:@""];
- }
- 
- - (NSDictionary *)handleRequestArgument:(HJCoreRequest *)request urlEncode:(BOOL)urlEncode {
- NSURL *url = [self handleRequestURL:request urlEncode:urlEncode];
- NSString *queryString = url.query;
- NSArray *queryArray = [queryString componentsSeparatedByString:@"&"];
- NSMutableArray *keys = @[].mutableCopy;
- NSMutableArray *values = @[].mutableCopy;
- for (NSString *obj in queryArray) {
- if ([HJNetworkUtils containsOfString:@"=" originalStr:obj]) {
- NSArray *objs = [obj componentsSeparatedByString:@"="];
- [keys addObject:[objs objectAtIndex:0]];
- if (objs.count > 1) {
- NSString *value = [HJNetworkUtils stringByURLDecode:[objs objectAtIndex:1]];
- [values addObject:HJNSStringAvailable(value)?value:@""];
- } else {
- [values addObject:@""];
- }
- }
- }
- NSMutableDictionary *queryDict = [NSMutableDictionary dictionaryWithObjects:values forKeys:keys];
- if (request.requestArgument) {
- [queryDict addEntriesFromDictionary:request.requestArgument];
- }
- return queryDict;
- }
- */
 
 - (AFHTTPRequestSerializer *)requestSerializerForRequest:(HJCoreRequest *)request {
     AFHTTPRequestSerializer *requestSerializer = nil;
@@ -598,7 +522,7 @@
                 request.responseJSONObject = request.responseObject;
             } break;
             case HJResponseSerializerTypeXMLParser: {
-                request.responseObject = [self.xmlParserResponseSerialzier responseObjectForResponse:task.response
+                request.responseObject = [self.xmlParserResponseSerializer responseObjectForResponse:task.response
                                                                                                 data:request.responseData
                                                                                                error:&serializationError];
             } break;
@@ -763,7 +687,8 @@
 
 - (NSString *)incompleteDownloadTempCacheFolder {
     NSFileManager *fileManager = [NSFileManager new];
-    NSString *cacheFolder = [NSTemporaryDirectory() stringByAppendingPathComponent:kHJNetworkIncompleteDownloadFolderName];
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:NSStringFromClass([self class])];
+    NSString *cacheFolder = [path stringByAppendingPathComponent:kHJNetworkIncompleteDownloadFolderName];
     
     BOOL isDirectory = NO;
     if ([fileManager fileExistsAtPath:cacheFolder isDirectory:&isDirectory] && isDirectory) {

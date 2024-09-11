@@ -11,6 +11,7 @@
 
 #import <HJNetwork/HJNetwork.h>
 #import <HJNetwork/HJNetworkPrivate.h>
+#import "DMNetworkAgent.h"
 #import "DMCommonRequest.h"
 #import "DMHTTPRequest.h"
 #import "DMDownloadRequest.h"
@@ -222,12 +223,12 @@
 }
 
 //NSString *const kTestDownloadURL = @"https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
-//NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.jpg_wh1200.jpg";
-NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/2401/95b5ee7b-4c51-4067-add2-480f5d98d12e";
+NSString *const kTestDownloadURL = @"https://seopic.699pic.com/photo/50008/9194.jpg_wh1200.jpg";
+//NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/2401/95b5ee7b-4c51-4067-add2-480f5d98d12e";
 
 - (void)resumDownload:(id)sender {
     [self clearDirectory:[DMDownloadRequest saveBasePath]];
-    [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
+    [self clearDirectory:[[DMNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
     [self createDirectory:[DMDownloadRequest saveBasePath]];
     
     DMDownloadRequest *req = [[DMDownloadRequest alloc] initWithTimeout:20 requestUrl:kTestDownloadURL];
@@ -237,9 +238,9 @@ NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/24
     [self expectRequest:req];
     
     //    // Start the request again
-    //    [[HJNetworkAgent sharedAgent] resetURLSessionManager];
+    //    [[DMNetworkAgent sharedAgent] resetURLSessionManager];
     //    // Allow all content type
-    //    [[HJNetworkAgent sharedAgent] manager].responseSerializer.acceptableContentTypes = nil;
+    //    [[DMNetworkAgent sharedAgent] manager].responseSerializer.acceptableContentTypes = nil;
     //
     //    DMDownloadRequest *req2 = [[DMDownloadRequest alloc] initWithTimeout:20 requestUrl:kTestDownloadURL];
     //    req2.resumableDownloadProgressBlock = ^(NSProgress *progress) {
@@ -277,7 +278,7 @@ NSString *const kTestDownloadURL = @"https://47.244.6.114/upd/v1/im/chat/file/24
                                                  responseSerializerType:HJResponseSerializerTypeJSON];
         if (isImage) {
             [self clearDirectory:[DMDownloadRequest saveBasePath]];
-            [self clearDirectory:[[HJNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
+            [self clearDirectory:[[DMNetworkAgent sharedAgent] incompleteDownloadTempCacheFolder]];
             [self createDirectory:[DMDownloadRequest saveBasePath]];
         }
         if (isImage) {
