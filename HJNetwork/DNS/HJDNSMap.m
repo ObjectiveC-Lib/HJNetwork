@@ -317,10 +317,11 @@ void descriptionFunction(const void *key, const void *value, void *context) {
     return self;
 }
 
-- (NSString *)getDNSValue:(NSString *)key {
+- (NSDictionary *)getDNSNode:(NSString *)key {
     if (!key || key.length <= 0) return nil;
     
     NSString *value = nil;
+    NSDictionary *kv = nil;
     Lock();
     HJDNSLinkedMap *map = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(key));
     if (map) {
@@ -333,6 +334,8 @@ void descriptionFunction(const void *key, const void *value, void *context) {
                 node = map->_head;
             }
             value = node->_value;
+            kv = @{ @"key":node->_key,
+                    @"value":value };
             host = [NSURL URLWithString:value].host;
             
             if (node->_failCount >= _negativeCount) {
@@ -344,10 +347,12 @@ void descriptionFunction(const void *key, const void *value, void *context) {
                     } else {
                         map = nil;
                         value = nil;
+                        kv = nil;
                     }
                 } else {
                     map = nil;
                     value = nil;
+                    kv = nil;
                 }
             } else {
                 if (HJIsIPAddress(host)) {
@@ -387,109 +392,117 @@ void descriptionFunction(const void *key, const void *value, void *context) {
         [_dns cleanTempVariables];
     }
     Unlock();
-    return value;
+    return kv;
 }
 
 - (void)setNegativeDNSValue:(NSString *)dnsValue key:(NSString *)key {
-    if (!dnsValue || dnsValue.length <= 0 || !key || key.length <= 0) return;
-    
-    Lock();
-    HJDNSLinkedMap *map = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(key));
-    if (map) {
-        NSString *value = nil;
-        do {
-            HJDNSLinkedMapNode *node;
-            if (map->_current && map->_current != map->_head) {
-                node = map->_current;
-            } else {
-                node = map->_head;
-            }
-            value = node->_value;
-            
-            if ([value isEqualToString:dnsValue]) {
-                node->_failCount += 1;
-                [map bringNodeToTail:node];
-                map = nil;
-            } else {
-                if (!map->_current) {
-                    map->_current = map->_head;
-                }
-                HJDNSLinkedMap *tmpMap = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(value));
-                if (tmpMap) {
-                    tmpMap->_prev = map;
-                    map = tmpMap;
-                } else {
-                    if (map->_current->_next) {
-                        map->_current = map->_current->_next;
-                    } else {
-                        map->_current = nil;
-                    }
-                    while (map && !map->_current) {
-                        map = map->_prev;
-                        if (map) {
-                            if (map->_current->_next) {
-                                map->_current = map->_current->_next;
-                            } else {
-                                map->_current = nil;
-                            }
-                        }
-                    }
-                }
-            }
-        } while (map);
-        [_dns cleanTempVariables];
-    }
-    Unlock();
+    [self setDNSValue:dnsValue key:key isNegative:YES];
 }
 
 - (void)setPositiveDNSValue:(NSString *)dnsValue key:(NSString *)key {
+    [self setDNSValue:dnsValue key:key isNegative:NO];
+}
+
+- (void)setDNSValue:(NSString *)dnsValue key:(NSString *)key isNegative:(BOOL)isNegative {
     if (!dnsValue || dnsValue.length <= 0 || !key || key.length <= 0) return;
     
     Lock();
-    HJDNSLinkedMap *map = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(key));
-    if (map) {
-        NSString *value = nil;
-        do {
-            HJDNSLinkedMapNode *node;
-            if (map->_current && map->_current != map->_head) {
-                node = map->_current;
-            } else {
-                node = map->_head;
-            }
-            value = node->_value;
-            
-            if ([value isEqualToString:dnsValue]) {
-                node->_failCount = 0;
-                [map bringNodeToHead:node];
-                map = nil;
-            } else {
-                if (!map->_current) {
-                    map->_current = map->_head;
-                }
-                HJDNSLinkedMap *tmpMap = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(value));
-                if (tmpMap) {
-                    tmpMap->_prev = map;
-                    map = tmpMap;
-                } else {
-                    if (map->_current->_next) {
-                        map->_current = map->_current->_next;
-                    } else {
-                        map->_current = nil;
-                    }
-                    while (map && !map->_current) {
-                        map = map->_prev;
-                        if (map) {
+    if ([dnsValue isEqualToString:key]) {
+        CFIndex count = CFDictionaryGetCount(_dns->_dict);
+        const void **keys = malloc(count * sizeof(const void *));
+        const void **values = malloc(count * sizeof(const void *));
+        if (keys && values) {
+            BOOL hasSet = NO;
+            CFDictionaryGetKeysAndValues(_dns->_dict, keys, values);
+            for (CFIndex i = 0; i < count; i++) {
+                HJDNSLinkedMap *map = (__bridge HJDNSLinkedMap *)values[i];
+                if (map) {
+                    do {
+                        if (!map->_current) {
+                            map->_current = map->_head;
+                        } else {
                             if (map->_current->_next) {
                                 map->_current = map->_current->_next;
                             } else {
                                 map->_current = nil;
                             }
                         }
+                        HJDNSLinkedMapNode *node = map->_current;
+                        if (node) {
+                            NSString *value = node->_value;
+                            if (value && [value isEqualToString:dnsValue]) {
+                                if (isNegative) {
+                                    node->_failCount += 1;
+                                    [map bringNodeToTail:node];
+                                } else {
+                                    node->_failCount = 0;
+                                    [map bringNodeToHead:node];
+                                }
+                                map = nil;
+                                hasSet = YES;
+                            }
+                        } else {
+                            map = nil;
+                        }
+                    } while (map);
+                }
+                if (hasSet) break;;
+            }
+            [_dns cleanTempVariables];
+        }
+        free(keys);
+        free(values);
+    } else {
+        HJDNSLinkedMap *map = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(key));
+        if (map) {
+            NSString *value = nil;
+            do {
+                HJDNSLinkedMapNode *node;
+                if (map->_current && map->_current != map->_head) {
+                    node = map->_current;
+                } else {
+                    node = map->_head;
+                }
+                value = node->_value;
+                
+                if (value && [value isEqualToString:dnsValue]) {
+                    if (isNegative) {
+                        node->_failCount += 1;
+                        [map bringNodeToTail:node];
+                    } else {
+                        node->_failCount = 0;
+                        [map bringNodeToHead:node];
+                    }
+                    map = nil;
+                } else {
+                    if (!map->_current) {
+                        map->_current = map->_head;
+                    }
+                    HJDNSLinkedMap *tmpMap = CFDictionaryGetValue(_dns->_dict, (__bridge const void *)(value));
+                    if (tmpMap) {
+                        tmpMap->_prev = map;
+                        map = tmpMap;
+                    } else {
+                        if (map->_current->_next) {
+                            map->_current = map->_current->_next;
+                        } else {
+                            map->_current = nil;
+                        }
+                        while (map && !map->_current) {
+                            map = map->_prev;
+                            if (map) {
+                                if (map->_current->_next) {
+                                    map->_current = map->_current->_next;
+                                } else {
+                                    map->_current = nil;
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        } while (map);
-        [_dns cleanTempVariables];
+            } while (map);
+            [_dns cleanTempVariables];
+        }
     }
     Unlock();
 }

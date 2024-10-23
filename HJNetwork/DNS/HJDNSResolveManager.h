@@ -31,11 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable HJDNSNode *)resolveURL:(NSURL *)originalURL;
 
-- (void)setNegativeUrl:(NSString *)url host:(NSString *)host;
-- (void)setNegativeUrl:(NSString *)url key:(NSString *)key;
+- (void)setNegativeUrl:(NSString *)url host:(nullable NSString *)host;
+- (void)setNegativeUrl:(NSString *)url key:(nullable NSString *)key;
 
-- (void)setPositiveUrl:(NSString *)url host:(NSString *)host;
-- (void)setPositiveUrl:(NSString *)url key:(NSString *)key;
+- (void)setPositiveUrl:(NSString *)url host:(nullable NSString *)host;
+- (void)setPositiveUrl:(NSString *)url key:(nullable NSString *)key;
 
 @end
 

@@ -76,12 +76,17 @@ static BOOL HJIsIPAddress(NSString *str) {
         return nil;
     }
     
+    HJDNSNode *node = [HJDNSNode new];
+    if (HJIsIPAddress(originalURL.host)) {
+        node.url = originalURL;
+        return node;
+    }
+    
     NSString *urlKey = [self filterOutExtraHost:originalURL.absoluteString];
     NSString *extraHost = [self getExtraHost:originalURL.absoluteString];
     
-    HJDNSNode *node = [HJDNSNode new];
     NSString *host = [NSURL URLWithString:urlKey].host;
-    if(HJIsIPAddress(host)) {
+    if (HJIsIPAddress(host)) {
         node.url = urlKey;
         if ([extraHost length] > 0) {
             node.host = extraHost;
@@ -90,18 +95,30 @@ static BOOL HJIsIPAddress(NSString *str) {
     }
     
     NSString *mapKey = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:urlKey]];
-    NSString *mapValue;
+    NSDictionary *mapNode = nil;
     if (!HJIsIPAddress([NSURL URLWithString:mapKey].host)) {
         Lock();
-        mapValue = [self.dnsMap getDNSValue:mapKey];
+        mapNode = [self.dnsMap getDNSNode:mapKey];
         Unlock();
     }
     
-    node.host = [NSURL URLWithString:mapKey].host;
+    NSString *mapValue = nil;
+    if (mapNode && mapNode.count) {
+        mapKey = mapNode[@"key"];
+        mapValue = mapNode[@"value"];
+    }
+    
     if (mapValue.length != 0) {
-        node.url = [originalURL.absoluteString stringByReplacingOccurrencesOfString:mapKey withString:mapValue];
+        if (HJIsIPAddress([NSURL URLWithString:mapValue].host)) {
+            node.url = mapValue;
+            node.host = [NSURL URLWithString:mapKey].host;
+        } else {
+            node.url = mapValue;
+            node.host = [NSURL URLWithString:mapValue].host;
+        }
     } else {
         node.url = originalURL.absoluteString;
+        node.host = [NSURL URLWithString:originalURL.absoluteString].host;
     }
     
     if (self.debug) NSLog(@"HJ_DNS_Use_Get: MapKey = %@, MapValue = %@", mapKey, mapValue);
@@ -125,13 +142,36 @@ static BOOL HJIsIPAddress(NSString *str) {
     [self markUrl:url key:key isNegative:NO];
 }
 
-- (void)markUrl:(NSString *)url host:(NSString *)host isNegative:(BOOL)isNegative  {
-    if (!url || url.length <= 0 || !host || host.length <= 0 || _ignoreNegative) return;
+- (void)markUrl:(NSString *)url host:(NSString *)host isNegative:(BOOL)isNegative {
+    if (_ignoreNegative || !url || url.length <= 0) return;
     
-    NSString *mapKey = [self.class getUrlMapKeyWithoutPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
-    NSString *mapKey1 = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:[NSURL URLWithString:url].host withString:host]]];
+    //NSLog(@"url = %@, host = %@", url, host);
+    
+    if (!host || host.length <= 0) {
+        host = [NSURL URLWithString:url].host;
+    }
+    
+    NSString *mapKey = host;
     NSString *mapValue = [self.class getUrlMapKeyWithPort:[NSURL URLWithString:url]];
-    if ([mapKey1 isEqualToString:mapValue]) { return; }
+    
+    NSURL *valueURL = [NSURL URLWithString:mapValue];
+    NSURL *keyURL = [NSURL URLWithString:host];
+    
+    if (!keyURL.scheme) {
+        if (valueURL.scheme && valueURL.scheme.length > 0) {
+            mapKey = [NSString stringWithFormat:@"%@://%@", valueURL.scheme, mapKey];
+        }
+    }
+    
+    if (!keyURL.port.stringValue) {
+        if (valueURL.port && valueURL.port.intValue > 0) {
+            mapKey = [NSString stringWithFormat:@"%@:%@", mapKey, valueURL.port.stringValue];
+        }
+    }
+    
+    NSString *mapKey1 = [self.class getUrlMapKeyWithoutPort:[NSURL URLWithString:mapKey]];
+    
+    //NSLog(@"mapValue = %@, mapKey = %@, mapKey1 = %@", mapValue, mapKey, mapKey1);
     
     Lock();
     if (isNegative) {
@@ -150,71 +190,8 @@ static BOOL HJIsIPAddress(NSString *str) {
     Unlock();
 }
 
-- (void)markUrl:(NSString *)url key:(NSString *)key isNegative:(BOOL)isNegative  {
-    if (!url || url.length <= 0 || !key || key.length <= 0 || _ignoreNegative) return;
-    
-    NSURL *mapURL = [NSURL URLWithString:url];
-    NSString *mapValue = [self.class getUrlMapKeyWithPort:mapURL];
-    
-    NSURL *keyURL = [NSURL URLWithString:key];
-    NSString *keyScheme = keyURL.scheme;
-    NSString *keyHost = keyURL.host;
-    NSString *keyPort = keyURL.port.stringValue;
-    
-    if (!keyHost || keyHost.length <= 0) return;
-    
-    NSString *mapKeyWithSchemeHostPort = nil;
-    NSString *mapKeyWithSchemeHost = nil;
-    NSString *mapKeyWithHostPort = nil;
-    if (keyScheme && keyScheme.length && keyPort && keyPort.length) {
-        mapKeyWithSchemeHostPort = key;
-    } else if (keyScheme && keyScheme.length) {
-        mapKeyWithSchemeHost = key;
-        if (mapURL.port && mapURL.port.intValue > 0) {
-            mapKeyWithSchemeHostPort = [NSString stringWithFormat:@"%@:%@", mapKeyWithSchemeHost, mapURL.port.stringValue];
-        }
-    } else if (keyPort && keyPort.length) {
-        mapKeyWithHostPort = key;
-        if (mapURL.scheme && mapURL.scheme.length > 0) {
-            mapKeyWithSchemeHostPort = [NSString stringWithFormat:@"%@://%@", mapURL.scheme, mapKeyWithHostPort];
-        }
-    }
-    
-    if (mapKeyWithSchemeHostPort && ![mapKeyWithSchemeHostPort isEqualToString:url]) {
-        Lock();
-        if (isNegative) {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithSchemeHostPort, mapValue);
-            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithSchemeHostPort];
-        } else {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithSchemeHostPort, mapValue);
-            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithSchemeHostPort];
-        }
-        Unlock();
-    }
-    
-    if (mapKeyWithSchemeHost && ![mapKeyWithSchemeHost isEqualToString:url]) {
-        Lock();
-        if (isNegative) {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithSchemeHost, mapValue);
-            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithSchemeHost];
-        } else {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithSchemeHost, mapValue);
-            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithSchemeHost];
-        }
-        Unlock();
-    }
-    
-    if (mapKeyWithHostPort && ![mapKeyWithHostPort isEqualToString:url]) {
-        Lock();
-        if (isNegative) {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Negative: MapKey = %@, MapValue = %@", mapKeyWithHostPort, mapValue);
-            [self.dnsMap setNegativeDNSValue:mapValue key:mapKeyWithHostPort];
-        } else {
-            if (self.debug) NSLog(@"HJ_DNS_Use_Set_Positive: MapKey = %@, MapValue = %@", mapKeyWithHostPort, mapValue);
-            [self.dnsMap setPositiveDNSValue:mapValue key:mapKeyWithHostPort];
-        }
-        Unlock();
-    }
+- (void)markUrl:(NSString *)url key:(NSString *)key isNegative:(BOOL)isNegative {
+    [self markUrl:url host:key isNegative:isNegative];
 }
 
 #pragma mark - Default Map

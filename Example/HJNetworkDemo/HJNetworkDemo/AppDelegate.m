@@ -116,10 +116,10 @@
                                           NSURLSessionTaskMetrics * _Nonnull metrics) {
             HJNetworkMetrics *metric = [[HJNetworkMetrics alloc] initWithMetrics:metrics session:session task:task];
             if (metric.status_code == 200) {
-                [[HJDNSResolveManager sharedManager] setPositiveUrl:metric.req_url host:metric.req_headers[@"Host"]];
+                [[HJDNSResolveManager sharedManager] setPositiveUrl:metric.req_url host:metric.req_headers[@"host"]];
             } else {
                 // NSLog(@"%@", metric);
-                [[HJDNSResolveManager sharedManager] setNegativeUrl:metric.req_url host:metric.req_headers[@"Host"]];
+                [[HJDNSResolveManager sharedManager] setNegativeUrl:metric.req_url host:metric.req_headers[@"host"]];
                 // NSLog(@"%@", [HJDNSResolveManager sharedManager]);
             }
         };

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithDict:(NSDictionary <NSString*, NSArray*> *)dict negativeCount:(NSUInteger)negativeCount;
 
-- (NSString *_Nullable)getDNSValue:(NSString *)key;
+- (NSDictionary *_Nullable)getDNSNode:(NSString *)key;
 - (void)setNegativeDNSValue:(NSString *)value key:(NSString *)key;
 - (void)setPositiveDNSValue:(NSString *)value key:(NSString *)key;
 
