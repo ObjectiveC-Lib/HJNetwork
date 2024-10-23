@@ -7,6 +7,7 @@
 //
 
 #import "HJCanonicalRequest.h"
+#import "HJCustomScheme.h"
 #include <xlocale.h>
 
 #pragma mark * URL canonicalization steps
@@ -293,7 +294,7 @@ extern NSMutableURLRequest * HJCanonicalRequestForRequest(NSURLRequest *request)
     NSString *scheme = [[[request URL] scheme] lowercaseString];
     assert(scheme != nil);
     
-    if (![scheme isEqual:@"http" ] && ![scheme isEqual:@"https"]) {
+    if (![scheme isEqual:@"http" ] && ![scheme isEqual:@"https"] && ![HJCustomScheme containsScheme:scheme]) {
         assert(NO);
     } else {
         static const CanonicalRequestStepFunction kStepFunctions[] = {
