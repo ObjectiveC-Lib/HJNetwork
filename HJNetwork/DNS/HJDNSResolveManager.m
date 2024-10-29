@@ -78,9 +78,9 @@ static BOOL HJIsIPAddress(NSString *str) {
     
     NSString *urlKey = [self filterOutExtraHost:originalURL.absoluteString];
     NSString *extraHost = [self getExtraHost:originalURL.absoluteString];
-    NSString *host = [NSURL URLWithString:urlKey].host;
     
     HJDNSNode *node = [HJDNSNode new];
+    NSString *host = [NSURL URLWithString:urlKey].host;
     if (HJIsIPAddress(host)) {
         node.url = urlKey;
         if ([extraHost length] > 0) {
@@ -97,23 +97,25 @@ static BOOL HJIsIPAddress(NSString *str) {
         Unlock();
     }
     
+    NSString *nodeKey = nil;
     NSString *mapValue = nil;
     if (mapNode && mapNode.count) {
-        mapKey = mapNode[@"key"];
+        nodeKey = mapNode[@"key"];
         mapValue = mapNode[@"value"];
     }
     
     if (mapValue.length != 0) {
+        node.url = [originalURL.absoluteString stringByReplacingOccurrencesOfString:mapKey withString:mapValue];
         if (HJIsIPAddress([NSURL URLWithString:mapValue].host)) {
-            node.url = mapValue;
-            node.host = [NSURL URLWithString:mapKey].host;
+            node.host = [NSURL URLWithString:nodeKey].host;
         } else {
-            node.url = mapValue;
             node.host = [NSURL URLWithString:mapValue].host;
         }
     } else {
         node.url = originalURL.absoluteString;
-        node.host = [NSURL URLWithString:originalURL.absoluteString].host;
+        if (!HJIsIPAddress(originalURL.host)) {
+            node.host = originalURL.host;
+        }
     }
     
     if (self.debug) NSLog(@"HJ_DNS_Use_Get: MapKey = %@, MapValue = %@", mapKey, mapValue);
