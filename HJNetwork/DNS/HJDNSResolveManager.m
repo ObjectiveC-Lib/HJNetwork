@@ -76,16 +76,11 @@ static BOOL HJIsIPAddress(NSString *str) {
         return nil;
     }
     
-    HJDNSNode *node = [HJDNSNode new];
-    if (HJIsIPAddress(originalURL.host)) {
-        node.url = originalURL;
-        return node;
-    }
-    
     NSString *urlKey = [self filterOutExtraHost:originalURL.absoluteString];
     NSString *extraHost = [self getExtraHost:originalURL.absoluteString];
-    
     NSString *host = [NSURL URLWithString:urlKey].host;
+    
+    HJDNSNode *node = [HJDNSNode new];
     if (HJIsIPAddress(host)) {
         node.url = urlKey;
         if ([extraHost length] > 0) {
