@@ -132,6 +132,10 @@
     return data;
 }
 
+- (NSMutableDictionary *)payload {
+    return objc_getAssociatedObject(self, _cmd);;
+}
+
 @end
 
 @implementation HJUploadConfig (Extension)
@@ -178,10 +182,6 @@
 
 - (void)setPayload:(NSMutableDictionary *)payload {
     objc_setAssociatedObject(self, @selector(payload), payload, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSMutableDictionary *)payload {
-    return objc_getAssociatedObject(self, _cmd);;
 }
 
 @end
