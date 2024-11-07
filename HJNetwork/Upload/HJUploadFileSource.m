@@ -172,41 +172,45 @@
         block.error = nil;
         [block.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
             if (fragment.status == HJUploadStatusFailure) {
-                fragment.status = HJUploadStatusProcessing;
-                fragment.error = nil;
-                if (weakSelf.request) {
-                    HJCoreRequest *request = weakSelf.request(fragment);
-                    Lock();
-                    [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
-                    Unlock();
-                    request.uploadProgressBlock = ^(NSProgress *progress) {
-                        fragment.status = HJUploadStatusProcessing;
-                        // NSLog(@"reStartRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-                        if (fragment.progress) {
-                            fragment.progress(progress);
-                        }
-                    };
-                    [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
-                        fragment.status = HJUploadStatusSuccess;
-                        if (fragment.completion) {
-                            fragment.completion(HJUploadStatusSuccess, weakSelf.sourceId, request.responseObject, nil);
-                        }
+                if (weakSelf.status != HJUploadStatusCancel) {
+                    if (weakSelf.request) {
+                        HJCoreRequest *request = weakSelf.request(fragment);
                         Lock();
-                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                        [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
                         Unlock();
-                    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
-                        fragment.status = HJUploadStatusFailure;
-                        NSString *errorDesc = request.error.localizedDescription;
-                        if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
-                            fragment.status = HJUploadStatusCancel;
+                        request.uploadProgressBlock = ^(NSProgress *progress) {
+                            fragment.status = HJUploadStatusProcessing;
+                            // NSLog(@"reStartRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+                            if (fragment.progress) {
+                                fragment.progress(progress);
+                            }
+                        };
+                        if (weakSelf.status != HJUploadStatusCancel) {
+                            [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
+                                fragment.status = HJUploadStatusSuccess;
+                                if (fragment.completion) {
+                                    fragment.completion(HJUploadStatusSuccess, weakSelf.sourceId, request.responseObject, nil);
+                                }
+                                Lock();
+                                [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                                Unlock();
+                            } failure:^(__kindof HJCoreRequest * _Nonnull request) {
+                                NSString *errorDesc = request.error.localizedDescription;
+                                if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
+                                    fragment.status = HJUploadStatusCancel;
+                                } else {
+                                    fragment.status = HJUploadStatusFailure;
+                                }
+                                if (fragment.completion) {
+                                    fragment.completion(fragment.status, weakSelf.sourceId, request.responseObject, request.error);
+                                }
+                                Lock();
+                                [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                                Unlock();
+                            }];
+                            fragment.error = nil;
                         }
-                        if (fragment.completion) {
-                            fragment.completion(fragment.status, weakSelf.sourceId, request.responseObject, request.error);
-                        }
-                        Lock();
-                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
-                        Unlock();
-                    }];
+                    }
                 }
             }
         }];
@@ -233,40 +237,44 @@
                     fragment.completion(fragment.status, weakSelf.sourceId, nil, nil);
                 }
             } else {
-                fragment.status = HJUploadStatusProcessing;
-                if (weakSelf.request) {
-                    HJCoreRequest *request = weakSelf.request(fragment);
-                    Lock();
-                    [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
-                    Unlock();
-                    request.uploadProgressBlock = ^(NSProgress *progress) {
-                        fragment.status = HJUploadStatusProcessing;
-                        // NSLog(@"startRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
-                        if (fragment.progress) {
-                            fragment.progress(progress);
-                        }
-                    };
-                    [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
-                        fragment.status = HJUploadStatusSuccess;
-                        if (fragment.completion) {
-                            fragment.completion(HJUploadStatusSuccess, weakSelf.sourceId, request.responseObject, nil);
-                        }
+                if (weakSelf.status != HJUploadStatusCancel) {
+                    if (weakSelf.request) {
+                        HJCoreRequest *request = weakSelf.request(fragment);
                         Lock();
-                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                        [weakSelf.requestDict setObject:request forKey:fragment.fragmentId];
                         Unlock();
-                    } failure:^(__kindof HJCoreRequest * _Nonnull request) {
-                        fragment.status = HJUploadStatusFailure;
-                        NSString *errorDesc = request.error.localizedDescription;
-                        if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
-                            fragment.status = HJUploadStatusCancel;
+                        request.uploadProgressBlock = ^(NSProgress *progress) {
+                            fragment.status = HJUploadStatusProcessing;
+                            // NSLog(@"startRequest_fragment_completedUnitCount: %lld / %lld", progress.completedUnitCount, progress.totalUnitCount);
+                            if (fragment.progress) {
+                                fragment.progress(progress);
+                            }
+                        };
+                        if (weakSelf.status != HJUploadStatusCancel) {
+                            [request startWithCompletionBlockWithSuccess:^(__kindof HJCoreRequest * _Nonnull request) {
+                                fragment.status = HJUploadStatusSuccess;
+                                if (fragment.completion) {
+                                    fragment.completion(HJUploadStatusSuccess, weakSelf.sourceId, request.responseObject, nil);
+                                }
+                                Lock();
+                                [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                                Unlock();
+                            } failure:^(__kindof HJCoreRequest * _Nonnull request) {
+                                NSString *errorDesc = request.error.localizedDescription;
+                                if ((errorDesc && [errorDesc isEqualToString:@"cancelled"]) || weakSelf.status == HJUploadStatusCancel) {
+                                    fragment.status = HJUploadStatusCancel;
+                                } else {
+                                    fragment.status = HJUploadStatusFailure;
+                                }
+                                if (fragment.completion) {
+                                    fragment.completion(fragment.status, weakSelf.sourceId, request.responseObject, request.error);
+                                }
+                                Lock();
+                                [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
+                                Unlock();
+                            }];
                         }
-                        if (fragment.completion) {
-                            fragment.completion(fragment.status, weakSelf.sourceId, request.responseObject, request.error);
-                        }
-                        Lock();
-                        [weakSelf.requestDict removeObjectForKey:fragment.fragmentId];
-                        Unlock();
-                    }];
+                    }
                 }
             }
         }];
@@ -274,6 +282,7 @@
 }
 
 - (void)cancelRequest {
+    __block BOOL needCallbackCompletion = YES;
     __weak typeof(self) weakSelf = self;
     [self.blocks enumerateObjectsUsingBlock:^(HJUploadFileBlock * _Nonnull block, NSUInteger idx, BOOL * _Nonnull stop) {
         [block.fragments enumerateObjectsUsingBlock:^(HJUploadFileFragment * _Nonnull fragment, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -286,8 +295,25 @@
                     fragment.status == HJUploadStatusCancel;
                 }
             }
+            if (fragment.status != HJUploadStatusWaiting) {
+                needCallbackCompletion = NO;
+            }
         }];
     }];
+    
+    if (needCallbackCompletion) {
+        if (!self.error) {
+            self.error = [NSError errorWithDomain:NSURLErrorDomain
+                                             code:NSURLErrorCancelled
+                                         userInfo:@{ NSLocalizedDescriptionKey : @"HJUploadFileSource cancelled Task" }];
+        }
+        if (self.taskCompletion) {
+            self.taskCompletion(self.taskKey,
+                                self.status==HJUploadStatusCancel?HJTaskStageCancelled:HJTaskStageFinished,
+                                self.callbackInfo, self.error);
+        }
+        [[HJUploadSourceManager sharedManager] removeSource:self];
+    }
 }
 
 - (void)setCompletionCount:(NSUInteger)completionCount {
