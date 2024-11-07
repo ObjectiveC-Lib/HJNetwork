@@ -20,13 +20,13 @@
 @synthesize cryptoMD5 = _cryptoMD5;
 
 - (void)dealloc {
-    NSLog(@"HJUploadFileFragment_dealloc");
+    // NSLog(@"HJUpload_FileFragment_dealloc");
     if (_fileHandle) {
         if (@available(iOS 13.0, *)) {
             NSError *error = nil;
             [_fileHandle closeAndReturnError:&error];
             if (error) {
-                NSLog(@"HJUploadSource_closeFile_error = %@", error);
+                // NSLog(@"HJUploadSource_closeFile_error = %@", error);
             }
         } else {
             [_fileHandle closeFile];
@@ -55,9 +55,9 @@
             data = [self.fileHandle readDataUpToLength:length error:&error];
         }
         if (error) {
-            NSLog(@"HJUploadSource_fetchData_error = %@", error);
+            // NSLog(@"HJUploadSource_fetchData_error = %@", error);
             [self.fileHandle closeAndReturnError:&error];
-            NSLog(@"HJUploadSource_fetchData_error = %@", error);
+            // NSLog(@"HJUploadSource_fetchData_error = %@", error);
         }
     } else {
         [self.fileHandle seekToFileOffset:self.offset+offset];

@@ -12,7 +12,7 @@
 @implementation HJUploadConfig
 
 - (void)dealloc {
-    NSLog(@"HJUploadConfig_dealloc");
+    // NSLog(@"HJUpload_Config_dealloc");
 }
 
 - (instancetype)init {

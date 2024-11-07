@@ -26,7 +26,7 @@
 @synthesize cryptoMD5 = _cryptoMD5;
 
 - (void)dealloc {
-    NSLog(@"HJUploadFileBlock_dealloc");
+    // NSLog(@"HJUpload_FileBlock_dealloc");
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
 }
 

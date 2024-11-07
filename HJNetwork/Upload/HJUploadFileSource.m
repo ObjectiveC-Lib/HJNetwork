@@ -95,7 +95,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"HJUploadSource_dealloc_%@: dealloc", self.sourceId);
+    // NSLog(@"HJUpload_Source_dealloc_%@: dealloc", self.sourceId);
     
     [self.fileProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
     pthread_mutex_destroy(&_lock);
@@ -117,10 +117,10 @@
         _requestDict = [NSMutableDictionary new];
         
         __weak typeof(self) weakSelf = self;
-        NSMutableString *sourceId = [NSMutableString new];
-        NSMutableArray *blocks = [NSMutableArray new];
+        __block NSMutableString *sourceId = [NSMutableString new];
         __block NSUInteger size = 0;
         __block NSUInteger cryptoSize = 0;
+        NSMutableArray *blocks = [NSMutableArray new];
         [paths enumerateObjectsUsingBlock:^(NSString * _Nonnull path, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *url = nil;
             if (urls && urls.count) url = urls[idx];
@@ -408,6 +408,7 @@
 #pragma mark - HJTaskProtocol
 
 - (void)startTask {
+    // NSLog(@"[Upload] startTask");
     [[HJUploadSourceManager sharedManager] addSource:self];
     self.status = HJUploadStatusProcessing;
     
@@ -417,6 +418,7 @@
 }
 
 - (void)cancelTask {
+    // NSLog(@"[Upload] cancelTask");
     self.status = HJUploadStatusCancel;
     [self cancelRequest];
 }

@@ -33,7 +33,7 @@
 @synthesize streamError;
 
 - (void)dealloc {
-    NSLog(@"HJUploadInputStream_dealloc");
+    // NSLog(@"HJUpload_InputStream_dealloc");
 }
 
 - (instancetype)initWithFragment:(nullable HJUploadFileFragment *)fragment {
