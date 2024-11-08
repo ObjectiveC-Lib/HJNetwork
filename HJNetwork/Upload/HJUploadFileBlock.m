@@ -60,30 +60,29 @@
     }
     
     /// 存取文件路径
-    NSURL *url = [NSURL URLWithString:path];
     if ([path containsString:[HJFileManager tmpDir]]) {
         self.dirType = HJDirectoryTypeTemporary;
-        self.path = [self cutPath:url.path withString:[HJFileManager tmpDir]];
+        self.path = [self cutPath:path withString:[HJFileManager tmpDir]];
     }
     
     if ([path containsString:[HJFileManager documentsDir]]) {
         self.dirType = HJDirectoryTypeDocument;
-        self.path = [self cutPath:url.path withString:[HJFileManager documentsDir]];
+        self.path = [self cutPath:path withString:[HJFileManager documentsDir]];
     }
     
     if ([path containsString:[HJFileManager libraryDir]]) {
         self.dirType = HJDirectoryTypeLibrary;
-        self.path = [self cutPath:url.path withString:[HJFileManager libraryDir]];
+        self.path = [self cutPath:path withString:[HJFileManager libraryDir]];
     }
     
     if ([path containsString:[HJFileManager cachesDir]]) {
         self.dirType = HJDirectoryTypeCaches;
-        self.path = [self cutPath:url.path withString:[HJFileManager cachesDir]];
+        self.path = [self cutPath:path withString:[HJFileManager cachesDir]];
     }
     
     if ([path containsString:[HJFileManager mainBundleDir]]) {
         self.dirType = HJDirectoryTypeMainBundle;
-        self.path = [self cutPath:url.path withString:[HJFileManager mainBundleDir]];
+        self.path = [self cutPath:path withString:[HJFileManager mainBundleDir]];
     }
     
     /// 文件大小

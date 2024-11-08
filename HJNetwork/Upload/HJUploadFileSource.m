@@ -146,7 +146,9 @@
                 self.completionCount += 1;
             };
             [blocks addObject:block];
-            [sourceId appendString:block.path];
+            if (block.path && block.path.length) {
+                [sourceId appendString:block.path];
+            }
         }];
         _sourceId = HJFileCreateId(sourceId);
         _blocks = [blocks copy];
